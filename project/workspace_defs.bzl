@@ -30,13 +30,11 @@ def _maven_import(artifact, sha256, licenses, **kwargs):
     name = ("%s_%s" % (group_id, artifact_id)).replace(".", "_").replace("-", "_")
     url_suffix = "{0}/{1}/{2}/{1}-{2}.jar".format(group_id.replace(".", "/"), artifact_id, version)
 
-    # TODO(cpovirk): Consider jvm_maven_import_external.
     java_import_external(
         name = name,
         jar_urls = [base + url_suffix for base in _MAVEN_MIRRORS],
         jar_sha256 = sha256,
         licenses = licenses,
-        # TODO(cpovirk): Remove after https://github.com/bazelbuild/bazel/issues/10838 is fixed.
         rule_load = """load("@rules_java//java:defs.bzl", "java_import")""",
         tags = ["maven_coordinates=" + artifact],
         **kwargs
