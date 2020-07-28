@@ -1,0 +1,9 @@
+# Bazel symlinks.
+/bazel-*
+
+# IntelliJ IDEA
+*/.idea
+out/
+
+# Bazel Plugin for IntelliJ IDEA
+*/.ijwb
