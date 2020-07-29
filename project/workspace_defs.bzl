@@ -48,6 +48,8 @@ def google_common_workspace_rules():
     //third_party.
     """
 
+    # Import AutoService
+
     _maven_import(
         artifact = "com.google.auto:auto-common:0.10",
         licenses = ["notice"],
@@ -59,4 +61,20 @@ def google_common_workspace_rules():
         licenses = ["notice"],
         sha256 = "e422d49c312fd2031222e7306e8108c1b4118eb9c049f1b51eca280bed87e924",
     )
+
+    # Import Protocol Buffers
+
+    _maven_import(
+        artifact = "com.google.protobuf:protobuf-java:3.12.0",
+        licenses = ["notice"],
+        sha256 = "dc7f93e3a3dc2c11be5ba9672af3e26410f0a3289312dbf2260d4d8a0c711a51",
+    )
+
+    for protobuf_repo in ("com_google_protobuf", "com_google_protobuf_java"):
+        http_archive(
+            name = protobuf_repo,
+            sha256 = "9748c0d90e54ea09e5e75fb7fac16edce15d2028d4356f32211cfa3c0e956564",
+            strip_prefix = "protobuf-3.11.4",
+            urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.12.0.zip"],
+        )
 
