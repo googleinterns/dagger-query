@@ -14,18 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery;
+syntax = "proto3";
+package dagerquery.models;
 
-import com.google.auto.service.AutoService;
-import dagger.model.BindingGraph;
-import dagger.spi.BindingGraphPlugin;
-import dagger.spi.DiagnosticReporter;
+option java_package = "com.google.daggerquery.protobuf.autogen";
+option java_outer_classname = "DependencyProto";
 
-@AutoService(BindingGraphPlugin.class)
-public class QueryPlugin implements BindingGraphPlugin {
+message Dependency {
 
-  @Override
-  public void visitGraph(BindingGraph bindingGraph, DiagnosticReporter diagnosticReporter) {
-  }
+  // A string representation of a node's key.
+  string target = 1;
 
 }

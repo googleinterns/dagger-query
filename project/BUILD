@@ -17,13 +17,19 @@ load("@dagger//:workspace_defs.bzl", "dagger_rules")
 
 dagger_rules()
 
+java_library(
+    name = "dagger_query_protobuf",
+    srcs = glob(["src/com/google/daggerquery/protobuf/**/*.java"]),
+    deps = ["//third_party/java/protobuf:protobuf"],
+)
+
 java_plugin(
     name = "dagger_query_plugin",
-    srcs = glob(["src/com/google/daggerquery/**/*.java"]),
+    srcs = ["src/com/google/daggerquery/plugin/QueryPlugin.java"],
     deps = [
         "//:dagger-spi",
+        ":dagger_query_protobuf",
         "//third_party/java/auto:service",
-        "//third_party/java/protobuf:protobuf",
     ]
 )
 
