@@ -22,12 +22,19 @@ import "com/google/daggerquery/protobuf/dependency.proto";
 option java_package = "com.google.daggerquery.protobuf.autogen";
 option java_outer_classname = "BindingGraphProto";
 
+// Model for representing dagger.model.BindingGraph.
 message BindingGraph {
 
+  // Created for representing a list with all dependencies as a value for a map.
   message ListWithDependencies {
     repeated Dependency dependency = 1;
   }
 
+  // This data structure represents a directed graph.
+  // For example, if there is an edge A --> B,
+  // then adjacency_list[A] = [..., B, ...].
+  // So the key is a string representation of a node's key
+  // and the value is a list with all node's dependencies.
   map<string, ListWithDependencies> adjacency_list = 1;
 
 }

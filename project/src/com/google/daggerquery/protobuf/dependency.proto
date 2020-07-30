@@ -22,6 +22,7 @@ option java_outer_classname = "DependencyProto";
 
 message Dependency {
 
+  // A string representation of a node's key.
   string target = 1;
 
 }
