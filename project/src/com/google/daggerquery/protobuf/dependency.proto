@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-syntax = "proto2";
+syntax = "proto3";
 package dagerquery.models;
 
-option java_package = "com.google.daggerquery.protobuf";
+option java_package = "com.google.daggerquery.protobuf.autogen";
 option java_outer_classname = "DependencyProto";
 
 message Dependency {
 
-  required string target = 1;
+  string target = 1;
 
 }

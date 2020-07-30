@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-syntax = "proto2";
+syntax = "proto3";
 package dagerquery.models;
 
 import "com/google/daggerquery/protobuf/dependency.proto";
 
-option java_package = "com.google.daggerquery.protobuf";
+option java_package = "com.google.daggerquery.protobuf.autogen";
 option java_outer_classname = "BindingGraphProto";
 
 message BindingGraph {
