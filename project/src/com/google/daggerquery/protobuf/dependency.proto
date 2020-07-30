@@ -22,19 +22,6 @@ option java_outer_classname = "DependencyProto";
 
 message Dependency {
 
-  enum RequestKind {
-    INSTANCE = 0;
-    PROVIDER = 1;
-    LAZY = 2;
-    PROVIDER_OF_LAZY = 3;
-    MEMBERS_INJECTION = 4;
-    PRODUCER = 5;
-    PRODUCED = 6;
-    FUTURE = 7;
-  }
-
-  required string target            = 1;
-  optional RequestKind request_kind = 2;
-  optional string element           = 3;
+  required string target = 1;
 
 }

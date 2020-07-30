@@ -17,7 +17,6 @@ limitations under the License.
 syntax = "proto2";
 package dagerquery.models;
 
-import "com/google/daggerquery/protobuf/binding.proto";
 import "com/google/daggerquery/protobuf/dependency.proto";
 
 option java_package = "com.google.daggerquery.protobuf";
@@ -30,6 +29,5 @@ message BindingGraph {
   }
 
   map<string, ListWithDependencies> adjacency_list = 1;
-  map<string, Binding> bindings                    = 2;
 
 }

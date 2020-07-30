@@ -34,34 +34,6 @@ public final class DependencyProto {
      */
     com.google.protobuf.ByteString
         getTargetBytes();
-
-    /**
-     * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-     * @return Whether the requestKind field is set.
-     */
-    boolean hasRequestKind();
-    /**
-     * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-     * @return The requestKind.
-     */
-    DependencyProto.Dependency.RequestKind getRequestKind();
-
-    /**
-     * <code>optional string element = 3;</code>
-     * @return Whether the element field is set.
-     */
-    boolean hasElement();
-    /**
-     * <code>optional string element = 3;</code>
-     * @return The element.
-     */
-    java.lang.String getElement();
-    /**
-     * <code>optional string element = 3;</code>
-     * @return The bytes for element.
-     */
-    com.google.protobuf.ByteString
-        getElementBytes();
   }
   /**
    * Protobuf type {@code dagerquery.models.Dependency}
@@ -77,8 +49,6 @@ public final class DependencyProto {
     }
     private Dependency() {
       target_ = "";
-      requestKind_ = 0;
-      element_ = "";
     }
 
     @java.lang.Override
@@ -111,24 +81,6 @@ public final class DependencyProto {
               target_ = bs;
               break;
             }
-            case 16: {
-              int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
-              DependencyProto.Dependency.RequestKind value = DependencyProto.Dependency.RequestKind.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
-                requestKind_ = rawValue;
-              }
-              break;
-            }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              element_ = bs;
-              break;
-            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -159,156 +111,6 @@ public final class DependencyProto {
       return DependencyProto.internal_static_dagerquery_models_Dependency_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               DependencyProto.Dependency.class, DependencyProto.Dependency.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code dagerquery.models.Dependency.RequestKind}
-     */
-    public enum RequestKind
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>INSTANCE = 0;</code>
-       */
-      INSTANCE(0),
-      /**
-       * <code>PROVIDER = 1;</code>
-       */
-      PROVIDER(1),
-      /**
-       * <code>LAZY = 2;</code>
-       */
-      LAZY(2),
-      /**
-       * <code>PROVIDER_OF_LAZY = 3;</code>
-       */
-      PROVIDER_OF_LAZY(3),
-      /**
-       * <code>MEMBERS_INJECTION = 4;</code>
-       */
-      MEMBERS_INJECTION(4),
-      /**
-       * <code>PRODUCER = 5;</code>
-       */
-      PRODUCER(5),
-      /**
-       * <code>PRODUCED = 6;</code>
-       */
-      PRODUCED(6),
-      /**
-       * <code>FUTURE = 7;</code>
-       */
-      FUTURE(7),
-      ;
-
-      /**
-       * <code>INSTANCE = 0;</code>
-       */
-      public static final int INSTANCE_VALUE = 0;
-      /**
-       * <code>PROVIDER = 1;</code>
-       */
-      public static final int PROVIDER_VALUE = 1;
-      /**
-       * <code>LAZY = 2;</code>
-       */
-      public static final int LAZY_VALUE = 2;
-      /**
-       * <code>PROVIDER_OF_LAZY = 3;</code>
-       */
-      public static final int PROVIDER_OF_LAZY_VALUE = 3;
-      /**
-       * <code>MEMBERS_INJECTION = 4;</code>
-       */
-      public static final int MEMBERS_INJECTION_VALUE = 4;
-      /**
-       * <code>PRODUCER = 5;</code>
-       */
-      public static final int PRODUCER_VALUE = 5;
-      /**
-       * <code>PRODUCED = 6;</code>
-       */
-      public static final int PRODUCED_VALUE = 6;
-      /**
-       * <code>FUTURE = 7;</code>
-       */
-      public static final int FUTURE_VALUE = 7;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static RequestKind valueOf(int value) {
-        return forNumber(value);
-      }
-
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       */
-      public static RequestKind forNumber(int value) {
-        switch (value) {
-          case 0: return INSTANCE;
-          case 1: return PROVIDER;
-          case 2: return LAZY;
-          case 3: return PROVIDER_OF_LAZY;
-          case 4: return MEMBERS_INJECTION;
-          case 5: return PRODUCER;
-          case 6: return PRODUCED;
-          case 7: return FUTURE;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<RequestKind>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          RequestKind> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<RequestKind>() {
-              public RequestKind findValueByNumber(int number) {
-                return RequestKind.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return DependencyProto.Dependency.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final RequestKind[] VALUES = values();
-
-      public static RequestKind valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private RequestKind(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:dagerquery.models.Dependency.RequestKind)
     }
 
     private int bitField0_;
@@ -360,73 +162,6 @@ public final class DependencyProto {
       }
     }
 
-    public static final int REQUEST_KIND_FIELD_NUMBER = 2;
-    private int requestKind_;
-    /**
-     * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-     * @return Whether the requestKind field is set.
-     */
-    @java.lang.Override public boolean hasRequestKind() {
-      return ((bitField0_ & 0x00000002) != 0);
-    }
-    /**
-     * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-     * @return The requestKind.
-     */
-    @java.lang.Override public DependencyProto.Dependency.RequestKind getRequestKind() {
-      @SuppressWarnings("deprecation")
-      DependencyProto.Dependency.RequestKind result = DependencyProto.Dependency.RequestKind.valueOf(requestKind_);
-      return result == null ? DependencyProto.Dependency.RequestKind.INSTANCE : result;
-    }
-
-    public static final int ELEMENT_FIELD_NUMBER = 3;
-    private volatile java.lang.Object element_;
-    /**
-     * <code>optional string element = 3;</code>
-     * @return Whether the element field is set.
-     */
-    @java.lang.Override
-    public boolean hasElement() {
-      return ((bitField0_ & 0x00000004) != 0);
-    }
-    /**
-     * <code>optional string element = 3;</code>
-     * @return The element.
-     */
-    @java.lang.Override
-    public java.lang.String getElement() {
-      java.lang.Object ref = element_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          element_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string element = 3;</code>
-     * @return The bytes for element.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getElementBytes() {
-      java.lang.Object ref = element_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        element_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -448,12 +183,6 @@ public final class DependencyProto {
       if (((bitField0_ & 0x00000001) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, target_);
       }
-      if (((bitField0_ & 0x00000002) != 0)) {
-        output.writeEnum(2, requestKind_);
-      }
-      if (((bitField0_ & 0x00000004) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, element_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -465,13 +194,6 @@ public final class DependencyProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, target_);
-      }
-      if (((bitField0_ & 0x00000002) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, requestKind_);
-      }
-      if (((bitField0_ & 0x00000004) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, element_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -493,15 +215,6 @@ public final class DependencyProto {
         if (!getTarget()
             .equals(other.getTarget())) return false;
       }
-      if (hasRequestKind() != other.hasRequestKind()) return false;
-      if (hasRequestKind()) {
-        if (requestKind_ != other.requestKind_) return false;
-      }
-      if (hasElement() != other.hasElement()) return false;
-      if (hasElement()) {
-        if (!getElement()
-            .equals(other.getElement())) return false;
-      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -516,14 +229,6 @@ public final class DependencyProto {
       if (hasTarget()) {
         hash = (37 * hash) + TARGET_FIELD_NUMBER;
         hash = (53 * hash) + getTarget().hashCode();
-      }
-      if (hasRequestKind()) {
-        hash = (37 * hash) + REQUEST_KIND_FIELD_NUMBER;
-        hash = (53 * hash) + requestKind_;
-      }
-      if (hasElement()) {
-        hash = (37 * hash) + ELEMENT_FIELD_NUMBER;
-        hash = (53 * hash) + getElement().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -660,10 +365,6 @@ public final class DependencyProto {
         super.clear();
         target_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        requestKind_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        element_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -696,14 +397,6 @@ public final class DependencyProto {
           to_bitField0_ |= 0x00000001;
         }
         result.target_ = target_;
-        if (((from_bitField0_ & 0x00000002) != 0)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.requestKind_ = requestKind_;
-        if (((from_bitField0_ & 0x00000004) != 0)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.element_ = element_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -756,14 +449,6 @@ public final class DependencyProto {
         if (other.hasTarget()) {
           bitField0_ |= 0x00000001;
           target_ = other.target_;
-          onChanged();
-        }
-        if (other.hasRequestKind()) {
-          setRequestKind(other.getRequestKind());
-        }
-        if (other.hasElement()) {
-          bitField0_ |= 0x00000004;
-          element_ = other.element_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -882,133 +567,6 @@ public final class DependencyProto {
         onChanged();
         return this;
       }
-
-      private int requestKind_ = 0;
-      /**
-       * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-       * @return Whether the requestKind field is set.
-       */
-      @java.lang.Override public boolean hasRequestKind() {
-        return ((bitField0_ & 0x00000002) != 0);
-      }
-      /**
-       * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-       * @return The requestKind.
-       */
-      @java.lang.Override
-      public DependencyProto.Dependency.RequestKind getRequestKind() {
-        @SuppressWarnings("deprecation")
-        DependencyProto.Dependency.RequestKind result = DependencyProto.Dependency.RequestKind.valueOf(requestKind_);
-        return result == null ? DependencyProto.Dependency.RequestKind.INSTANCE : result;
-      }
-      /**
-       * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-       * @param value The requestKind to set.
-       * @return This builder for chaining.
-       */
-      public Builder setRequestKind(DependencyProto.Dependency.RequestKind value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        requestKind_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional .dagerquery.models.Dependency.RequestKind request_kind = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearRequestKind() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        requestKind_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object element_ = "";
-      /**
-       * <code>optional string element = 3;</code>
-       * @return Whether the element field is set.
-       */
-      public boolean hasElement() {
-        return ((bitField0_ & 0x00000004) != 0);
-      }
-      /**
-       * <code>optional string element = 3;</code>
-       * @return The element.
-       */
-      public java.lang.String getElement() {
-        java.lang.Object ref = element_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            element_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string element = 3;</code>
-       * @return The bytes for element.
-       */
-      public com.google.protobuf.ByteString
-          getElementBytes() {
-        java.lang.Object ref = element_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          element_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string element = 3;</code>
-       * @param value The element to set.
-       * @return This builder for chaining.
-       */
-      public Builder setElement(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        element_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string element = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearElement() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        element_ = getDefaultInstance().getElement();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string element = 3;</code>
-       * @param value The bytes for element to set.
-       * @return This builder for chaining.
-       */
-      public Builder setElementBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        element_ = value;
-        onChanged();
-        return this;
-      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1076,15 +634,9 @@ public final class DependencyProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020dependency.proto\022\021dagerquery.models\"\371\001" +
-      "\n\nDependency\022\016\n\006target\030\001 \002(\t\022?\n\014request_" +
-      "kind\030\002 \001(\0162).dagerquery.models.Dependenc" +
-      "y.RequestKind\022\017\n\007element\030\003 \001(\t\"\210\001\n\013Reque" +
-      "stKind\022\014\n\010INSTANCE\020\000\022\014\n\010PROVIDER\020\001\022\010\n\004LA" +
-      "ZY\020\002\022\024\n\020PROVIDER_OF_LAZY\020\003\022\025\n\021MEMBERS_IN" +
-      "JECTION\020\004\022\014\n\010PRODUCER\020\005\022\014\n\010PRODUCED\020\006\022\n\n" +
-      "\006FUTURE\020\007B2\n\037com.google.daggerquery.prot" +
-      "obufB\017DependencyProto"
+      "\n\020dependency.proto\022\021dagerquery.models\"\034\n" +
+      "\nDependency\022\016\n\006target\030\001 \002(\tB2\n\037com.googl" +
+      "e.daggerquery.protobufB\017DependencyProto"
     };
 
     internal_static_dagerquery_models_Dependency_descriptor =
@@ -1092,7 +644,7 @@ public final class DependencyProto {
     internal_static_dagerquery_models_Dependency_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dagerquery_models_Dependency_descriptor,
-        new java.lang.String[] { "Target", "RequestKind", "Element", });
+        new java.lang.String[] { "Target", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

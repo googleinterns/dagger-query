@@ -51,40 +51,6 @@ public final class BindingGraphProto {
 
     BindingGraphProto.BindingGraph.ListWithDependencies getAdjacencyListOrThrow(
         java.lang.String key);
-
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-    int getBindingsCount();
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-    boolean containsBindings(
-        java.lang.String key);
-    /**
-     * Use {@link #getBindingsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, BindingProto.Binding>
-    getBindings();
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-    java.util.Map<java.lang.String, BindingProto.Binding>
-    getBindingsMap();
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-
-    BindingProto.Binding getBindingsOrDefault(
-        java.lang.String key,
-        BindingProto.Binding defaultValue);
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-
-    BindingProto.Binding getBindingsOrThrow(
-        java.lang.String key);
   }
   /**
    * Protobuf type {@code dagerquery.models.BindingGraph}
@@ -138,19 +104,6 @@ public final class BindingGraphProto {
                   adjacencyList__.getKey(), adjacencyList__.getValue());
               break;
             }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                bindings_ = com.google.protobuf.MapField.newMapField(
-                    BindingsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000002;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, BindingProto.Binding>
-              bindings__ = input.readMessage(
-                  BindingsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              bindings_.getMutableMap().put(
-                  bindings__.getKey(), bindings__.getValue());
-              break;
-            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -182,8 +135,6 @@ public final class BindingGraphProto {
       switch (number) {
         case 1:
           return internalGetAdjacencyList();
-        case 2:
-          return internalGetBindings();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -1075,87 +1026,6 @@ public final class BindingGraphProto {
       return map.get(key);
     }
 
-    public static final int BINDINGS_FIELD_NUMBER = 2;
-    private static final class BindingsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, BindingProto.Binding> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, BindingProto.Binding>newDefaultInstance(
-                  BindingGraphProto.internal_static_dagerquery_models_BindingGraph_BindingsEntry_descriptor,
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  BindingProto.Binding.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, BindingProto.Binding> bindings_;
-    private com.google.protobuf.MapField<java.lang.String, BindingProto.Binding>
-    internalGetBindings() {
-      if (bindings_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            BindingsDefaultEntryHolder.defaultEntry);
-      }
-      return bindings_;
-    }
-
-    public int getBindingsCount() {
-      return internalGetBindings().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsBindings(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      return internalGetBindings().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getBindingsMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, BindingProto.Binding> getBindings() {
-      return getBindingsMap();
-    }
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, BindingProto.Binding> getBindingsMap() {
-      return internalGetBindings().getMap();
-    }
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-    @java.lang.Override
-
-    public BindingProto.Binding getBindingsOrDefault(
-        java.lang.String key,
-        BindingProto.Binding defaultValue) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, BindingProto.Binding> map =
-          internalGetBindings().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-     */
-    @java.lang.Override
-
-    public BindingProto.Binding getBindingsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, BindingProto.Binding> map =
-          internalGetBindings().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1164,12 +1034,6 @@ public final class BindingGraphProto {
       if (isInitialized == 0) return false;
 
       for (BindingGraphProto.BindingGraph.ListWithDependencies item : getAdjacencyListMap().values()) {
-        if (!item.isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      for (BindingProto.Binding item : getBindingsMap().values()) {
         if (!item.isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
@@ -1188,12 +1052,6 @@ public final class BindingGraphProto {
           internalGetAdjacencyList(),
           AdjacencyListDefaultEntryHolder.defaultEntry,
           1);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetBindings(),
-          BindingsDefaultEntryHolder.defaultEntry,
-          2);
       unknownFields.writeTo(output);
     }
 
@@ -1213,16 +1071,6 @@ public final class BindingGraphProto {
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(1, adjacencyList__);
       }
-      for (java.util.Map.Entry<java.lang.String, BindingProto.Binding> entry
-           : internalGetBindings().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, BindingProto.Binding>
-        bindings__ = BindingsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, bindings__);
-      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1240,8 +1088,6 @@ public final class BindingGraphProto {
 
       if (!internalGetAdjacencyList().equals(
           other.internalGetAdjacencyList())) return false;
-      if (!internalGetBindings().equals(
-          other.internalGetBindings())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1256,10 +1102,6 @@ public final class BindingGraphProto {
       if (!internalGetAdjacencyList().getMap().isEmpty()) {
         hash = (37 * hash) + ADJACENCY_LIST_FIELD_NUMBER;
         hash = (53 * hash) + internalGetAdjacencyList().hashCode();
-      }
-      if (!internalGetBindings().getMap().isEmpty()) {
-        hash = (37 * hash) + BINDINGS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetBindings().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1374,8 +1216,6 @@ public final class BindingGraphProto {
         switch (number) {
           case 1:
             return internalGetAdjacencyList();
-          case 2:
-            return internalGetBindings();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -1387,8 +1227,6 @@ public final class BindingGraphProto {
         switch (number) {
           case 1:
             return internalGetMutableAdjacencyList();
-          case 2:
-            return internalGetMutableBindings();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -1421,7 +1259,6 @@ public final class BindingGraphProto {
       public Builder clear() {
         super.clear();
         internalGetMutableAdjacencyList().clear();
-        internalGetMutableBindings().clear();
         return this;
       }
 
@@ -1451,8 +1288,6 @@ public final class BindingGraphProto {
         int from_bitField0_ = bitField0_;
         result.adjacencyList_ = internalGetAdjacencyList();
         result.adjacencyList_.makeImmutable();
-        result.bindings_ = internalGetBindings();
-        result.bindings_.makeImmutable();
         onBuilt();
         return result;
       }
@@ -1503,8 +1338,6 @@ public final class BindingGraphProto {
         if (other == BindingGraphProto.BindingGraph.getDefaultInstance()) return this;
         internalGetMutableAdjacencyList().mergeFrom(
             other.internalGetAdjacencyList());
-        internalGetMutableBindings().mergeFrom(
-            other.internalGetBindings());
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1513,11 +1346,6 @@ public final class BindingGraphProto {
       @java.lang.Override
       public final boolean isInitialized() {
         for (BindingGraphProto.BindingGraph.ListWithDependencies item : getAdjacencyListMap().values()) {
-          if (!item.isInitialized()) {
-            return false;
-          }
-        }
-        for (BindingProto.Binding item : getBindingsMap().values()) {
           if (!item.isInitialized()) {
             return false;
           }
@@ -1672,134 +1500,6 @@ public final class BindingGraphProto {
             .putAll(values);
         return this;
       }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, BindingProto.Binding> bindings_;
-      private com.google.protobuf.MapField<java.lang.String, BindingProto.Binding>
-      internalGetBindings() {
-        if (bindings_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              BindingsDefaultEntryHolder.defaultEntry);
-        }
-        return bindings_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, BindingProto.Binding>
-      internalGetMutableBindings() {
-        onChanged();;
-        if (bindings_ == null) {
-          bindings_ = com.google.protobuf.MapField.newMapField(
-              BindingsDefaultEntryHolder.defaultEntry);
-        }
-        if (!bindings_.isMutable()) {
-          bindings_ = bindings_.copy();
-        }
-        return bindings_;
-      }
-
-      public int getBindingsCount() {
-        return internalGetBindings().getMap().size();
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-
-      @java.lang.Override
-      public boolean containsBindings(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        return internalGetBindings().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getBindingsMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, BindingProto.Binding> getBindings() {
-        return getBindingsMap();
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, BindingProto.Binding> getBindingsMap() {
-        return internalGetBindings().getMap();
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-      @java.lang.Override
-
-      public BindingProto.Binding getBindingsOrDefault(
-          java.lang.String key,
-          BindingProto.Binding defaultValue) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        java.util.Map<java.lang.String, BindingProto.Binding> map =
-            internalGetBindings().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-      @java.lang.Override
-
-      public BindingProto.Binding getBindingsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        java.util.Map<java.lang.String, BindingProto.Binding> map =
-            internalGetBindings().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
-      }
-
-      public Builder clearBindings() {
-        internalGetMutableBindings().getMutableMap()
-            .clear();
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-
-      public Builder removeBindings(
-          java.lang.String key) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableBindings().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, BindingProto.Binding>
-      getMutableBindings() {
-        return internalGetMutableBindings().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-      public Builder putBindings(
-          java.lang.String key,
-          BindingProto.Binding value) {
-        if (key == null) { throw new java.lang.NullPointerException(); }
-        if (value == null) { throw new java.lang.NullPointerException(); }
-        internalGetMutableBindings().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, .dagerquery.models.Binding&gt; bindings = 2;</code>
-       */
-
-      public Builder putAllBindings(
-          java.util.Map<java.lang.String, BindingProto.Binding> values) {
-        internalGetMutableBindings().getMutableMap()
-            .putAll(values);
-        return this;
-      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1868,11 +1568,6 @@ public final class BindingGraphProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_dagerquery_models_BindingGraph_AdjacencyListEntry_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_dagerquery_models_BindingGraph_BindingsEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_dagerquery_models_BindingGraph_BindingsEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1883,21 +1578,16 @@ public final class BindingGraphProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\023binding_graph.proto\022\021dagerquery.models" +
-      "\032-com/google/daggerquery/protobuf/bindin" +
-      "g.proto\0320com/google/daggerquery/protobuf" +
-      "/dependency.proto\"\237\003\n\014BindingGraph\022J\n\016ad" +
-      "jacency_list\030\001 \003(\01322.dagerquery.models.B" +
-      "indingGraph.AdjacencyListEntry\022?\n\010bindin" +
-      "gs\030\002 \003(\0132-.dagerquery.models.BindingGrap" +
-      "h.BindingsEntry\032I\n\024ListWithDependencies\022" +
-      "1\n\ndependency\030\001 \003(\0132\035.dagerquery.models." +
-      "Dependency\032j\n\022AdjacencyListEntry\022\013\n\003key\030" +
-      "\001 \001(\t\022C\n\005value\030\002 \001(\01324.dagerquery.models" +
-      ".BindingGraph.ListWithDependencies:\0028\001\032K" +
-      "\n\rBindingsEntry\022\013\n\003key\030\001 \001(\t\022)\n\005value\030\002 " +
-      "\001(\0132\032.dagerquery.models.Binding:\0028\001B4\n\037c" +
-      "om.google.daggerquery.protobufB\021BindingG" +
-      "raphProto"
+      "\0320com/google/daggerquery/protobuf/depend" +
+      "ency.proto\"\221\002\n\014BindingGraph\022J\n\016adjacency" +
+      "_list\030\001 \003(\01322.dagerquery.models.BindingG" +
+      "raph.AdjacencyListEntry\032I\n\024ListWithDepen" +
+      "dencies\0221\n\ndependency\030\001 \003(\0132\035.dagerquery" +
+      ".models.Dependency\032j\n\022AdjacencyListEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022C\n\005value\030\002 \001(\01324.dagerquer" +
+      "y.models.BindingGraph.ListWithDependenci" +
+      "es:\0028\001B4\n\037com.google.daggerquery.protobu" +
+      "fB\021BindingGraphProto"
     };
 
     internal_static_dagerquery_models_BindingGraph_descriptor =
@@ -1905,7 +1595,7 @@ public final class BindingGraphProto {
     internal_static_dagerquery_models_BindingGraph_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dagerquery_models_BindingGraph_descriptor,
-        new java.lang.String[] { "AdjacencyList", "Bindings", });
+        new java.lang.String[] { "AdjacencyList", });
     internal_static_dagerquery_models_BindingGraph_ListWithDependencies_descriptor =
       internal_static_dagerquery_models_BindingGraph_descriptor.getNestedTypes().get(0);
     internal_static_dagerquery_models_BindingGraph_ListWithDependencies_fieldAccessorTable = new
@@ -1918,13 +1608,6 @@ public final class BindingGraphProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_dagerquery_models_BindingGraph_AdjacencyListEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_dagerquery_models_BindingGraph_BindingsEntry_descriptor =
-      internal_static_dagerquery_models_BindingGraph_descriptor.getNestedTypes().get(2);
-    internal_static_dagerquery_models_BindingGraph_BindingsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_dagerquery_models_BindingGraph_BindingsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    BindingProto.getDescriptor();
     DependencyProto.getDescriptor();
   }
 
