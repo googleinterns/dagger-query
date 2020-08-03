@@ -32,7 +32,8 @@ public class GraphConverter<NodeT, EdgeT> {
    * Makes a directed adjacency list based on a given {@link com.google.common.graph.Network} instance
    * and writes it to a proto model.
    *
-   * <p>Uses models which were generated with <b>protocol buffers library</b> for representing edges.
+   * <p>Uses models which were generated with <a href="https://developers.google.com/protocol-buffers">
+   *   protocol buffers library</a> for representing edges.
    *
    * <p>Saving the directions of edges is provided by data structure itself.
    * For example, if we have an edge A --> B, we can be sure that list
