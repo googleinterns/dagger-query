@@ -23,13 +23,33 @@ java_library(
     deps = ["//third_party/java/protobuf:protobuf"],
 )
 
-java_plugin(
-    name = "dagger_query_plugin",
-    srcs = ["src/com/google/daggerquery/plugin/QueryPlugin.java"],
+java_library(
+    name = "dagger_query_plugin_sources",
+    srcs = glob(["src/com/google/daggerquery/plugin/**/*.java"]),
     deps = [
         "//:dagger-spi",
         ":dagger_query_protobuf",
         "//third_party/java/auto:service",
+        "//third_party/java/guava:guava",
+    ]
+)
+
+java_test(
+    name = "DaggerQueryTest",
+    size = "small",
+    srcs = glob(["tests/com/google/daggerquery/**/*.java"]),
+    test_class = "com.google.daggerquery.AllTests",
+    deps = [
+        ":dagger_query_protobuf",
+        ":dagger_query_plugin_sources",
+        "//third_party/java/junit:junit",
+    ],
+)
+
+java_plugin(
+    name = "dagger_query_plugin",
+    deps = [
+        ":dagger_query_plugin_sources",
     ]
 )
 

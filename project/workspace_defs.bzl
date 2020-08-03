@@ -78,3 +78,19 @@ def google_common_workspace_rules():
             urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.12.0.zip"],
         )
 
+    # Guava
+
+    _maven_import(
+        artifact = "com.google.guava:guava:27.1-jre",
+        licenses = ["notice"],
+        sha256 = "4a5aa70cc968a4d137e599ad37553e5cfeed2265e8c193476d7119036c536fe7",
+    )
+
+    # JUnit 4
+
+    _maven_import(
+        artifact = "junit:junit:4.11",
+        licenses = ["notice"],
+        sha256 = "90a8e1603eeca48e7e879f3afbc9560715322985f39a274f6f6070b43f9d06fe",
+    )
+
