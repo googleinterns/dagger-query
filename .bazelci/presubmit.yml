@@ -5,20 +5,20 @@ platforms:
     run_targets:
     - "..."
     build_targets:
-    - "..."
+    - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/com/google/daggerquery/plugin:GraphConverterTest"
   macos:
     run_targets:
     - "..."
     build_targets:
-    - "..."
+    - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/com/google/daggerquery/plugin:GraphConverterTest"
   windows:
     run_targets:
     - "..."
     build_targets:
-    - "..."
+    - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/com/google/daggerquery/plugin:GraphConverterTest"
