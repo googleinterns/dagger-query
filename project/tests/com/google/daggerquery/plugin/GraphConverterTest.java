@@ -21,19 +21,22 @@ import com.google.common.graph.Network;
 import com.google.common.graph.NetworkBuilder;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph.ListWithDependencies;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Map;
 
 public class GraphConverterTest {
   @Test
   public void testMakingGraph_WhenContainsOneEdge() {
-    MutableNetwork<String, Integer> network = makeMutableDirectedNetwork(/*allowsParallelEdges = */ false);
-    network.addEdge("A", "B", 10);
+    Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
 
     Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", network);
 
-    Assert.assertTrue(adjacencyList.get("A").getDependency(0).getTarget().equals("B"));
+    assertTrue(adjacencyList.get("A").getDependency(0).getTarget().equals("B"));
   }
 
   @Test
@@ -45,9 +48,9 @@ public class GraphConverterTest {
 
     Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", network);
 
-    Assert.assertEquals(0, adjacencyList.get("C").getDependencyCount());
-    Assert.assertEquals(1, adjacencyList.get("B").getDependencyCount());
-    Assert.assertEquals(2, adjacencyList.get("A").getDependencyCount());
+    assertEquals(0, adjacencyList.get("C").getDependencyCount());
+    assertEquals(1, adjacencyList.get("B").getDependencyCount());
+    assertEquals(2, adjacencyList.get("A").getDependencyCount());
   }
 
   @Test
@@ -60,8 +63,51 @@ public class GraphConverterTest {
 
     // Only the fact of the connection between two nodes is important,
     // so in case of parallel edges we just ignore them.
-    Assert.assertEquals(1, adjacencyList.get("A").getDependencyCount());
-    Assert.assertEquals(0, adjacencyList.get("B").getDependencyCount());
+    assertEquals(1, adjacencyList.get("A").getDependencyCount());
+    assertEquals(0, adjacencyList.get("B").getDependencyCount());
+  }
+
+  @Test
+  public void testMakingGraph_FromEmptyNetwork_ThrowsIllegalArgumentException() {
+    try {
+      MutableNetwork<String, Integer> network = makeMutableDirectedNetwork(/*allowsParallelEdges = */ false);
+      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", network);
+
+      fail();
+    } catch (IllegalArgumentException e) {
+    }
+  }
+
+  @Test
+  public void testMakingGraph_WithNullSourceNode_ThrowsNullPointerException() {
+    try {
+      Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
+      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ null, network);
+
+      fail();
+    } catch (NullPointerException e) {
+    }
+  }
+
+  @Test
+  public void testMakingGraph_WithNullNetwork_ThrowsNullPointerException() {
+    try {
+      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", null);
+
+      fail();
+    } catch (NullPointerException e) {
+    }
+  }
+
+  @Test
+  public void testMakingGraph_WithNonExistentSourceNode_ThrowsIllegalArgumentException() {
+    try {
+      Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
+      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "C", network);
+
+      fail();
+    } catch (IllegalArgumentException e) {
+    }
   }
 
   private <NodeT, EdgeT> Map<String, ListWithDependencies> makeAdjacencyList(NodeT rootNode, Network<NodeT, EdgeT> network) {
@@ -72,5 +118,12 @@ public class GraphConverterTest {
 
   private <NodeT, EdgeT> MutableNetwork<NodeT, EdgeT> makeMutableDirectedNetwork(Boolean allowsParallelEdges) {
     return NetworkBuilder.directed().allowsParallelEdges(allowsParallelEdges).build();
+  }
+
+  private <NodeT, EdgeT> Network<NodeT, EdgeT> makeMutableDirectedNetworkWithOneEdge(NodeT source,
+                                                                                     NodeT target, EdgeT edge) {
+    MutableNetwork<NodeT, EdgeT> network = makeMutableDirectedNetwork(/*allowsParallelEdges = */ false);
+    network.addEdge(source, target, edge);
+    return network;
   }
 }
