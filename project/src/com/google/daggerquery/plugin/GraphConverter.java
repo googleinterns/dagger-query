@@ -27,6 +27,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A class used to convert {@link com.google.common.graph.Network<NodeT, EdgeT>} instance to a model,
+ * generated with a <a href="https://developers.google.com/protocol-buffers">protocol buffers library</a>.
+ *
+ * A {@code NodeT} is class of nodes in a network. In proto model we save nodes as strings,
+ * so {@link GraphConverter<NodeT, EdgeT>} uses {@code toString()} method for translating in general case.
+ * More specific cases are described in {@code makeStringFromNode(NodeT node)} method's description.
+ *
+ * @param <NodeT> represents a node class in a given network
+ * @param <EdgeT> represents an edge class in a given network,
+ *                only the fact of presence of this edge is using, so its type doesn't matter
+ */
 public class GraphConverter<NodeT, EdgeT> {
   /**
    * Makes a directed adjacency list based on a given {@link com.google.common.graph.Network} instance
@@ -57,6 +69,11 @@ public class GraphConverter<NodeT, EdgeT> {
 
   /**
    * Implementation of depth first search algorithm that traverses a given network.
+   *
+   * Populates given {@code adjacencyList} with values taken from provided {@code network}.
+   * Starts traversing a graph from {@code currentNode}.
+   * Fills {@code visitedNodes} with processed nodes, after execution
+   * this set contains all nodes in current connected component.
    *
    * <p>For each node, all its child nodes are saved to {@code adjacencyList}.
    *
