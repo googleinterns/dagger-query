@@ -1,0 +1,24 @@
+---
+bazel: 2.1.0
+platforms:
+  ubuntu1804:
+    run_targets:
+    - "..."
+    build_targets:
+    - "..."
+    test_targets:
+    - "//tests/com/google/daggerquery/plugin:GraphConverterTest"
+  macos:
+    run_targets:
+    - "..."
+    build_targets:
+    - "..."
+    test_targets:
+    - "//tests/com/google/daggerquery/plugin:GraphConverterTest"
+  windows:
+    run_targets:
+    - "..."
+    build_targets:
+    - "..."
+    test_targets:
+    - "//tests/com/google/daggerquery/plugin:GraphConverterTest"
