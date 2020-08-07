@@ -21,12 +21,33 @@ import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import dagger.model.BindingGraph;
 import dagger.spi.BindingGraphPlugin;
 import dagger.spi.DiagnosticReporter;
+import javax.annotation.processing.Filer;
+import javax.tools.FileObject;
+import java.io.IOException;
+
+import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 
 @AutoService(BindingGraphPlugin.class)
 public class QueryPlugin implements BindingGraphPlugin {
+
+  // An instance used to create a new resource file at compile time.
+  private Filer filer;
+
+  @Override
+  public void initFiler(Filer filer) {
+    this.filer = filer;
+  }
+
   @Override
   public void visitGraph(BindingGraph bindingGraph, DiagnosticReporter diagnosticReporter) {
     BindingGraphProto.BindingGraph bindingGraphProto = new GraphConverter<BindingGraph.Node, BindingGraph.Edge>()
         .makeBindingGraphProto(bindingGraph.rootComponentNode(), bindingGraph.network());
+
+    try {
+      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", "binding_graph.textproto");
+      bindingGraphProto.writeTo(sourceFile.openOutputStream());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

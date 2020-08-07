@@ -20,4 +20,3 @@ java_plugin(
         "//src/com/google/daggerquery/plugin:plugin_sources",
     ]
 )
-
