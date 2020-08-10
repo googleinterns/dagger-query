@@ -1,5 +1,4 @@
 ---
-bazel: 2.1.0
 platforms:
   ubuntu1804:
     run_targets:
@@ -8,6 +7,7 @@ platforms:
     - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/..."
+    working_directory: project
   macos:
     run_targets:
     - "..."
@@ -15,6 +15,7 @@ platforms:
     - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/..."
+    working_directory: project
   windows:
     run_targets:
     - "..."
@@ -22,3 +23,4 @@ platforms:
     - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/..."
+    working_directory: project
