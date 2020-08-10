@@ -19,6 +19,9 @@ def _dagger_query_textproto_impl(ctx):
     dagger_app_target = ctx.attr.dagger_app_target
     src_jars = dagger_app_target[JavaInfo].source_jars
 
+    if len(src_jars) != 1:
+        fail("Found multiple jars with sources")
+
     ctx.actions.run_shell(
         inputs = src_jars,
         outputs = [ctx.outputs.out],
