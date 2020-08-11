@@ -4,17 +4,6 @@ A graph based query language on top of [dagger](https://github.com/google/dagger
 
 Dagger Query can be used to investigate the dagger dependency graph.
 
-## Before you start 
-
-To create protocol buffers classes run this in your terminal:
-
-```
-SRC_DIR='project/src'
-PROTO_DIR='project/src/com/google/daggerquery/protobuf'
-protoc -I=$SRC_DIR --java_out=$SRC_DIR --proto_path=$PROTO_DIR dependency.proto
-protoc -I=$SRC_DIR --java_out=$SRC_DIR --proto_path=$PROTO_DIR binding_graph.proto
-```
-
 **This is not an officially supported Google product.**
 
 ## Source Code Headers
