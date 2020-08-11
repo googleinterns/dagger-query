@@ -20,7 +20,8 @@ java_test(
     srcs = ["GraphConverterTest.java"],
     test_class = "com.google.daggerquery.plugin.GraphConverterTest",
     deps = [
-        "//src/com/google/daggerquery/protobuf:dagger_query_protobuf",
+        "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
+        "//src/com/google/daggerquery/protobuf:dependency_java_proto",
         "//src/com/google/daggerquery/plugin:plugin_sources",
         "//third_party/java/junit:junit",
     ],

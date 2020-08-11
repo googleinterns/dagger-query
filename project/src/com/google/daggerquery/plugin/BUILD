@@ -24,7 +24,8 @@ java_library(
     srcs = glob(["*.java"]),
     deps = [
         ":dagger-spi",
-        "//src/com/google/daggerquery/protobuf:dagger_query_protobuf",
+        "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
+        "//src/com/google/daggerquery/protobuf:dependency_java_proto",
         "//third_party/java/auto:service",
         "//third_party/java/guava:guava",
     ]

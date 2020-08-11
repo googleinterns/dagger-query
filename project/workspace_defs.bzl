@@ -72,9 +72,9 @@ def google_common_workspace_rules():
     for protobuf_repo in ("com_google_protobuf", "com_google_protobuf_java"):
         http_archive(
             name = protobuf_repo,
-            sha256 = "9748c0d90e54ea09e5e75fb7fac16edce15d2028d4356f32211cfa3c0e956564",
-            strip_prefix = "protobuf-3.11.4",
-            urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.12.0.zip"],
+            sha256 = "c5dc4cacbb303d5d0aa20c5cbb5cb88ef82ac61641c951cdf6b8e054184c5e22",
+            strip_prefix = "protobuf-3.12.4",
+            urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.12.4.zip"],
         )
 
     # Guava

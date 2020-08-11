@@ -12,12 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_java//java:defs.bzl", "java_library")
-
 package(default_visibility = ["//visibility:public"])
 
-java_library(
-    name = "dagger_query_protobuf",
-    srcs = glob(["autogen/*.java"]),
-    deps = ["//third_party/java/protobuf:protobuf"],
+java_proto_library(
+    name = "binding_graph_java_proto",
+    deps = [
+        ":binding_graph_proto",
+        ":dependency_proto"
+    ],
+)
+
+proto_library(
+    name = "binding_graph_proto",
+    srcs = ["binding_graph.proto"],
+    deps = [":dependency_proto"],
+)
+
+java_proto_library(
+    name = "dependency_java_proto",
+    deps = [":dependency_proto"],
+)
+
+proto_library(
+    name = "dependency_proto",
+    srcs = ["dependency.proto"],
 )
