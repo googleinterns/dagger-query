@@ -17,9 +17,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 
 _MAVEN_MIRRORS = [
-    "http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/",
+    "https://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/",
     "https://repo1.maven.org/maven2/",
-    "http://maven.ibiblio.org/maven2/",
 ]
 
 def _maven_import(artifact, sha256, licenses, **kwargs):
@@ -67,7 +66,7 @@ def google_common_workspace_rules():
     _maven_import(
         artifact = "com.google.protobuf:protobuf-java:3.12.0",
         licenses = ["notice"],
-        sha256 = "dc7f93e3a3dc2c11be5ba9672af3e26410f0a3289312dbf2260d4d8a0c711a51",
+        sha256 = "a98ed5a0272cdda6bde98fe15e794e3d99ec04554dba0ba8e0a49ff5cecc5e9e",
     )
 
     for protobuf_repo in ("com_google_protobuf", "com_google_protobuf_java"):

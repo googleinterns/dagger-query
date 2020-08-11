@@ -1,24 +1,18 @@
 ---
 platforms:
   ubuntu1804:
-    run_targets:
-    - "..."
     build_targets:
     - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/..."
     working_directory: project
   macos:
-    run_targets:
-    - "..."
     build_targets:
     - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:
     - "//tests/..."
     working_directory: project
   windows:
-    run_targets:
-    - "..."
     build_targets:
     - "//src/com/google/daggerquery:dagger_query_plugin"
     test_targets:

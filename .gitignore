@@ -10,4 +10,4 @@ out/
 */.ijwb
 
 # Protocol buffers
-*autogen
+# *autogen
