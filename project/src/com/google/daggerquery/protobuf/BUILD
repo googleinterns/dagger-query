@@ -16,10 +16,7 @@ package(default_visibility = ["//visibility:public"])
 
 java_proto_library(
     name = "binding_graph_java_proto",
-    deps = [
-        ":binding_graph_proto",
-        ":dependency_proto"
-    ],
+    deps = [":binding_graph_proto"],
 )
 
 proto_library(
