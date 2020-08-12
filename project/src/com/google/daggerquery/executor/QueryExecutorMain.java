@@ -22,8 +22,8 @@ import com.google.daggerquery.executor.services.DaggerQueryController;
 public class QueryExecutorMain {
   public static void main(String[] args) {
     new DaggerQueryController().execute(
-        /*arguments = */    args,
-        /*printStream = */  System.out,
+        /*arguments =*/    args,
+        /*printStream =*/  System.out,
         /*sourcesLoader =*/ new InternalSourcesLoader()
     );
   }
