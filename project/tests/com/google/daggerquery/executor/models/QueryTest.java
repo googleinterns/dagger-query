@@ -22,13 +22,9 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 public class QueryTest {
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testParsingQuery_WithNullQueryType_ThrowsNullPointerException() {
-    try {
-      Query query = new Query(/*type = */ null, "com.google.cats.Cat");
-      fail();
-    } catch (NullPointerException e) {
-    }
+    Query query = new Query(/*type = */ null, "com.google.cats.Cat");
   }
 
   @Test
@@ -40,30 +36,18 @@ public class QueryTest {
     assertArrayEquals(parameters, query.getParameters());
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testParsingDepsQuery_WithTwoStringParameters_ThrowsIllegalArgumentException() {
-    try {
-      Query query = new Query(QueryType.DEPS, "com.google.cats.FirstCat", "com.google.cats.SecondCat");
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    Query query = new Query(QueryType.DEPS, "com.google.cats.FirstCat", "com.google.cats.SecondCat");
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testParsingDepsQuery_WithoutParameters_ThrowsIllegalArgumentException() {
-    try {
-      Query query = new Query(QueryType.DEPS);
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    Query query = new Query(QueryType.DEPS);
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testParsingDepsQuery_WithNullParameters_ThrowsNullPointerException() {
-    try {
-      Query query = new Query(QueryType.DEPS, /*parameters = */ null);
-      fail();
-    } catch (NullPointerException e) {
-    }
+    Query query = new Query(QueryType.DEPS, /*parameters = */ null);
   }
 }

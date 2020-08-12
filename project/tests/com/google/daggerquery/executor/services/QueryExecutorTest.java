@@ -59,43 +59,28 @@ public class QueryExecutorTest {
     assertEquals(0, queryExecutionResult.size());
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testExecutingDepsQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
-    try {
-      List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
-          "com.google.Kitten",
-          makeSimpleBindingGraph()
-      );
-
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
+        "com.google.Kitten",
+        makeSimpleBindingGraph()
+    );
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testExecutingDepsQuery_WithNullQuery_ThrowsIllegalArgumentException() {
-    try {
-      List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
-          null,
-          makeSimpleBindingGraph()
-      );
-
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
+        null,
+        makeSimpleBindingGraph()
+    );
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testExecutingDepsQuery_WithNullBindingGraph_ThrowsNullPointerException() {
-    try {
-      List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
-          "com.google.Cat",
-          null
-      );
-
-      fail();
-    } catch (NullPointerException e) {
-    }
+    List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
+        "com.google.Cat",
+        null
+    );
   }
 
   /*

@@ -35,21 +35,13 @@ public class QueryTypeTest {
     assertEquals(QueryType.DEPS, type);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testParsingDepsQueryType_FromInvalidString_ThrowsIllegalArgumentException() {
-    try {
-      QueryType type = QueryType.parse("_deps");
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    QueryType type = QueryType.parse("_deps");
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testParsingDepsQueryType_FromNull_ThrowsIllegalArgumentException() {
-    try {
-      QueryType type = QueryType.parse(null);
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    QueryType type = QueryType.parse(null);
   }
 }

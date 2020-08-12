@@ -88,7 +88,7 @@ def google_common_workspace_rules():
     # JUnit 4
 
     _maven_import(
-        artifact = "junit:junit:4.11",
+        artifact = "junit:junit:4.13",
         licenses = ["notice"],
         sha256 = "90a8e1603eeca48e7e879f3afbc9560715322985f39a274f6f6070b43f9d06fe",
     )

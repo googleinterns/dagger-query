@@ -67,47 +67,27 @@ public class GraphConverterTest {
     assertEquals(0, adjacencyList.get("B").getDependencyCount());
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testMakingGraph_FromEmptyNetwork_ThrowsIllegalArgumentException() {
-    try {
-      MutableNetwork<String, Integer> network = makeMutableDirectedNetwork(/*allowsParallelEdges = */ false);
-      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", network);
-
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    MutableNetwork<String, Integer> network = makeMutableDirectedNetwork(/*allowsParallelEdges = */ false);
+    Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", network);
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testMakingGraph_WithNullSourceNode_ThrowsNullPointerException() {
-    try {
-      Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
-      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ null, network);
-
-      fail();
-    } catch (NullPointerException e) {
-    }
+    Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
+    Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ null, network);
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void testMakingGraph_WithNullNetwork_ThrowsNullPointerException() {
-    try {
-      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", null);
-
-      fail();
-    } catch (NullPointerException e) {
-    }
+    Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "A", null);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testMakingGraph_WithNonExistentSourceNode_ThrowsIllegalArgumentException() {
-    try {
-      Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
-      Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "C", network);
-
-      fail();
-    } catch (IllegalArgumentException e) {
-    }
+    Network<String, Integer> network = makeMutableDirectedNetworkWithOneEdge("A", "B", 10);
+    Map<String, ListWithDependencies> adjacencyList = makeAdjacencyList(/*rootNode = */ "C", network);
   }
 
   private <NodeT, EdgeT> Map<String, ListWithDependencies> makeAdjacencyList(NodeT rootNode, Network<NodeT, EdgeT> network) {
