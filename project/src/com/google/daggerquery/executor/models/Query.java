@@ -20,7 +20,6 @@ package com.google.daggerquery.executor.models;
  * A class which represents one query.
  *
  * <p>Each query has a {@code type} which itself an instance of {@link QueryType}.
- * There cannot be two queries with the same type.
  *
  * <p>Also each query contains parameters which were passed by user.
  * The number of parameters completely defined by {@link QueryType}.
