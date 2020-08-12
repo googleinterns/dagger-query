@@ -25,16 +25,3 @@ java_test(
         "//third_party/java/junit:junit",
     ],
 )
-
-java_test(
-    name = "DaggerQueryControllerTest",
-    size = "small",
-    srcs = ["DaggerQueryControllerTest.java"],
-    test_class = "com.google.daggerquery.executor.services.DaggerQueryControllerTest",
-    deps = [
-        "//src/com/google/daggerquery/executor/models:query_executor_models",
-        "//src/com/google/daggerquery/executor/services:query_executor_services",
-        "//src/com/google/daggerquery/protobuf:dagger_query_protobuf",
-        "//third_party/java/junit:junit",
-    ],
-)
