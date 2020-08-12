@@ -25,6 +25,10 @@ public class DaggerQueryController {
    * <p>An instance of {@link PrintStream} specifies where an output will be written.
    */
   public void execute(String[] arguments, PrintStream printStream, SourcesLoader sourcesLoader) {
+    if (arguments.length == 0) {
+      throw new IllegalArgumentException("You might forgot to specify the request and its parameters.");
+    }
+
     QueryExecutor queryExecutor = new QueryExecutor();
     QueryOutputWriter outputWriter = new QueryOutputWriter(printStream);
 
@@ -40,8 +44,6 @@ public class DaggerQueryController {
           outputWriter.writeDepsOutput(dependencies);
           break;
       }
-    } catch (ArrayIndexOutOfBoundsException e) {
-      printStream.println("Execution failed. You might forgot to specify the request and its parameters.");
     } catch (IllegalArgumentException e) {
       printStream.println("Execution failed. Reason: " + e.getMessage());
     } catch (IOException e) {
