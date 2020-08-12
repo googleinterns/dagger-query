@@ -90,6 +90,6 @@ def google_common_workspace_rules():
     _maven_import(
         artifact = "junit:junit:4.13",
         licenses = ["notice"],
-        sha256 = "90a8e1603eeca48e7e879f3afbc9560715322985f39a274f6f6070b43f9d06fe",
+        sha256 = "4b8532f63bdc0e0661507f947eb324a954d1dbac631ad19c8aa9a00feed1d863",
     )
 
