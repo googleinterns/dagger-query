@@ -29,7 +29,7 @@ public class InternalSourcesLoader implements SourcesLoader {
     InputStream inputStream = InternalSourcesLoader.class.getResourceAsStream(PATH_TO_BINDING_GRAPH);
 
     if (inputStream == null) {
-      throw new FileNotFoundException("File binding_graph_data.textproto is missed.");
+      throw new FileNotFoundException(String.format("File %s is missed.", PATH_TO_BINDING_GRAPH));
     }
 
     return BindingGraph.parseFrom(inputStream);
