@@ -38,7 +38,6 @@ public class QueryOutputWriter {
    * so method simply writes them one by one.
    */
   public void writeDepsOutput(List<String> dependencies) {
-    printStream.println(String.format("All dependencies:"));
-    dependencies.forEach(dependency -> printStream.println("\t" + dependency));
+    dependencies.forEach(printStream::println);
   }
 }

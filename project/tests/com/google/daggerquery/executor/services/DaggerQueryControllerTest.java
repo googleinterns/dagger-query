@@ -21,7 +21,7 @@ public class DaggerQueryControllerTest {
         /*sourcesLoader =*/ new TestSourcesLoader()
       );
 
-    assertEquals("All dependencies:\n\tcom.google.Cat\n", outputStream.toString());
+    assertEquals("com.google.Cat\n", outputStream.toString());
   }
 
   @Test
