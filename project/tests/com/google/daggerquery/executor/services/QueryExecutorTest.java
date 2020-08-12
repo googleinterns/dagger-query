@@ -73,7 +73,7 @@ public class QueryExecutorTest {
   }
 
   @Test
-  public void testExecutingDepsQuery_WithNullQuery_ThrowsNullPointerException() {
+  public void testExecutingDepsQuery_WithNullQuery_ThrowsIllegalArgumentException() {
     try {
       List<String> queryExecutionResult = new QueryExecutor().executeDepsQuery(
           null,
@@ -81,7 +81,7 @@ public class QueryExecutorTest {
       );
 
       fail();
-    } catch (NullPointerException e) {
+    } catch (IllegalArgumentException e) {
     }
   }
 
@@ -116,10 +116,12 @@ public class QueryExecutorTest {
     ListWithDependencies factoryNodeDeps = ListWithDependencies.newBuilder()
         .addDependency(catNode)
         .build();
+    ListWithDependencies catNodeDeps = ListWithDependencies.newBuilder().build();
 
     return BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
         .putAdjacencyList("com.google.CatsFactory", factoryNodeDeps)
+        .putAdjacencyList("com.google.Cat", catNodeDeps)
         .build();
   }
 }

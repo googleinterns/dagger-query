@@ -41,28 +41,7 @@ public class QueryExecutor {
    */
   public List<String> executeDepsQuery(String sourceNode, BindingGraph bindingGraph) {
     if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
-      // Will check if this node is a valid node in passed binding graph or not.
-      DependencyProto.Dependency targetNode = DependencyProto.Dependency.newBuilder().setTarget(sourceNode).build();
-
-      boolean containsValue;
-      containsValue = bindingGraph.getAdjacencyListMap().values().stream()
-          .map(list -> list.getDependencyList().contains(targetNode))
-          .reduce(false, (a, b) -> a || b);
-
-      /**
-       *  This case appears when user specifies source node which is a leaf in a graph.
-       *
-       *  If node is a leaf, it's not presented in graph as a key,
-       *  because there are no edges which starts in it.
-       *
-       *  However this node is a correct node in graph, so the best solution
-       *  in this situation is to return an empty list with dependencies.
-       */
-      if (containsValue) {
-        return new ArrayList<>();
-      } else {
-        throw new IllegalArgumentException("Specified source node doesn't exist.");
-      }
+      throw new IllegalArgumentException("Specified source node doesn't exist.");
     }
 
     return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
