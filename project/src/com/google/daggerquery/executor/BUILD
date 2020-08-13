@@ -25,5 +25,4 @@ java_binary(
         "//src/com/google/daggerquery/executor/services:query_executor_services",
         "//src/com/google/daggerquery/protobuf:dagger_query_protobuf"
     ],
-    resources = ["//src/com/google/daggerquery:binding_graph_data"],
 )
