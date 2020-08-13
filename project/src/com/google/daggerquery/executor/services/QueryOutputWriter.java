@@ -24,7 +24,7 @@ public class QueryOutputWriter {
 
   /**
    * Creates an instance of {@link QueryOutputWriter} and
-   * associates it with given {@link PrintStream} instance,
+   * associates it with the given {@link PrintStream} instance,
    * where all output will be written.
    */
   public QueryOutputWriter(PrintStream printStream) {
@@ -34,8 +34,8 @@ public class QueryOutputWriter {
   /**
    * Writes an output of execution {@link com.google.daggerquery.executor.models.QueryType}.DEPS query.
    *
-   * <p>An output is an array with all dependencies presented as Strings,
-   * so method simply writes them one by one.
+   * <p>The output is an array with all dependencies presented as Strings,
+   * so this method simply writes them one by one.
    */
   public void writeDepsOutput(List<String> dependencies) {
     dependencies.forEach(printStream::println);

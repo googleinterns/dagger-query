@@ -26,7 +26,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Special class for executing queries by traversing a {@link BindingGraph} instance.
+ * A class for executing queries on a {@link BindingGraph}.
  *
  * <p>Responsible for executing query, which includes finding the result
  * and writing it for user in specified {@link PrintStream} instance.
