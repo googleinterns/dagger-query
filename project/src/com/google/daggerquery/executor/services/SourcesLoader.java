@@ -17,8 +17,23 @@ limitations under the License.
 package com.google.daggerquery.executor.services;
 
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
-public interface SourcesLoader {
-  BindingGraph loadBindingGraph() throws IOException;
+/**
+ * A class which loads a binding graph saved with Dagger SPI plugin.
+ */
+public class SourcesLoader {
+  private static final String PATH_TO_BINDING_GRAPH = "/com/google/daggerquery/binding_graph_data.textproto";
+
+  public BindingGraph loadBindingGraph() throws IOException {
+    InputStream inputStream = SourcesLoader.class.getResourceAsStream(PATH_TO_BINDING_GRAPH);
+
+    if (inputStream == null) {
+      throw new FileNotFoundException(String.format("File %s is missing.", PATH_TO_BINDING_GRAPH));
+    }
+
+    return BindingGraph.parseFrom(inputStream);
+  }
 }

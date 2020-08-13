@@ -19,4 +19,5 @@ package(default_visibility = ["//visibility:public"])
 java_library(
     name = "query_executor_models",
     srcs = glob(["*.java"]),
+    deps = ["//src/com/google/daggerquery/protobuf:dagger_query_protobuf"]
 )

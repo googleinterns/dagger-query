@@ -18,8 +18,8 @@ package(default_visibility = ["//visibility:public"])
 
 java_binary(
     name = "query_executor",
-    srcs = ["QueryExecutorMain.java"],
-    main_class = "com.google.daggerquery.executor.QueryExecutorMain",
+    srcs = ["QueryExecutor.java"],
+    main_class = "com.google.daggerquery.executor.QueryExecutor",
     deps = [
         "//src/com/google/daggerquery/executor/models:query_executor_models",
         "//src/com/google/daggerquery/executor/services:query_executor_services",

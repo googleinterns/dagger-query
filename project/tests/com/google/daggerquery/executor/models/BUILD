@@ -15,23 +15,13 @@
 load("@rules_java//java:defs.bzl", "java_test")
 
 java_test(
-    name = "QueryTypeTest",
-    size = "small",
-    srcs = ["QueryTypeTest.java"],
-    test_class = "com.google.daggerquery.executor.models.QueryTypeTest",
-    deps = [
-        "//src/com/google/daggerquery/executor/models:query_executor_models",
-        "//third_party/java/junit:junit",
-    ],
-)
-
-java_test(
     name = "QueryTest",
     size = "small",
     srcs = ["QueryTest.java"],
     test_class = "com.google.daggerquery.executor.models.QueryTest",
     deps = [
         "//src/com/google/daggerquery/executor/models:query_executor_models",
+        "//src/com/google/daggerquery/protobuf:dagger_query_protobuf",
         "//third_party/java/junit:junit",
     ],
 )
