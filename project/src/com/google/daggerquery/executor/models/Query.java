@@ -32,7 +32,7 @@ import static java.util.stream.Collectors.toList;
  * <p>Each query has a String {@code name} value.
  *
  * <p>Also each query contains parameters which were passed by user.
- * The number of parameters completely defined by query's name.
+ * The number of parameters is completely defined by the query's name.
  */
 public class Query {
   /**

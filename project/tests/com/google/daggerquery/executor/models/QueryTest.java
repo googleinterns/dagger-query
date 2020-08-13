@@ -108,7 +108,7 @@ public class QueryTest {
   }
 
   /*
-   * Makes a simple non-cycled binding graph with the following structure:
+   * Makes a simple acyclic binding graph with the following structure:
    *
    * com.google.Component --> com.google.CatsFactory --> com.google.Cat
    * com.google.Component --> com.google.Helper

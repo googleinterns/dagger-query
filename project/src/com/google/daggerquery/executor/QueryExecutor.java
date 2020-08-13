@@ -39,7 +39,7 @@ public class QueryExecutor {
 
     try {
       if (args.length == 0) {
-        throw new IllegalArgumentException("You might forgot to specify the request and its parameters.");
+        throw new IllegalArgumentException("You did not specify the request and its parameters.");
       }
 
       Query query = new Query(args[0], Arrays.copyOfRange(args, 1, args.length));
