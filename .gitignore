@@ -8,6 +8,3 @@ out/
 
 # Bazel Plugin for IntelliJ IDEA
 */.ijwb
-
-# Protocol buffers
-# *autogen

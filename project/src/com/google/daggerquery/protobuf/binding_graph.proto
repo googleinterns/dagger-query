@@ -17,7 +17,7 @@ limitations under the License.
 syntax = "proto3";
 package dagerquery.models;
 
-import "com/google/daggerquery/protobuf/dependency.proto";
+import "src/com/google/daggerquery/protobuf/dependency.proto";
 
 option java_package = "com.google.daggerquery.protobuf.autogen";
 option java_outer_classname = "BindingGraphProto";
