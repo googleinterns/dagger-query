@@ -17,12 +17,14 @@ limitations under the License.
 package com.google.daggerquery.executor.models;
 
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
-import com.google.daggerquery.protobuf.autogen.DependencyProto;
+import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,13 +37,18 @@ import static java.util.stream.Collectors.toList;
  * The number of parameters is completely defined by the query's name.
  */
 public class Query {
+
+  private final static String DEPS_QUERY_NAME = "deps";
+  private final static String ALLPATHS_QUERY_NAME = "allpaths";
+
   /**
    * The key is the name of supported query and the value is the number of parameters,
    * required by query with such name.
    */
   private final static Map<String, Integer> supportedQueries = new HashMap<String, Integer>() {
     {
-      put("deps", 1);
+      put(DEPS_QUERY_NAME, 1);
+      put(ALLPATHS_QUERY_NAME, 2);
     }
   };
 
@@ -83,16 +90,52 @@ public class Query {
    * <p>For `deps` queries each string represent exactly one dependency.
    */
   public List<String> execute(BindingGraph bindingGraph) {
-    if (name.equals("deps")) {
-      String sourceNode = parameters[0];
-      if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
-        throw new IllegalArgumentException("Specified source node doesn't exist.");
-      }
+    String source = parameters[0];
 
-      return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
-          .stream().map(DependencyProto.Dependency::getTarget).sorted().collect(toList());
+    if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
+      throw new IllegalArgumentException("Specified source node doesn't exist.");
+    }
+
+    switch (name) {
+      case DEPS_QUERY_NAME:
+        return bindingGraph.getAdjacencyListMap().get(source).getDependencyList()
+            .stream().map(Dependency::getTarget).sorted().collect(toList());
+
+      case ALLPATHS_QUERY_NAME:
+        String target = parameters[1];
+        Set<String> visitedNodes = new HashSet<>();
+        List<List<String>> result = new ArrayList<>();
+        List<String> path = new ArrayList<>();
+
+        findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
+        return result.stream().map(list -> String.join(" -> ", list)).collect(toList());
     }
 
     throw new NotImplementedException();
+  }
+
+  private void findAllPaths(String source, String target, List<String> path, BindingGraph bindingGraph,
+                            Set<String> visitedNodes, List<List<String>> allPaths) {
+    path.add(source);
+
+    // If we've already found a path from `source` to `target`, we can stop and not go deeper.
+    if (source.equals(target)) {
+      allPaths.add(new ArrayList<>(path));
+      path.remove(source);
+      return;
+    }
+
+    visitedNodes.add(source);
+    System.out.println(String.format("Visiting %s", source));
+    for (Dependency nextNode: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
+      if (visitedNodes.contains(nextNode.getTarget())) {
+        continue;
+      }
+
+      findAllPaths(nextNode.getTarget(), target, path, bindingGraph, visitedNodes, allPaths);
+    }
+
+    visitedNodes.remove(source);
+    path.remove(source);
   }
 }
