@@ -86,8 +86,14 @@ public class Query {
   /**
    * Executes query on a {@link BindingGraph}.
    *
-   * <p>For all queries return a list with string. Strings content depends on a query name.
-   * <p>For `deps` queries each string represent exactly one dependency.
+   * <p>For all queries return a list with strings. Strings content depends on a query name.
+   *
+   * <ul>
+   * <li>For `deps` query each string represent exactly one dependency.
+   * <li>For `allpaths` query each string contains a path between {@code source} and {@code target} nodes.
+   * The connection between nodes is shown with construction '->'. For example, one of the possible paths
+   * may look like this: "com.google.First -> com.google.Second -> com.google.Third".
+   * </ul>
    */
   public List<String> execute(BindingGraph bindingGraph) {
     String source = parameters[0];
@@ -114,6 +120,16 @@ public class Query {
     throw new NotImplementedException();
   }
 
+  /**
+   * Traverses a {@link BindingGraph} starting from {@code source} node.
+   *
+   * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops. Constructs a {@code path} which is
+   * an instance of {@link List<String>}. At each recursive level this variable contains a correct path in a graph from
+   * some root node which was passed in the first call and {@code target} node which is the same for all calls.
+   *
+   * <p>As the result fills provided {@link List<List<String>>} {@code allPaths} with all possible paths between
+   * root and target nodes.
+   */
   private void findAllPaths(String source, String target, List<String> path, BindingGraph bindingGraph,
                             Set<String> visitedNodes, List<List<String>> allPaths) {
     path.add(source);
@@ -126,7 +142,6 @@ public class Query {
     }
 
     visitedNodes.add(source);
-    System.out.println(String.format("Visiting %s", source));
     for (Dependency nextNode: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
       if (visitedNodes.contains(nextNode.getTarget())) {
         continue;
