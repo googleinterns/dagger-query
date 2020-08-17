@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.google.daggerquery.executor.models;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -45,12 +46,10 @@ public class Query {
    * The key is the name of supported query and the value is the number of parameters,
    * required by query with such name.
    */
-  private final static Map<String, Integer> supportedQueries = new HashMap<String, Integer>() {
-    {
-      put(DEPS_QUERY_NAME, 1);
-      put(ALLPATHS_QUERY_NAME, 2);
-    }
-  };
+  private final static ImmutableMap<String, Integer> supportedQueries = ImmutableMap.<String, Integer>builder()
+      .put(DEPS_QUERY_NAME, 1)
+      .put(ALLPATHS_QUERY_NAME, 2)
+      .build();
 
   private String name;
   private String[] parameters;
