@@ -215,7 +215,7 @@ public class QueryTest {
         .addDependency(factoryNode)
         .addDependency(helperNode)
         .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies factoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+    BindingGraphProto.BindingGraph.ListWithDependencies catsFactoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .addDependency(catNode)
         .build();
     BindingGraphProto.BindingGraph.ListWithDependencies catNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
@@ -225,7 +225,7 @@ public class QueryTest {
 
     return BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
-        .putAdjacencyList("com.google.CatsFactory", factoryNodeDeps)
+        .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
         .putAdjacencyList("com.google.Helper", helperNodeDeps)
         .build();
@@ -251,7 +251,7 @@ public class QueryTest {
         .addDependency(catNode)
         .addDependency(detailsNode)
         .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies factoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+    BindingGraphProto.BindingGraph.ListWithDependencies catsFactoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .addDependency(catNode)
         .build();
     BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
@@ -265,7 +265,7 @@ public class QueryTest {
 
     return BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
-        .putAdjacencyList("com.google.CatsFactory", factoryNodeDeps)
+        .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Helper", helperNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
         .putAdjacencyList("com.google.Details", detailsNodeDeps)

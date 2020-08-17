@@ -86,12 +86,12 @@ public class Query {
   /**
    * Executes query on a {@link BindingGraph}.
    *
-   * <p>For all queries return a list with strings. Strings content depends on a query name.
+   * <p>For all queries return a list with strings. The content of the strings depends on a query name.
    *
    * <ul>
-   * <li>For `deps` query each string represent exactly one dependency.
+   * <li>For `deps` query each string represents exactly one dependency.
    * <li>For `allpaths` query each string contains a path between {@code source} and {@code target} nodes.
-   * The connection between nodes is shown with construction '->'. For example, one of the possible paths
+   * The connection between nodes is shown with the construction '->'. For example, one of the possible paths
    * may look like this: "com.google.First -> com.google.Second -> com.google.Third".
    * </ul>
    */
