@@ -28,12 +28,12 @@ import java.util.List;
 
 public class QueryTest {
 
-  // Tests for `DEPS` query
-
   @Test(expected = NullPointerException.class)
   public void testParsingQuery_WithNullQueryTypeName_ThrowsNullPointerException() {
     Query query = new Query(/*typeName = */ null, "com.google.cats.Cat");
   }
+
+  // Tests for `DEPS` query
 
   @Test(expected = IllegalArgumentException.class)
   public void testParsingDepsQuery_WithTwoStringParameters_ThrowsIllegalArgumentException() {
