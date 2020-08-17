@@ -21,6 +21,6 @@ java_library(
     srcs = glob(["*.java"]),
     deps = [
         "//src/com/google/daggerquery/executor/models:query_executor_models",
-        "//src/com/google/daggerquery/protobuf:dagger_query_protobuf",
+        "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
     ]
 )
