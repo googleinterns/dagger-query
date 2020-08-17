@@ -16,16 +16,17 @@ limitations under the License.
 
 package com.google.daggerquery.executor.models;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -114,34 +115,65 @@ public class Query {
 
         String target = parameters[1];
         Set<String> visitedNodes = new HashSet<>();
-        List<List<String>> result = new ArrayList<>();
-        List<String> path = new ArrayList<>();
+        ImmutableList.Builder<Path> result = new ImmutableList.Builder<>();
+        Path path = new Path<>();
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
-        return result.stream().map(list -> String.join(" -> ", list)).collect(toList());
+        return result.build().stream().map(Path::toString).collect(toList());
     }
 
     throw new NotImplementedException();
   }
 
   /**
+   * Represents a path between nodes of type {@code NodeT}.
+   *
+   * <p>Supports operations of adding a new node to the back and removing the last node.
+   *
+   * <p>Uses delimiter '->' for constructing the string representation of all data.
+   */
+  private class Path<NodeT> {
+    private Deque<NodeT> nodesDeque = new ArrayDeque<>();
+
+    Path() {
+    }
+
+    Path(Path<NodeT> path) {
+      nodesDeque = new ArrayDeque<>(path.nodesDeque);
+    }
+
+    void addLast(NodeT element) {
+      nodesDeque.addLast(element);
+    }
+
+    NodeT removeLast() {
+      return nodesDeque.removeLast();
+    }
+
+    @Override
+    public String toString() {
+      return String.join(" -> ", nodesDeque.stream().map(NodeT::toString).collect(Collectors.toList()));
+    }
+  }
+
+  /**
    * Traverses a {@link BindingGraph} starting from {@code source} node.
    *
    * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops. Constructs a {@code path} which is
-   * an instance of {@link List<String>}. At each recursive level this variable contains a correct path in a graph from
+   * an instance of {@link Path<String>}. At each recursive level this variable contains a correct path in a graph from
    * some root node which was passed in the first call and {@code target} node which is the same for all calls.
    *
-   * <p>As the result fills provided {@link List<List<String>>} {@code allPaths} with all possible paths between
+   * <p>As the result fills provided {@link ImmutableList.Builder<Path>} {@code allPaths} with all possible paths between
    * root and target nodes.
    */
-  private void findAllPaths(String source, String target, List<String> path, BindingGraph bindingGraph,
-                            Set<String> visitedNodes, List<List<String>> allPaths) {
-    path.add(source);
+  private void findAllPaths(String source, String target, Path path, BindingGraph bindingGraph,
+                            Set<String> visitedNodes, ImmutableList.Builder<Path> allPaths) {
+    path.addLast(source);
 
     // If we've already found a path from `source` to `target`, we can stop and not go deeper.
     if (source.equals(target)) {
-      allPaths.add(new ArrayList<>(path));
-      path.remove(source);
+      allPaths.add(new Path<>(path));
+      path.removeLast();
       return;
     }
 
@@ -155,6 +187,6 @@ public class Query {
     }
 
     visitedNodes.remove(source);
-    path.remove(source);
+    path.removeLast();
   }
 }
