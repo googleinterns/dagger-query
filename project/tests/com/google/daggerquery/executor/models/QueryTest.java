@@ -18,8 +18,8 @@ package com.google.daggerquery.executor.models;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.assertTrue;
+import com.google.common.collect.Lists;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.DependencyProto;
 import org.junit.Test;
@@ -32,6 +32,8 @@ public class QueryTest {
   public void testParsingQuery_WithNullQueryTypeName_ThrowsNullPointerException() {
     Query query = new Query(/*typeName = */ null, "com.google.cats.Cat");
   }
+
+  // Tests for `DEPS` query
 
   @Test(expected = IllegalArgumentException.class)
   public void testParsingDepsQuery_WithTwoStringParameters_ThrowsIllegalArgumentException() {
@@ -107,6 +109,99 @@ public class QueryTest {
     query.execute(null);
   }
 
+  // Tests for `ALLPATHS` query
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingAllPathsQuery_WithOneStringParameter_ThrowsIllegalArgumentException() {
+    Query query = new Query("allpaths", "com.google.cats.Cat");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingAllPathsQuery_WithoutParameters_ThrowsIllegalArgumentException() {
+    Query query = new Query("allpaths");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testParsingAllPathsQuery_WithNullParameters_ThrowsNullPointerException() {
+    Query query = new Query("allpaths", /*parameters = */ null);
+  }
+
+  @Test
+  public void testExecutingAllPathsQuery_WithCapitalizedName_WhenResultContainsOnePathWithTwoNodes() {
+    String[] parameters = {"com.google.Cat", "com.google.Details"};
+    Query query = new Query("ALLpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    String[] expectedOutput = {"com.google.Cat -> com.google.Details"};
+    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+  }
+
+  @Test
+  public void testExecutingAllPathsQuery_WhenResultContainsOnePathWithThreeNodes() {
+    String[] parameters = {"com.google.CatsFactory", "com.google.Details"};
+    Query query = new Query("allpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    String[] expectedOutput = {"com.google.CatsFactory -> com.google.Cat -> com.google.Details"};
+    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+  }
+
+  @Test
+  public void testExecutingAllPathsQuery_WhenResultContainsMultiplePaths() {
+    String[] parameters = {"com.google.Component", "com.google.Details"};
+    Query query = new Query("allpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    List<String> expectedOutput = Lists.newArrayList(
+        "com.google.Component -> com.google.Details",
+        "com.google.Component -> com.google.Cat -> com.google.Details",
+        "com.google.Component -> com.google.CatsFactory -> com.google.Cat -> com.google.Details",
+        "com.google.Component -> com.google.Helper -> com.google.CatsFactory -> com.google.Cat -> com.google.Details"
+    );
+
+    assertTrue(expectedOutput.size() == queryExecutionResult.size());
+    assertTrue(queryExecutionResult.containsAll(expectedOutput) && expectedOutput.containsAll(queryExecutionResult));
+  }
+
+  @Test
+  public void testExecutingAllPathsQuery_WithLeafAsSourceNode() {
+    String[] parameters = {"com.google.Details", "com.google.Component"};
+    Query query = new Query("allpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    assertEquals(0, queryExecutionResult.size());
+  }
+
+  @Test
+  public void testExecutingAllPathsQuery_WhenThereIsNoPaths() {
+    String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
+    Query query = new Query("allpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    assertEquals(0, queryExecutionResult.size());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingAllPathssQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.Kitten", "com.google.Details"};
+    Query query = new Query("allpaths", parameters);
+
+    query.execute(makeSimpleBindingGraph());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testExecutingAllPathsQuery_WithNullBindingGraph_ThrowsNullPointerException() {
+    String[] parameters = {"com.google.Component", "com.google.Details"};
+    Query query = new Query("allpaths", parameters);
+
+    query.execute(null);
+  }
+
   /*
    * Makes a simple acyclic binding graph with the following structure:
    *
@@ -122,15 +217,60 @@ public class QueryTest {
         .addDependency(factoryNode)
         .addDependency(helperNode)
         .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies factoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+    BindingGraphProto.BindingGraph.ListWithDependencies catsFactoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .addDependency(catNode)
         .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies catNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder().build();
+    BindingGraphProto.BindingGraph.ListWithDependencies catNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .build();
+    BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .build();
 
     return BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
-        .putAdjacencyList("com.google.CatsFactory", factoryNodeDeps)
+        .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
+        .putAdjacencyList("com.google.Helper", helperNodeDeps)
+        .build();
+  }
+
+  /*
+   * Makes an acyclic binding graph with multiple paths between nodes with the following structure:
+   *
+   * com.google.Component --> com.google.CatsFactory --> com.google.Cat --> com.google.Details
+   * com.google.Component --> com.google.Helper --> com.google.CatsFactory --> com.google.Cat --> com.google.Details
+   * com.google.Component --> com.google.Cat --> com.google.Details
+   * com.google.Component --> com.google.Details
+   */
+  private BindingGraphProto.BindingGraph makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
+    DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
+    DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
+    DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
+    DependencyProto.Dependency detailsNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Details").build();
+
+    BindingGraphProto.BindingGraph.ListWithDependencies componentNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .addDependency(factoryNode)
+        .addDependency(helperNode)
+        .addDependency(catNode)
+        .addDependency(detailsNode)
+        .build();
+    BindingGraphProto.BindingGraph.ListWithDependencies catsFactoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .addDependency(catNode)
+        .build();
+    BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .addDependency(factoryNode)
+        .build();
+    BindingGraphProto.BindingGraph.ListWithDependencies catNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .addDependency(detailsNode)
+        .build();
+    BindingGraphProto.BindingGraph.ListWithDependencies detailsNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
+        .build();
+
+    return BindingGraphProto.BindingGraph.newBuilder()
+        .putAdjacencyList("com.google.Component", componentNodeDeps)
+        .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
+        .putAdjacencyList("com.google.Helper", helperNodeDeps)
+        .putAdjacencyList("com.google.Cat", catNodeDeps)
+        .putAdjacencyList("com.google.Details", detailsNodeDeps)
         .build();
   }
 }

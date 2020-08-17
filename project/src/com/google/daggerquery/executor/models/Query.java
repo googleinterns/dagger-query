@@ -16,13 +16,17 @@ limitations under the License.
 
 package com.google.daggerquery.executor.models;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
-import com.google.daggerquery.protobuf.autogen.DependencyProto;
+import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.HashMap;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,15 +39,18 @@ import static java.util.stream.Collectors.toList;
  * The number of parameters is completely defined by the query's name.
  */
 public class Query {
+
+  private final static String DEPS_QUERY_NAME = "deps";
+  private final static String ALLPATHS_QUERY_NAME = "allpaths";
+
   /**
    * The key is the name of supported query and the value is the number of parameters,
    * required by query with such name.
    */
-  private final static Map<String, Integer> supportedQueries = new HashMap<String, Integer>() {
-    {
-      put("deps", 1);
-    }
-  };
+  private final static ImmutableMap<String, Integer> supportedQueries = ImmutableMap.<String, Integer>builder()
+      .put(DEPS_QUERY_NAME, 1)
+      .put(ALLPATHS_QUERY_NAME, 2)
+      .build();
 
   private String name;
   private String[] parameters;
@@ -79,20 +86,107 @@ public class Query {
   /**
    * Executes query on a {@link BindingGraph}.
    *
-   * <p>For all queries return a list with string. Strings content depends on a query name.
-   * <p>For `deps` queries each string represent exactly one dependency.
+   * <p>For all queries return a list with strings. The content of the strings depends on a query name.
+   *
+   * <ul>
+   * <li>For `deps` query each string represents exactly one dependency.
+   * <li>For `allpaths` query each string contains a path between {@code source} and {@code target} nodes.
+   * The connection between nodes is shown with the construction '->'. For example, one of the possible paths
+   * may look like this: "com.google.First -> com.google.Second -> com.google.Third".
+   * </ul>
    */
   public List<String> execute(BindingGraph bindingGraph) {
-    if (name.equals("deps")) {
-      String sourceNode = parameters[0];
-      if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
-        throw new IllegalArgumentException("Specified source node doesn't exist.");
-      }
+    switch (name) {
+      case DEPS_QUERY_NAME:
+        String sourceNode = parameters[0];
 
-      return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
-          .stream().map(DependencyProto.Dependency::getTarget).sorted().collect(toList());
+        if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
+          throw new IllegalArgumentException("Specified source node doesn't exist.");
+        }
+
+        return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
+            .stream().map(Dependency::getTarget).sorted().collect(toList());
+      case ALLPATHS_QUERY_NAME:
+        String source = parameters[0];
+
+        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
+          throw new IllegalArgumentException("Specified source node doesn't exist.");
+        }
+
+        String target = parameters[1];
+        Set<String> visitedNodes = new HashSet<>();
+        ImmutableList.Builder<Path> result = new ImmutableList.Builder<>();
+        Path path = new Path<>();
+
+        findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
+        return result.build().stream().map(Path::toString).collect(toList());
     }
 
     throw new NotImplementedException();
+  }
+
+  /**
+   * Represents a path between nodes of type {@code NodeT}.
+   *
+   * <p>Supports operations of adding a new node to the back and removing the last node.
+   *
+   * <p>Uses delimiter '->' for constructing the string representation of all data.
+   */
+  private static class Path<NodeT> {
+    private Deque<NodeT> nodesDeque = new ArrayDeque<>();
+
+    Path() {
+    }
+
+    Path(Path<NodeT> path) {
+      nodesDeque = new ArrayDeque<>(path.nodesDeque);
+    }
+
+    void addLast(NodeT element) {
+      nodesDeque.addLast(element);
+    }
+
+    NodeT removeLast() {
+      return nodesDeque.removeLast();
+    }
+
+    @Override
+    public String toString() {
+      return String.join(" -> ", nodesDeque.stream().map(NodeT::toString).collect(Collectors.toList()));
+    }
+  }
+
+  /**
+   * Traverses a {@link BindingGraph} starting from {@code source} node.
+   *
+   * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops. Constructs a {@code path} which is
+   * an instance of {@link Path<String>}. At each recursive level this variable contains a correct path in a graph from
+   * some root node which was passed in the first call and {@code target} node which is the same for all calls.
+   *
+   * <p>As the result fills provided {@link ImmutableList.Builder<Path>} {@code allPaths} with all possible paths between
+   * root and target nodes.
+   */
+  private void findAllPaths(String source, String target, Path path, BindingGraph bindingGraph,
+                            Set<String> visitedNodes, ImmutableList.Builder<Path> allPaths) {
+    path.addLast(source);
+
+    // If we've already found a path from `source` to `target`, we can stop and not go deeper.
+    if (source.equals(target)) {
+      allPaths.add(new Path<>(path));
+      path.removeLast();
+      return;
+    }
+
+    visitedNodes.add(source);
+    for (Dependency nextNode: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
+      if (visitedNodes.contains(nextNode.getTarget())) {
+        continue;
+      }
+
+      findAllPaths(nextNode.getTarget(), target, path, bindingGraph, visitedNodes, allPaths);
+    }
+
+    visitedNodes.remove(source);
+    path.removeLast();
   }
 }
