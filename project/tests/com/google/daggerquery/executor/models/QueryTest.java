@@ -18,8 +18,8 @@ package com.google.daggerquery.executor.models;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.assertTrue;
+import com.google.common.collect.Lists;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.DependencyProto;
 import org.junit.Test;
@@ -155,13 +155,15 @@ public class QueryTest {
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
 
-    String[] expectedOutput = {
-        "com.google.Component -> com.google.CatsFactory -> com.google.Cat -> com.google.Details",
-        "com.google.Component -> com.google.Helper -> com.google.CatsFactory -> com.google.Cat -> com.google.Details",
+    List<String> expectedOutput = Lists.newArrayList(
+        "com.google.Component -> com.google.Details",
         "com.google.Component -> com.google.Cat -> com.google.Details",
-        "com.google.Component -> com.google.Details"
-    };
-    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+        "com.google.Component -> com.google.CatsFactory -> com.google.Cat -> com.google.Details",
+        "com.google.Component -> com.google.Helper -> com.google.CatsFactory -> com.google.Cat -> com.google.Details"
+    );
+
+    assertTrue(expectedOutput.size() == queryExecutionResult.size());
+    assertTrue(queryExecutionResult.containsAll(expectedOutput) && expectedOutput.containsAll(queryExecutionResult));
   }
 
   @Test
