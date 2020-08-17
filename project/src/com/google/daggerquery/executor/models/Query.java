@@ -95,18 +95,23 @@ public class Query {
    * </ul>
    */
   public List<String> execute(BindingGraph bindingGraph) {
-    String source = parameters[0];
-
-    if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-      throw new IllegalArgumentException("Specified source node doesn't exist.");
-    }
-
     switch (name) {
       case DEPS_QUERY_NAME:
-        return bindingGraph.getAdjacencyListMap().get(source).getDependencyList()
-            .stream().map(Dependency::getTarget).sorted().collect(toList());
+        String sourceNode = parameters[0];
 
+        if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
+          throw new IllegalArgumentException("Specified source node doesn't exist.");
+        }
+
+        return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
+            .stream().map(Dependency::getTarget).sorted().collect(toList());
       case ALLPATHS_QUERY_NAME:
+        String source = parameters[0];
+
+        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
+          throw new IllegalArgumentException("Specified source node doesn't exist.");
+        }
+
         String target = parameters[1];
         Set<String> visitedNodes = new HashSet<>();
         List<List<String>> result = new ArrayList<>();
