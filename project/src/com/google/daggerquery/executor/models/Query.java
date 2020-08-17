@@ -132,7 +132,7 @@ public class Query {
    *
    * <p>Uses delimiter '->' for constructing the string representation of all data.
    */
-  private class Path<NodeT> {
+  private static class Path<NodeT> {
     private Deque<NodeT> nodesDeque = new ArrayDeque<>();
 
     Path() {
