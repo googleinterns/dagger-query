@@ -20,7 +20,6 @@ import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 /**
  * A class which loads a binding graph saved with Dagger SPI plugin.
@@ -29,13 +28,12 @@ public class SourcesLoader {
   private static final String PATH_TO_BINDING_GRAPH = "/com/google/daggerquery/binding_graph_data.textproto";
 
   public BindingGraph loadBindingGraph() throws IOException {
-    try (InputStream inputStream = SourcesLoader.class.getResourceAsStream(PATH_TO_BINDING_GRAPH))  {
-      if (inputStream == null) {
-        throw new FileNotFoundException(String.format("File %s is missing.", PATH_TO_BINDING_GRAPH));
-      }
+    InputStream inputStream = SourcesLoader.class.getResourceAsStream(PATH_TO_BINDING_GRAPH);
 
-      int sizeOfBindingGraph = ByteBuffer.wrap(inputStream.readNBytes(4)).getInt();
-      return BindingGraph.parseFrom(inputStream.readNBytes(sizeOfBindingGraph));
+    if (inputStream == null) {
+      throw new FileNotFoundException(String.format("File %s is missing.", PATH_TO_BINDING_GRAPH));
     }
+
+    return BindingGraph.parseFrom(inputStream);
   }
 }

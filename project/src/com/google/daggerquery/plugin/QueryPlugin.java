@@ -25,7 +25,6 @@ import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 
@@ -46,10 +45,9 @@ public class QueryPlugin implements BindingGraphPlugin {
         .makeBindingGraphProto(bindingGraph.rootComponentNode(), bindingGraph.network());
 
     try {
-      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", "binding_graph.textproto");
+      String fileName = bindingGraph.rootComponentNode().componentPath().rootComponent().getSimpleName().toString();
+      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", String.format("%s.textproto", fileName));
       try (OutputStream outputStream = sourceFile.openOutputStream()) {
-        byte[] bindingGraphSize = ByteBuffer.allocate(4).putInt(bindingGraphProto.toByteArray().length).array();
-        outputStream.write(bindingGraphSize);
         bindingGraphProto.writeTo(outputStream);
       }
     } catch (IOException e) {

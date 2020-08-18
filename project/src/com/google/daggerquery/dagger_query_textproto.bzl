@@ -25,7 +25,7 @@ def _dagger_query_textproto_impl(ctx):
     ctx.actions.run_shell(
         inputs = src_jars,
         outputs = [ctx.outputs.out],
-        command = "touch {out}; unzip {src_jar}; for FILE in *.textproto; do cat $FILE >> {out}; done".format(
+        command = "unzip {src_jar} '*.textproto' -d .; zip -R {out} '*.textproto'".format(
             src_jar = src_jars[0].path,
             out = ctx.outputs.out.path,
         ),
@@ -39,7 +39,7 @@ _dagger_query_textproto = rule(
         ),
     },
     outputs = {
-        "out": "%{name}.textproto",
+        "out": "%{name}.zip",
     },
     implementation = _dagger_query_textproto_impl,
 )
