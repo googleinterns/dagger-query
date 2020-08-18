@@ -25,7 +25,7 @@ def _dagger_query_textproto_impl(ctx):
     ctx.actions.run_shell(
         inputs = src_jars,
         outputs = [ctx.outputs.out],
-        command = "unzip {src_jar} '*.textproto' -d .; zip -R {out} '*.textproto'".format(
+        command = "unzip {src_jar} '*.textproto' -d .; zip {out} '*.textproto'".format(
             src_jar = src_jars[0].path,
             out = ctx.outputs.out.path,
         ),
