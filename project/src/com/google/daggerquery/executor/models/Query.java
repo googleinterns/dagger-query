@@ -65,8 +65,8 @@ public class Query {
    * <p>Checks that passed arguments are correct and not {@code null}. The {@code parameters} argument is
    * correct when its length equals to the value in {@code supportedQueries}.
    *
-   * <p>Throws {@link IllegalArgumentException} if number of parameters is invalid or query's name is invalid.
-   * Throws {@link NullPointerException} if any of arguments are equal to {@code null}.
+   * @throws IllegalArgumentException if number of parameters is invalid or query's name is invalid
+   * @throws NullPointerException if any of arguments are equal to {@code null}
    */
   public Query(String typeName, String... parameters) {
     if (typeName == null || parameters == null) {
@@ -98,6 +98,8 @@ public class Query {
    * The connection between nodes is shown with the construction '->'. For example, one of the possible paths
    * may look like this: "com.google.First -> com.google.Second -> com.google.Third".
    * </ul>
+   *
+   * @throws IllegalArgumentException if specified source node doesn't exist
    */
   public List<String> execute(BindingGraph bindingGraph) {
     switch (name) {
@@ -105,7 +107,7 @@ public class Query {
         String source = parameters[0];
 
         if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-          throw new IllegalArgumentException("Specified source node doesn't exist.");
+          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
         }
 
         return bindingGraph.getAdjacencyListMap().get(source).getDependencyList()
@@ -115,7 +117,7 @@ public class Query {
         String source = parameters[0];
 
         if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-          throw new IllegalArgumentException("Specified source node doesn't exist.");
+          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
         }
 
         String target = parameters[1];
@@ -189,7 +191,7 @@ public class Query {
   }
 
   /**
-   * Traverses a {@link BindingGraph} starting from {@code source} node.
+   * Traverses a {@link BindingGraph} starting from {@code source} node to find all paths between nodes.
    *
    * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops. Constructs a {@code path} which is
    * an instance of {@link Path<String>}. At each recursive level this variable contains a correct path in a graph from
