@@ -38,6 +38,15 @@ public class QueryPlugin implements BindingGraphPlugin {
     this.filer = filer;
   }
 
+  /**
+   * This method is called once for each binding graph presented in the app.
+   *
+   * <p>Converts given {@link BindingGraph} into <a href="https://en.wikipedia.org/wiki/Adjacency_list">adjacency list</a>
+   * and serializes it via <a href="https://developers.google.com/protocol-buffers">protocol buffers library</a>.
+   *
+   * <p>Saves each binding graph into a separate file. The file names are constructed from a simple name of a
+   * root component of a graph and extension .textproto.
+   */
   @Override
   public void visitGraph(BindingGraph bindingGraph, DiagnosticReporter diagnosticReporter) {
     BindingGraphProto.BindingGraph bindingGraphProto = new GraphConverter<BindingGraph.Node, BindingGraph.Edge>()
