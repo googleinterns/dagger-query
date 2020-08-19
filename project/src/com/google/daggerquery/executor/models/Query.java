@@ -101,7 +101,7 @@ public class Query {
         String sourceNode = parameters[0];
 
         if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
-          throw new IllegalArgumentException("Specified source node doesn't exist.");
+          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", sourceNode));
         }
 
         return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
@@ -110,7 +110,7 @@ public class Query {
         String source = parameters[0];
 
         if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-          throw new IllegalArgumentException("Specified source node doesn't exist.");
+          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
         }
 
         String target = parameters[1];
