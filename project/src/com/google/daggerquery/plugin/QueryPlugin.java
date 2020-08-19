@@ -46,7 +46,7 @@ public class QueryPlugin implements BindingGraphPlugin {
 
     try {
       String fileName = bindingGraph.rootComponentNode().componentPath().rootComponent().getSimpleName().toString();
-      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", String.format("%s.textproto", fileName));
+      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", String.format("%s_graph.textproto", fileName));
       try (OutputStream outputStream = sourceFile.openOutputStream()) {
         bindingGraphProto.writeTo(outputStream);
       }
