@@ -24,6 +24,7 @@ import dagger.spi.DiagnosticReporter;
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 
@@ -53,8 +54,11 @@ public class QueryPlugin implements BindingGraphPlugin {
         .makeBindingGraphProto(bindingGraph.rootComponentNode(), bindingGraph.network());
 
     try {
-      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", "binding_graph.textproto");
-      bindingGraphProto.writeTo(sourceFile.openOutputStream());
+      String fileName = bindingGraph.rootComponentNode().componentPath().rootComponent().getSimpleName().toString();
+      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", String.format("%s_graph.textproto", fileName));
+      try (OutputStream outputStream = sourceFile.openOutputStream()) {
+        bindingGraphProto.writeTo(outputStream);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
