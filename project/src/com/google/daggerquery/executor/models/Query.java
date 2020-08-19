@@ -23,6 +23,7 @@ import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -141,7 +142,7 @@ public class Query {
           return new ArrayList<>();
         }
 
-        return List.of(path.toString());
+        return Arrays.asList(path.toString());
       }
     }
 
