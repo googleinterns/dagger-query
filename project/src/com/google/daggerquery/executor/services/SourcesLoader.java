@@ -16,24 +16,73 @@ limitations under the License.
 
 package com.google.daggerquery.executor.services;
 
+import com.google.common.io.Files;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * A class which loads a binding graph saved with Dagger SPI plugin.
  */
 public class SourcesLoader {
-  private static final String PATH_TO_BINDING_GRAPH = "/com/google/daggerquery/binding_graph_data.textproto";
+  private static final String PATH_TO_BINDING_GRAPHS = "/com/google/daggerquery/binding_graph_data.zip";
+  private static final String BINDING_GRAPHS_SOURCES = "binding_graphs.bin";
 
-  public BindingGraph loadBindingGraph() throws IOException {
-    InputStream inputStream = SourcesLoader.class.getResourceAsStream(PATH_TO_BINDING_GRAPH);
+  /**
+   * Reads .zip resource file which contains several .textproto files with serialized binding graphs.
+   *
+   * <p>Returns a list with {@link BindingGraph} instances. Parses them from files located in .zip file.
+   *
+   * @throws FileNotFoundException if an app with the connected plugin wasn't launched and .zip file cannot be found
+   * @throws IOException if an I/O error occurred while extracting files from .zip file
+   */
+  public List<BindingGraph> loadBindingGraphs() throws IOException {
+    try (InputStream zipInputStream = SourcesLoader.class.getResourceAsStream(PATH_TO_BINDING_GRAPHS)) {
+      if (zipInputStream == null) {
+        throw new FileNotFoundException(String.format("File %s is missing.", PATH_TO_BINDING_GRAPHS));
+      }
 
-    if (inputStream == null) {
-      throw new FileNotFoundException(String.format("File %s is missing.", PATH_TO_BINDING_GRAPH));
+      ZipFile zipFile = makeZipFileFromInputStream(zipInputStream);
+      Enumeration<? extends ZipEntry> filesWithBindingGraphs = zipFile.entries();
+
+      List<BindingGraph> bindingGraphs = new ArrayList<>();
+      while (filesWithBindingGraphs.hasMoreElements()) {
+        ZipEntry bindingGraphEntry = filesWithBindingGraphs.nextElement();
+
+        try (InputStream inputStream = zipFile.getInputStream(bindingGraphEntry)) {
+          bindingGraphs.add(BindingGraph.parseFrom(inputStream));
+        }
+      }
+
+      return bindingGraphs;
     }
+  }
 
-    return BindingGraph.parseFrom(inputStream);
+  /**
+   * Copies all data from given {@link InputStream} into {@link ZipFile}.
+   *
+   * <p>The need for this mapping arises from the fact that we should access the resource
+   * as a stream when the resource is bundled as a .zip file. In general we convert {@link InputStream}
+   * instance into {@link ZipFile} to access all .textproto zipped files.
+   *
+   * @throws IOException if an I/O error occurred while reading sources from given {@link InputStream} instance
+   */
+  private ZipFile makeZipFileFromInputStream(InputStream inputStream) throws IOException {
+    byte[] buffer = new byte[inputStream.available()];
+    inputStream.read(buffer);
+
+    // Creates a new temporary file and fills its content.
+    File fileWithSources = new File(BINDING_GRAPHS_SOURCES);
+    fileWithSources.createNewFile();
+    Files.write(buffer, fileWithSources);
+
+    return new ZipFile(fileWithSources);
   }
 }

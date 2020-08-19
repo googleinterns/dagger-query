@@ -23,5 +23,7 @@ java_binary(
     deps = [
         "//src/com/google/daggerquery/executor/models:query_executor_models",
         "//src/com/google/daggerquery/executor/services:query_executor_services",
+        "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
+        "//third_party/java/guava:guava",
     ],
 )
