@@ -22,6 +22,7 @@ import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,7 @@ public class Query {
 
   private final static String DEPS_QUERY_NAME = "deps";
   private final static String ALLPATHS_QUERY_NAME = "allpaths";
+  private final static String SOMEPATH_QUERY_NAME = "somepath";
 
   /**
    * The key is the name of supported query and the value is the number of parameters,
@@ -50,6 +52,7 @@ public class Query {
   private final static ImmutableMap<String, Integer> supportedQueries = ImmutableMap.<String, Integer>builder()
       .put(DEPS_QUERY_NAME, 1)
       .put(ALLPATHS_QUERY_NAME, 2)
+      .put(SOMEPATH_QUERY_NAME, 2)
       .build();
 
   private String name;
@@ -97,16 +100,17 @@ public class Query {
    */
   public List<String> execute(BindingGraph bindingGraph) {
     switch (name) {
-      case DEPS_QUERY_NAME:
-        String sourceNode = parameters[0];
+      case DEPS_QUERY_NAME: {
+        String source = parameters[0];
 
-        if (!bindingGraph.getAdjacencyListMap().containsKey(sourceNode)) {
+        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
           throw new IllegalArgumentException("Specified source node doesn't exist.");
         }
 
-        return bindingGraph.getAdjacencyListMap().get(sourceNode).getDependencyList()
+        return bindingGraph.getAdjacencyListMap().get(source).getDependencyList()
             .stream().map(Dependency::getTarget).sorted().collect(toList());
-      case ALLPATHS_QUERY_NAME:
+      }
+      case ALLPATHS_QUERY_NAME: {
         String source = parameters[0];
 
         if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
@@ -120,6 +124,25 @@ public class Query {
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
         return result.build().stream().map(Path::toString).collect(toList());
+      }
+      case SOMEPATH_QUERY_NAME: {
+        String source = parameters[0];
+
+        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
+          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
+        }
+
+        String target = parameters[1];
+        Set<String> visitedNodes = new HashSet<>();
+        Path path = new Path<>();
+
+        findSomePath(source, target, path, bindingGraph, visitedNodes);
+        if (path.isEmpty()) {
+          return new ArrayList<>();
+        }
+
+        return List.of(path.toString());
+      }
     }
 
     throw new NotImplementedException();
@@ -148,6 +171,14 @@ public class Query {
 
     NodeT removeLast() {
       return nodesDeque.removeLast();
+    }
+
+    NodeT getLast() {
+      return nodesDeque.getLast();
+    }
+
+    boolean isEmpty() {
+      return nodesDeque.isEmpty();
     }
 
     @Override
@@ -188,5 +219,42 @@ public class Query {
 
     visitedNodes.remove(source);
     path.removeLast();
+  }
+
+  /**
+   * Traverses a {@link BindingGraph} starting from {@code source} node to find some path between nodes.
+   *
+   * <p>Finds the first path from {@code source} node passed in the first call and
+   * {@code target} node, which is the same for all calls. Constructs this {@code path}
+   * like an instance of {@link Path<String>}. When this path is found, stops going deeper.
+   *
+   * <p>Returns boolean value which indicates if we have already constructed a path or we have to continue execution.
+   *
+   * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops.
+   */
+  private boolean findSomePath(String source, String target, Path path,
+                               BindingGraph bindingGraph, Set<String> visitedNodes) {
+    path.addLast(source);
+
+    // Checks if we've already constructed some path from `source` to `target` and don't need to go deeper.
+    if (path.getLast().equals(target)) {
+      return true;
+    }
+
+    visitedNodes.add(source);
+    for (Dependency nextNode: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
+      if (visitedNodes.contains(nextNode.getTarget())) {
+        continue;
+      }
+
+      if (findSomePath(nextNode.getTarget(), target, path, bindingGraph, visitedNodes)) {
+        return true;
+      }
+    }
+
+    visitedNodes.remove(source);
+    path.removeLast();
+
+    return false;
   }
 }

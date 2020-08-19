@@ -25,6 +25,7 @@ import com.google.daggerquery.protobuf.autogen.DependencyProto;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 public class QueryTest {
 
@@ -187,7 +188,7 @@ public class QueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testExecutingAllPathssQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
+  public void testExecutingAllPathsQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
     String[] parameters = {"com.google.Kitten", "com.google.Details"};
     Query query = new Query("allpaths", parameters);
 
@@ -198,6 +199,99 @@ public class QueryTest {
   public void testExecutingAllPathsQuery_WithNullBindingGraph_ThrowsNullPointerException() {
     String[] parameters = {"com.google.Component", "com.google.Details"};
     Query query = new Query("allpaths", parameters);
+
+    query.execute(null);
+  }
+
+  // Tests for `SOMEPATH` query
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingSomePathQuery_WithOneStringParameter_ThrowsIllegalArgumentException() {
+    Query query = new Query("somepath", "com.google.cats.Cat");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingSomePathQuery_WithoutParameters_ThrowsIllegalArgumentException() {
+    Query query = new Query("somepath");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testParsingSomePathQuery_WithNullParameters_ThrowsNullPointerException() {
+    Query query = new Query("somepath", /*parameters = */ null);
+  }
+
+  @Test
+  public void testExecutingSomePathQuery_WithCapitalizedName_WhenResultContainsOnePathWithTwoNodes() {
+    String[] parameters = {"com.google.Cat", "com.google.Details"};
+    Query query = new Query("SoMePaTh", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    String[] expectedOutput = {"com.google.Cat -> com.google.Details"};
+    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+  }
+
+  @Test
+  public void testExecutingSomePathQuery_WhenResultContainsOnePathWithThreeNodes() {
+    String[] parameters = {"com.google.CatsFactory", "com.google.Details"};
+    Query query = new Query("somepath", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    String[] expectedOutput = {"com.google.CatsFactory -> com.google.Cat -> com.google.Details"};
+    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+  }
+
+  @Test
+  public void testExecutingSomePathQuery_WhenResultContainsMultiplePaths() {
+    String[] parameters = {"com.google.Component", "com.google.Details"};
+    Query query = new Query("somepath", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    Set<String> possibleOutputs = Set.of(
+        "com.google.Component -> com.google.Details",
+        "com.google.Component -> com.google.Cat -> com.google.Details",
+        "com.google.Component -> com.google.CatsFactory -> com.google.Cat -> com.google.Details",
+        "com.google.Component -> com.google.Helper -> com.google.CatsFactory -> com.google.Cat -> com.google.Details"
+    );
+
+    assertEquals(1, queryExecutionResult.size());
+    assertTrue(possibleOutputs.contains(queryExecutionResult.get(0)));
+  }
+
+  @Test
+  public void testExecutingSomePathQuery_WithLeafAsSourceNode() {
+    String[] parameters = {"com.google.Details", "com.google.Component"};
+    Query query = new Query("somepath", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    assertEquals(0, queryExecutionResult.size());
+  }
+
+  @Test
+  public void testExecutingSomePathQuery_WhenThereIsNoPaths() {
+    String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
+    Query query = new Query("somepath", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    assertEquals(0, queryExecutionResult.size());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingSomePathQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.Kitten", "com.google.Details"};
+    Query query = new Query("somepath", parameters);
+
+    query.execute(makeSimpleBindingGraph());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testExecutingSomePathQuery_WithNullBindingGraph_ThrowsNullPointerException() {
+    String[] parameters = {"com.google.Component", "com.google.Details"};
+    Query query = new Query("somepath", parameters);
 
     query.execute(null);
   }
