@@ -49,32 +49,34 @@ public class SourcesLoader {
         throw new FileNotFoundException(String.format("File %s is missing.", PATH_TO_BINDING_GRAPHS));
       }
 
-      ZipFile zipFile = makeZipFileFromInputStream(zipInputStream);
-      Enumeration<? extends ZipEntry> filesWithBindingGraphs = zipFile.entries();
+      File fileWithSources = makeFileFromInputStream(zipInputStream);
+      try (ZipFile zipFile = new ZipFile(fileWithSources)) {
+        Enumeration<? extends ZipEntry> filesWithBindingGraphs = zipFile.entries();
 
-      List<BindingGraph> bindingGraphs = new ArrayList<>();
-      while (filesWithBindingGraphs.hasMoreElements()) {
-        ZipEntry bindingGraphEntry = filesWithBindingGraphs.nextElement();
+        List<BindingGraph> bindingGraphs = new ArrayList<>();
+        while (filesWithBindingGraphs.hasMoreElements()) {
+          ZipEntry bindingGraphEntry = filesWithBindingGraphs.nextElement();
 
-        try (InputStream inputStream = zipFile.getInputStream(bindingGraphEntry)) {
-          bindingGraphs.add(BindingGraph.parseFrom(inputStream));
+          try (InputStream inputStream = zipFile.getInputStream(bindingGraphEntry)) {
+            bindingGraphs.add(BindingGraph.parseFrom(inputStream));
+          }
         }
+        fileWithSources.delete();
+        return bindingGraphs;
       }
-
-      return bindingGraphs;
     }
   }
 
   /**
-   * Copies all data from given {@link InputStream} into {@link ZipFile}.
+   * Copies all data from given {@link InputStream} into {@link File}.
    *
    * <p>The need for this mapping arises from the fact that we should access the resource
    * as a stream when the resource is bundled as a .zip file. In general we convert {@link InputStream}
-   * instance into {@link ZipFile} to access all .textproto zipped files.
+   * instance into {@link File} to access all .textproto zipped files.
    *
    * @throws IOException if an I/O error occurred while reading sources from given {@link InputStream} instance
    */
-  private ZipFile makeZipFileFromInputStream(InputStream inputStream) throws IOException {
+  private File makeFileFromInputStream(InputStream inputStream) throws IOException {
     byte[] buffer = new byte[inputStream.available()];
     inputStream.read(buffer);
 
@@ -83,6 +85,6 @@ public class SourcesLoader {
     fileWithSources.createNewFile();
     Files.write(buffer, fileWithSources);
 
-    return new ZipFile(fileWithSources);
+    return fileWithSources;
   }
 }
