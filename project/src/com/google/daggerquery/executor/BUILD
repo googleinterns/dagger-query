@@ -24,4 +24,7 @@ java_binary(
         "//src/com/google/daggerquery/executor/models:query_executor_models",
         "//src/com/google/daggerquery/executor/services:query_executor_services",
     ],
+    resources = [
+        "//src/com/google/daggerquery:binding_graph_data"
+    ],
 )

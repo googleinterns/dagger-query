@@ -13,10 +13,20 @@
 # limitations under the License.
 
 load("@rules_java//java:defs.bzl", "java_plugin")
+load(":dagger_query_textproto.bzl", "dagger_query_textproto")
+
+package(default_visibility = ["//visibility:public"])
 
 java_plugin(
     name = "dagger_query_plugin",
     deps = [
         "//src/com/google/daggerquery/plugin:plugin_sources",
     ]
+)
+
+dagger_query_textproto(
+    name = "binding_graph_data",
+
+    # Put here the name of a target in which you have used a plugin for generating binding graph.
+    dagger_app_target = "YOUR_APP_TARGET"
 )
