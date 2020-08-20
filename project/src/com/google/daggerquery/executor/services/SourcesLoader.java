@@ -33,7 +33,7 @@ import java.util.zip.ZipFile;
  */
 public class SourcesLoader {
   private static final String PATH_TO_BINDING_GRAPHS = "/com/google/daggerquery/binding_graph_data.zip";
-  private static final String BINDING_GRAPHS_SOURCES = "binding_graphs.bin";
+  private static final String BINDING_GRAPHS_SOURCES = "binding_graphs.tmp";
 
   /**
    * Reads .zip resource file which contains several .textproto files with serialized binding graphs.
