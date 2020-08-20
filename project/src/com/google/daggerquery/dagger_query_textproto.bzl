@@ -25,7 +25,7 @@ def _dagger_query_textproto_impl(ctx):
     ctx.actions.run_shell(
         inputs = src_jars,
         outputs = [ctx.outputs.out],
-        command = "unzip {src_jar} '*_graph.textproto' -d .; zip {out} '*_graph.textproto'".format(
+        command = "unzip {src_jar} '*_graph.textproto' -d binding_graphs_tmp; cd binding_graphs_tmp; zip -r ../{out} .; cd ..; rm -r binding_graphs_tmp".format(
             src_jar = src_jars[0].path,
             out = ctx.outputs.out.path,
         ),
