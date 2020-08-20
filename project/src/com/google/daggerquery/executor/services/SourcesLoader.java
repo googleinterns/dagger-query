@@ -18,6 +18,7 @@ package com.google.daggerquery.executor.services;
 
 import com.google.common.io.Files;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
+import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,10 +58,20 @@ public class SourcesLoader {
         while (filesWithBindingGraphs.hasMoreElements()) {
           ZipEntry bindingGraphEntry = filesWithBindingGraphs.nextElement();
 
-          try (InputStream inputStream = zipFile.getInputStream(bindingGraphEntry)) {
-            bindingGraphs.add(BindingGraph.parseFrom(inputStream));
+          try {
+            try (InputStream inputStream = zipFile.getInputStream(bindingGraphEntry)) {
+              bindingGraphs.add(BindingGraph.parseFrom(inputStream));
+            }
+          } catch (InvalidProtocolBufferException e) {
+            // This might happened because non-proto files were in .zip.
+            // However, we still can parse other files with serialized binding graphs and ignore this exception.
           }
         }
+
+        if (bindingGraphs.isEmpty()) {
+          throw new FileNotFoundException("The .zip does not contain .textproto files with serialized binding graphs.");
+        }
+
         fileWithSources.delete();
         return bindingGraphs;
       }
