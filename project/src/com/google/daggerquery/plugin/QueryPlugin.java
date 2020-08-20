@@ -24,6 +24,7 @@ import dagger.spi.DiagnosticReporter;
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 
@@ -38,14 +39,26 @@ public class QueryPlugin implements BindingGraphPlugin {
     this.filer = filer;
   }
 
+  /**
+   * This method is called once for each binding graph presented in the app.
+   *
+   * <p>Converts given {@link BindingGraph} into <a href="https://en.wikipedia.org/wiki/Adjacency_list">adjacency list</a>
+   * and serializes it via <a href="https://developers.google.com/protocol-buffers">protocol buffers library</a>.
+   *
+   * <p>Saves each binding graph into a separate file. The file names are constructed from a simple name of a
+   * root component of a graph and extension .textproto.
+   */
   @Override
   public void visitGraph(BindingGraph bindingGraph, DiagnosticReporter diagnosticReporter) {
     BindingGraphProto.BindingGraph bindingGraphProto = new GraphConverter<BindingGraph.Node, BindingGraph.Edge>()
         .makeBindingGraphProto(bindingGraph.rootComponentNode(), bindingGraph.network());
 
     try {
-      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", "binding_graph.textproto");
-      bindingGraphProto.writeTo(sourceFile.openOutputStream());
+      String fileName = bindingGraph.rootComponentNode().componentPath().rootComponent().getSimpleName().toString();
+      FileObject sourceFile = filer.createResource(SOURCE_OUTPUT, "", String.format("%s_graph.textproto", fileName));
+      try (OutputStream outputStream = sourceFile.openOutputStream()) {
+        bindingGraphProto.writeTo(outputStream);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
