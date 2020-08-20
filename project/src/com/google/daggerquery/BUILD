@@ -23,10 +23,3 @@ java_plugin(
         "//src/com/google/daggerquery/plugin:plugin_sources",
     ]
 )
-
-dagger_query_textproto(
-    name = "binding_graph_data",
-
-    # Put here the name of a target in which you have used a plugin for generating binding graph.
-    dagger_app_target = "YOUR_APP_TARGET"
-)
