@@ -23,5 +23,6 @@ java_library(
         "//src/com/google/daggerquery/executor/models:query_executor_models",
         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
         "//third_party/java/guava:guava",
+        "//third_party/java/protobuf:protobuf"
     ]
 )

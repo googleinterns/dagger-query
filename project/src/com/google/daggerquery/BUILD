@@ -13,7 +13,7 @@
 # limitations under the License.
 
 load("@rules_java//java:defs.bzl", "java_plugin")
-load(":dagger_query_textproto.bzl", "dagger_query_textproto")
+load("//src/com/google/daggerquery/executor:dagger_query.bzl", "dagger_query")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -22,4 +22,9 @@ java_plugin(
     deps = [
         "//src/com/google/daggerquery/plugin:plugin_sources",
     ]
+)
+
+dagger_query(
+  name = "dagger_query_app",
+  dagger_app_target = "//src/com/google/daggerquery/example:beach_example"
 )
