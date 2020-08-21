@@ -16,9 +16,10 @@ limitations under the License.
 
 package com.google.daggerquery.executor;
 
+import com.google.common.collect.ImmutableList;
 import com.google.daggerquery.executor.models.Query;
 import com.google.daggerquery.executor.services.SourcesLoader;
-
+import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -43,8 +44,26 @@ public class QueryExecutor {
       }
 
       Query query = new Query(args[0], Arrays.copyOfRange(args, 1, args.length));
-      List<String> result = query.execute(new SourcesLoader().loadBindingGraph());
-      result.forEach(printStream::println);
+      List<BindingGraph> bindingGraphs = new SourcesLoader().loadBindingGraphs();
+
+      ImmutableList.Builder resultBuilder = new ImmutableList.Builder();
+
+      // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
+      String failureReason = "";
+      for (BindingGraph bindingGraph: bindingGraphs) {
+        try {
+          resultBuilder.addAll(query.execute(bindingGraph));
+        } catch (IllegalArgumentException e) {
+          failureReason = e.getMessage();
+        }
+      }
+
+      ImmutableList resultList = resultBuilder.build();
+      if (resultList.isEmpty()) {
+        throw new IllegalArgumentException(failureReason);
+      } else {
+        resultList.forEach(printStream::println);
+      }
     } catch (IllegalArgumentException e) {
       printStream.println("Execution failed. Reason: " + e.getMessage());
     } catch (IOException e) {
