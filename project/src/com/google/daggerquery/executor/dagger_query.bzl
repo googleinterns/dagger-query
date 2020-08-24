@@ -23,13 +23,7 @@ def dagger_query(name, dagger_app_target):
 
    java_binary(
      name = name,
-     srcs = ["//src/com/google/daggerquery/executor:QueryExecutor.java"],
      main_class = "com.google.daggerquery.executor.QueryExecutor",
-     deps = [
-         "//src/com/google/daggerquery/executor/models:query_executor_models",
-         "//src/com/google/daggerquery/executor/services:query_executor_services",
-         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
-         "//third_party/java/guava:guava",
-     ],
+     runtime_deps = ["//src/com/google/daggerquery/executor:query_executor"],
      resources = [":binding_graph_data"],
    )

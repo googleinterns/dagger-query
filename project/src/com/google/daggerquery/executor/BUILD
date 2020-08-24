@@ -12,4 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-exports_files(["QueryExecutor.java"])
+package(default_visibility = ["//visibility:public"])
+
+java_library(
+     name = "query_executor",
+     srcs = ["//src/com/google/daggerquery/executor:QueryExecutor.java"],
+     deps = [
+         "//src/com/google/daggerquery/executor/models:query_executor_models",
+         "//src/com/google/daggerquery/executor/services:query_executor_services",
+         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
+         "//third_party/java/guava:guava",
+     ],
+   )
