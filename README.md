@@ -8,7 +8,7 @@ Dagger Query can be used to investigate the dagger dependency graph.
 ## How to use Dagger Query project?
 
 1. Add `//src/com/google/daggerquery:dagger_query_plugin` target in a **plugins** attribute of your app's target.
-2. Go to `src/com/google/daggerquery/BUILD` and use **dagger_query** rule with your app's target name. 
+2. Use **dagger_query** rule located in a `src/com/google/daggerquery/executor` with your app's target name. 
 
        dagger_query(
           name = "dagger_query_app",
