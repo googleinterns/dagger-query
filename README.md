@@ -17,10 +17,10 @@ Dagger Query can be used to investigate the dagger dependency graph.
           dagger_app_target = "YOUR_TARGET"
        )
 
-3. Use bash script located in a `project` folder for executing queries! 🚀 
-    > ./dagger-query.sh deps com.google.Cat \
-    > ./dagger-query.sh allpaths com.google.Office com.google.Beach \
-    > ./dagger-query.sh somepath com.google.Paris com.google.sights.EiffelTower
+3. Use bash script located in a `project` folder for executing queries! 🚀 Pass a path to the `dagger_query` target as the first parameter.  
+    > ./dagger-query.sh YOUR_PATH deps com.google.Cat \
+    > ./dagger-query.sh YOUR_PATH allpaths com.google.Office com.google.Beach \
+    > ./dagger-query.sh YOUR_PATH somepath com.google.Paris com.google.sights.EiffelTower
 
 
 **This is not an officially supported Google product.**
