@@ -273,7 +273,7 @@ public class Query {
    * Otherwise, it throws an exception, the type of which depends on the node's name.
    *
    * @throws MisspelledNodeNameException if specified source node contains a typo
-   * and can be corrected in no more than three steps
+   * and can be corrected in no more than {@code MAX_NUMBER_OF_MISPLACED_LETTERS} steps
    *
    * @throws IllegalArgumentException if specified source node doesn't exist
    */
@@ -283,38 +283,42 @@ public class Query {
     }
 
     // The specified node could not be found on the graph, we need to check for typos.
-    String closestNode = findNodeWithClosestName(node, bindingGraph.getAdjacencyListMap().keySet());
-    if (closestNode == null) {
+    List<String> closestNodes = findNodesWithClosestName(node, bindingGraph.getAdjacencyListMap().keySet());
+    if (closestNodes.isEmpty()) {
       throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", node));
     } else {
-      throw new MisspelledNodeNameException(/*nodeNameWithTypo =*/ node, /*correctNodeName =*/ closestNode);
+      throw new MisspelledNodeNameException(/*nodeNameWithTypo =*/ node, /*correctNodeName =*/ closestNodes);
     }
   }
 
   /**
-   * Finds the closest node in a given {@link Set<String>} to the {@code originalNode}.
+   * Finds the closest nodes in a given {@link Set<String>} to the {@code originalNode}.
    *
    * <p>For measuring a distance uses <a href = "https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance metric</a>.
    * It simply calculates the number of changes required to be made to get one sequence from another,
    * where each change is a single character modification (deletion, insertion or substitution).
    *
-   * <p>TA node can be considered a neighbor only if the distance between it and the given {@code originalNode}
+   * <p>A node can be considered a neighbor only if the distance between it and the given {@code originalNode}
    * is less than or equal to {@code MAX_NUMBER_OF_MISPLACED_LETTERS}.
    *
-   * <p>If a node with a similar name is not found, returns {@code null}.
+   * <p>If no nodes with a similar name are found, returns an empty {@link List<String>}.
+   * Otherwise, it returns a {@link List<String>} with nodes with the same distance.
    */
-  private String findNodeWithClosestName(String originalNode, Set<String> allNodes) {
-    String closestNode = null;
+  private List<String> findNodesWithClosestName(String originalNode, Set<String> allNodes) {
+    List<String> closestNodes = new ArrayList<>();
     int bestDistance = Integer.MAX_VALUE;
 
     for (String node: allNodes) {
       int distance = levenshteinDistanceCalculator.apply(originalNode, node);
       if (distance <= MAX_NUMBER_OF_MISPLACED_LETTERS && distance < bestDistance) {
-        closestNode = node;
+        closestNodes.clear();
+        closestNodes.add(node);
         bestDistance = distance;
+      } else if (distance == bestDistance) {
+        closestNodes.add(node);
       }
     }
 
-    return closestNode;
+    return closestNodes;
   }
 }

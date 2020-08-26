@@ -1,5 +1,7 @@
 package com.google.daggerquery.executor.models;
 
+import java.util.List;
+
 /**
  * An exception is thrown to indicate that a binding name contains a typo.
  *
@@ -10,12 +12,12 @@ public class MisspelledNodeNameException extends RuntimeException {
 
   /**
    * Constructs a <code>MisspelledNodeNameException</code> with a detailed message
-   * consisting of the given binding name with typo followed by the correct binding name
-   * which presented in a binding graph.
+   * consisting of the provided binding name, followed by similarly named bindings
+   * that exist in our binding graph.
    */
-  public MisspelledNodeNameException(String nodeNameWithTypo, String correctNodeName) {
+  public MisspelledNodeNameException(String nodeNameWithTypo, List<String> correctNodesName) {
     super(String.format("Binding with name %s contains a typo and not found in a graph. Maybe you meant %s?",
-                        nodeNameWithTypo, correctNodeName));
+                        nodeNameWithTypo, String.join(" or ", correctNodesName)));
   }
 
 }
