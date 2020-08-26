@@ -22,6 +22,7 @@ java_library(
     deps = [
         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
         "//src/com/google/daggerquery/protobuf:dependency_java_proto",
-        "//third_party/java/guava:guava"
+        "//third_party/java/guava:guava",
+        "@apache-commons-text//jar"
     ],
 )
