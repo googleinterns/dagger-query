@@ -126,7 +126,7 @@ public class QueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testExecutingDepsQuery_WithFourTyposInNodeName_ThrowsIllegalArgumentException() {
+  public void testExecutingDepsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
     String[] parameters = {"com.google.CatsFactory...."};
     Query query = new Query("deps", parameters);
 
@@ -241,7 +241,7 @@ public class QueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testExecutingAllPathsQuery_WithFourTyposInNodeName_ThrowsIllegalArgumentException() {
+  public void testExecutingAllPathsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
     String[] parameters = {"com.google.com.CatsFactory", "com.google.Details"};
     Query query = new Query("allpaths", parameters);
 
@@ -357,7 +357,7 @@ public class QueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testExecutingSomePathQuery_WithFourTyposInNodeName_ThrowsIllegalArgumentException() {
+  public void testExecutingSomePathQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
     String[] parameters = {"com.google.com.CatsFactory", "com.google.Details"};
     Query query = new Query("somepath", parameters);
 
