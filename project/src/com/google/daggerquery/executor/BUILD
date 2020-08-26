@@ -12,18 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_java//java:defs.bzl", "java_binary")
-
 package(default_visibility = ["//visibility:public"])
 
-java_binary(
-    name = "query_executor",
-    srcs = ["QueryExecutor.java"],
-    main_class = "com.google.daggerquery.executor.QueryExecutor",
-    deps = [
-        "//src/com/google/daggerquery/executor/models:query_executor_models",
-        "//src/com/google/daggerquery/executor/services:query_executor_services",
-        "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
-        "//third_party/java/guava:guava",
-    ],
-)
+java_library(
+     name = "query_executor",
+     srcs = ["//src/com/google/daggerquery/executor:QueryExecutor.java"],
+     deps = [
+         "//src/com/google/daggerquery/executor/models:query_executor_models",
+         "//src/com/google/daggerquery/executor/services:query_executor_services",
+         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
+         "//third_party/java/guava:guava",
+     ],
+   )

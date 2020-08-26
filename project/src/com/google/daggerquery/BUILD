@@ -14,6 +14,8 @@
 
 load("@rules_java//java:defs.bzl", "java_plugin")
 
+package(default_visibility = ["//visibility:public"])
+
 java_plugin(
     name = "dagger_query_plugin",
     deps = [

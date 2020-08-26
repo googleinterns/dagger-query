@@ -4,6 +4,25 @@ A graph based query language on top of [dagger](https://github.com/google/dagger
 
 Dagger Query can be used to investigate the dagger dependency graph.
 
+
+## How to use Dagger Query project?
+
+1. Add `//src/com/google/daggerquery:dagger_query_plugin` target in a **plugins** attribute of your app's target.
+2. Use **dagger_query** rule located in a `src/com/google/daggerquery/executor` with your app's target name. 
+
+       dagger_query(
+          name = "dagger_query_app",
+
+          # Put here the name of a target in which you have used a plugin for generating binding graph.
+          dagger_app_target = "YOUR_TARGET"
+       )
+
+3. Use bash script located in a `project` folder for executing queries! 🚀 Pass a path to the `dagger_query` target as the first parameter.  
+    > ./dagger-query.sh YOUR_PATH deps com.google.Cat \
+    > ./dagger-query.sh YOUR_PATH allpaths com.google.Office com.google.Beach \
+    > ./dagger-query.sh YOUR_PATH somepath com.google.Paris com.google.sights.EiffelTower
+
+
 **This is not an officially supported Google product.**
 
 ## Source Code Headers
