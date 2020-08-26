@@ -9,7 +9,7 @@ package com.google.daggerquery.executor.models;
 public class MisspelledNodeNameException extends RuntimeException {
 
   /**
-   * Constructs a <code>MisspelledNodeNameException</code> with a detail message
+   * Constructs a <code>MisspelledNodeNameException</code> with a detailed message
    * consisting of the given binding name with typo followed by the correct binding name
    * which presented in a binding graph.
    */

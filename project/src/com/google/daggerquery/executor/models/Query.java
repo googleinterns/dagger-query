@@ -267,7 +267,7 @@ public class Query {
   }
 
   /**
-   * Checks if the passed {@code node} is on the {@link BindingGraph} or if the user misspelled the node's name.
+   * Checks if the passed {@code node} is in the {@link BindingGraph} or if the user misspelled the node's name.
    *
    * <p>If the passed node is correct, does nothing.
    * Otherwise, it throws an exception, the type of which depends on the node's name.
