@@ -306,15 +306,10 @@ public class Query {
    */
   private List<String> findNodesWithClosestName(String originalNode, Set<String> allNodes) {
     List<String> closestNodes = new ArrayList<>();
-    int bestDistance = Integer.MAX_VALUE;
 
     for (String node: allNodes) {
       int distance = levenshteinDistanceCalculator.apply(originalNode, node);
-      if (distance <= MAX_NUMBER_OF_MISPLACED_LETTERS && distance < bestDistance) {
-        closestNodes.clear();
-        closestNodes.add(node);
-        bestDistance = distance;
-      } else if (distance == bestDistance) {
+      if (distance <= MAX_NUMBER_OF_MISPLACED_LETTERS) {
         closestNodes.add(node);
       }
     }
