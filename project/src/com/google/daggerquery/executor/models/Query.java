@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.text.similarity.LevenshteinDistance;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -45,6 +46,13 @@ public class Query {
   private final static String DEPS_QUERY_NAME = "deps";
   private final static String ALLPATHS_QUERY_NAME = "allpaths";
   private final static String SOMEPATH_QUERY_NAME = "somepath";
+
+  private final static int MAX_NUMBER_OF_MISPLACED_LETTERS = 3;
+
+  /**
+   * An algorithm for measuring distances between node names in a binding graph to detect typos.
+   */
+  private final static LevenshteinDistance levenshteinDistanceCalculator = new LevenshteinDistance();
 
   /**
    * The key is the name of supported query and the value is the number of parameters,
@@ -99,6 +107,9 @@ public class Query {
    * may look like this: "com.google.First -> com.google.Second -> com.google.Third".
    * </ul>
    *
+   * @throws MisspelledNodeNameException if the specified source node contains a typo
+   * and can be corrected in no more than three steps
+   *
    * @throws IllegalArgumentException if specified source node doesn't exist
    */
   public List<String> execute(BindingGraph bindingGraph) {
@@ -106,9 +117,7 @@ public class Query {
       case DEPS_QUERY_NAME: {
         String source = parameters[0];
 
-        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
-        }
+        checkNodeForCorrectness(source, bindingGraph);
 
         return bindingGraph.getAdjacencyListMap().get(source).getDependencyList()
             .stream().map(Dependency::getTarget).sorted().collect(toList());
@@ -116,9 +125,7 @@ public class Query {
       case ALLPATHS_QUERY_NAME: {
         String source = parameters[0];
 
-        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
-        }
+        checkNodeForCorrectness(source, bindingGraph);
 
         String target = parameters[1];
         Set<String> visitedNodes = new HashSet<>();
@@ -131,9 +138,7 @@ public class Query {
       case SOMEPATH_QUERY_NAME: {
         String source = parameters[0];
 
-        if (!bindingGraph.getAdjacencyListMap().containsKey(source)) {
-          throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", source));
-        }
+        checkNodeForCorrectness(source, bindingGraph);
 
         String target = parameters[1];
         Set<String> visitedNodes = new HashSet<>();
@@ -259,5 +264,56 @@ public class Query {
     path.removeLast();
 
     return false;
+  }
+
+  /**
+   * Checks if the passed {@code node} is in the {@link BindingGraph} or if the user misspelled the node's name.
+   *
+   * <p>If the passed node is correct, does nothing.
+   * Otherwise, it throws an exception, the type of which depends on the node's name.
+   *
+   * @throws MisspelledNodeNameException if specified source node contains a typo
+   * and can be corrected in no more than {@code MAX_NUMBER_OF_MISPLACED_LETTERS} steps
+   *
+   * @throws IllegalArgumentException if specified source node doesn't exist
+   */
+  private void checkNodeForCorrectness(String node, BindingGraph bindingGraph) {
+    if (bindingGraph.getAdjacencyListMap().containsKey(node)) {
+      return;
+    }
+
+    // The specified node could not be found on the graph, we need to check for typos.
+    List<String> closestNodes = findNodesWithClosestName(node, bindingGraph.getAdjacencyListMap().keySet());
+    if (closestNodes.isEmpty()) {
+      throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", node));
+    } else {
+      throw new MisspelledNodeNameException(/*nodeNameWithTypo =*/ node, /*correctNodeName =*/ closestNodes);
+    }
+  }
+
+  /**
+   * Finds the closest nodes in a given {@link Set<String>} to the {@code originalNode}.
+   *
+   * <p>For measuring a distance uses <a href = "https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance metric</a>.
+   * It simply calculates the number of changes required to be made to get one sequence from another,
+   * where each change is a single character modification (deletion, insertion or substitution).
+   *
+   * <p>A node can be considered a neighbor only if the distance between it and the given {@code originalNode}
+   * is less than or equal to {@code MAX_NUMBER_OF_MISPLACED_LETTERS}.
+   *
+   * <p>If no nodes with a similar name are found, returns an empty {@link List<String>}.
+   * Otherwise, it returns a {@link List<String>} with nodes with the same distance.
+   */
+  private List<String> findNodesWithClosestName(String originalNode, Set<String> allNodes) {
+    List<String> closestNodes = new ArrayList<>();
+
+    for (String node: allNodes) {
+      int distance = levenshteinDistanceCalculator.apply(originalNode, node);
+      if (distance <= MAX_NUMBER_OF_MISPLACED_LETTERS) {
+        closestNodes.add(node);
+      }
+    }
+
+    return closestNodes;
   }
 }

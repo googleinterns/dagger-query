@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.daggerquery.executor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.daggerquery.executor.models.MisspelledNodeNameException;
 import com.google.daggerquery.executor.models.Query;
 import com.google.daggerquery.executor.services.SourcesLoader;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
@@ -49,18 +50,25 @@ public class QueryExecutor {
       ImmutableList.Builder resultBuilder = new ImmutableList.Builder();
 
       // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
-      String failureReason = "";
+      MisspelledNodeNameException lastMisspelledNodeNameException = null;
+      IllegalArgumentException lastIllegalArgumentException = null;
       for (BindingGraph bindingGraph: bindingGraphs) {
         try {
           resultBuilder.addAll(query.execute(bindingGraph));
         } catch (IllegalArgumentException e) {
-          failureReason = e.getMessage();
+          lastIllegalArgumentException = e;
+        } catch (MisspelledNodeNameException e) {
+          lastMisspelledNodeNameException = e;
         }
       }
 
       ImmutableList resultList = resultBuilder.build();
       if (resultList.isEmpty()) {
-        throw new IllegalArgumentException(failureReason);
+        if (lastMisspelledNodeNameException != null) {
+          throw new IllegalArgumentException(lastMisspelledNodeNameException.getMessage());
+        } else if (lastIllegalArgumentException != null) {
+          throw lastIllegalArgumentException;
+        }
       } else {
         resultList.forEach(printStream::println);
       }

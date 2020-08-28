@@ -19,12 +19,12 @@ package com.google.daggerquery.executor.models;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.DependencyProto;
 import org.junit.Test;
-
 import java.util.List;
 import java.util.Set;
 
@@ -109,6 +109,28 @@ public class QueryTest {
     Query query = new Query("deps", parameters);
 
     query.execute(null);
+  }
+
+  @Test
+  public void testExecutingDepsQuery_WithOneTypoInNodeName_ThrowsMisspelledNodeNameException() {
+    try {
+      String[] parameters = {"com.google.CatsFactoryy"};
+      Query query = new Query("deps", parameters);
+
+      List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+      fail();
+    } catch (MisspelledNodeNameException e) {
+      // We do not care too much about the rest of the message, but it should contain a correct node name.
+      assertTrue(e.getMessage().contains("com.google.CatsFactory"));
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingDepsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.CatsFactory...."};
+    Query query = new Query("deps", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
   }
 
   // Tests for `ALLPATHS` query
@@ -204,6 +226,28 @@ public class QueryTest {
     query.execute(null);
   }
 
+  @Test
+  public void testExecutingAllPathsQuery_WithThreeTyposInNodeName_ThrowsMisspelledNodeNameException() {
+    try {
+      String[] parameters = {"com.google.CatsFactories", "com.google.Details"};
+      Query query = new Query("allpaths", parameters);
+
+      List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+      fail();
+    } catch (MisspelledNodeNameException e) {
+      // We do not care too much about the rest of the message, but it should contain a correct node name.
+      assertTrue(e.getMessage().contains("com.google.CatsFactory"));
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingAllPathsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.com.CatsFactory", "com.google.Details"};
+    Query query = new Query("allpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+  }
+
   // Tests for `SOMEPATH` query
 
   @Test(expected = IllegalArgumentException.class)
@@ -296,6 +340,28 @@ public class QueryTest {
     Query query = new Query("somepath", parameters);
 
     query.execute(null);
+  }
+
+  @Test
+  public void testExecutingSomePathQuery_WithTwoTyposInNodeName_ThrowsMisspelledNodeNameException() {
+    try {
+      String[] parameters = {"c.google.CatsFactory", "com.google.Details"};
+      Query query = new Query("somepath", parameters);
+
+      List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+      fail();
+    } catch (MisspelledNodeNameException e) {
+      // We do not care too much about the rest of the message, but it should contain a correct node name.
+      assertTrue(e.getMessage().contains("com.google.CatsFactory"));
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingSomePathQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.com.CatsFactory", "com.google.Details"};
+    Query query = new Query("somepath", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
   }
 
   /*
