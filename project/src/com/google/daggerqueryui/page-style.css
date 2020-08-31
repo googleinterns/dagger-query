@@ -15,3 +15,19 @@
 #query-text-field {
     margin-top: 5%;
 }
+
+.hidden {
+    display: none;
+}
+
+#help-button {
+    background: #FFF;
+}
+
+#help-button:focus {
+    outline: 0 !important;
+}
+
+.query-name {
+    color: #09AF00;
+}
