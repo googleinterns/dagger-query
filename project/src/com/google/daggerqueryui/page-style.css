@@ -15,3 +15,13 @@
 #query-text-field {
     margin-top: 5%;
 }
+
+.interactive-input-container .query-name {
+    position: absolute;
+    width: auto;
+    display: none;
+    border: 0px;
+    color: #09AF00;
+    background: #FFF !important;
+    font-weight: bold;
+}
