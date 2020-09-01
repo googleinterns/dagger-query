@@ -16,23 +16,23 @@
 <head>
     <title>Dagger Query UI</title>
 
-    <link rel="stylesheet" href="page-style.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="third-party/css/bootstrap.min.css">
     <link rel="stylesheet" href="third-party/css/mdb.min.css">
     <link rel="stylesheet" href="third-party/css/roboto-fonts.css">
 
     <!-- JQuery -->
-    <script src="third-party/js/jquery.min.js"></script>
+    <script src="third-party/js/jquery.min.js" defer></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="third-party/js/mdb.min.js"></script>
+    <script src="third-party/js/mdb.min.js" defer></script>
 </head>
 <body>
 
 <div class="container" id="query-text-field">
     <div class="md-form form-lg interactive-input-container">
         <div class="form-control form-control-lg query-name"></div>
-        <input type="text" id="inputLGEx" class="form-control form-control-lg" spellcheck="false">
-        <label for="inputLGEx">Your query</label>
+        <input type="text" id="query-input" class="form-control form-control-lg" spellcheck="false">
+        <label for="query-input">Your query</label>
     </div>
 </div>
 
