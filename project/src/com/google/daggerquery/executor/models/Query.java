@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import jsinterop.annotations.JsType;
 
 import static java.util.stream.Collectors.toList;
 
@@ -36,7 +37,10 @@ import static java.util.stream.Collectors.toList;
  *
  * <p>Also each query contains parameters which were passed by user.
  * The number of parameters is completely defined by the query's name.
+ *
+ * <p>Class is marked as @JsType as we would like to use this class in JavaScript.
  */
+@JsType
 public class Query {
 
   private final static String DEPS_QUERY_NAME = "deps";
