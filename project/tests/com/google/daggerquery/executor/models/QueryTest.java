@@ -370,7 +370,7 @@ public class QueryTest {
    * com.google.Component --> com.google.CatsFactory --> com.google.Cat
    * com.google.Component --> com.google.Helper
    */
-  private BindingGraphProto.BindingGraph makeSimpleBindingGraph() {
+  private Graph makeSimpleBindingGraph() {
     DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
     DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
     DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
@@ -387,12 +387,13 @@ public class QueryTest {
     BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .build();
 
-    return BindingGraphProto.BindingGraph.newBuilder()
+    BindingGraphProto.BindingGraph bindingGraph = BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
         .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
         .putAdjacencyList("com.google.Helper", helperNodeDeps)
         .build();
+    return new GraphProto(bindingGraph);
   }
 
   /*
@@ -403,7 +404,7 @@ public class QueryTest {
    * com.google.Component --> com.google.Cat --> com.google.Details
    * com.google.Component --> com.google.Details
    */
-  private BindingGraphProto.BindingGraph makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
+  private Graph makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
     DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
     DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
     DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
@@ -427,12 +428,13 @@ public class QueryTest {
     BindingGraphProto.BindingGraph.ListWithDependencies detailsNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .build();
 
-    return BindingGraphProto.BindingGraph.newBuilder()
+    BindingGraphProto.BindingGraph bindingGraph = BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
         .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Helper", helperNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
         .putAdjacencyList("com.google.Details", detailsNodeDeps)
         .build();
+    return new GraphProto(bindingGraph);
   }
 }
