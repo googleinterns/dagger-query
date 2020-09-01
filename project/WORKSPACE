@@ -49,8 +49,3 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
-
-http_jar (
-    name = "apache-commons-text",
-    url = "https://repo1.maven.org/maven2/org/apache/commons/commons-text/1.9/commons-text-1.9.jar"
-)
