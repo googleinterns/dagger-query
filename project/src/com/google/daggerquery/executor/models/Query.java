@@ -312,7 +312,8 @@ public class Query {
   }
 
   /**
-   * Measures the difference between two strings.
+   * Measures the difference between two strings using a
+   * <a href = "https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance algorithm</a>.
    *
    * @return the number of changes required to get one string from another,
    * where each change is a single character modification (substitution, deletion or insertion)
