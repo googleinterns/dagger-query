@@ -30,7 +30,11 @@ java_library(
 
 j2cl_library(
     name = "query_executor_models-j2cl",
-    srcs = glob(["*.java"]),
+    srcs = [
+        "Graph.java",
+        "Query.java",
+        "MisspelledNodeNameException.java",
+    ],
     deps = [
         "@com_google_j2cl//:jsinterop-annotations-j2cl",
         "@com_google_guava-j2cl",
