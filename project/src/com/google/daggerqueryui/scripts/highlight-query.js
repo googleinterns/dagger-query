@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-$(function (){
-    $.fn.validate_query = function (query){
-        return query == "deps" || query == "allpaths" || query == "somepath";
+$(function () {
+    $.fn.validateQuery = function (query) {
+        var supportedQueries = ["deps", "allpaths", "somepath"];
+        return supportedQueries.includes(query);
     };
 });
 
-$(document).on('keydown keyup change', '.interactive-input-container input', function (){
-    if(($(this).val().length) && ($(this).val().split(' ').length) && ($(this).validate_query($(this).val().split(' ')[0]))){
-        $(this).closest('.interactive-input-container').find('.query-name').html($(this).val().split(' ')[0]).show();
-    } else{
+$(document).on('keydown keyup change', '.interactive-input-container input', function () {
+    const query = $(this).val().split(' ')[0];
+    if ($(this).validateQuery(query)) {
+        $(this).closest('.interactive-input-container').find('.query-name').html(query).show();
+    } else {
         $(this).closest('.interactive-input-container').find('.query-name').hide();
     }
 });
