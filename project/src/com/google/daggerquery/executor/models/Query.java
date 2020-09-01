@@ -23,6 +23,7 @@ import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -342,7 +343,7 @@ public class Query {
           int deleteCost = distances[firstIndex + 1][secondIndex] + 1;
 
           distances[firstIndex + 1][secondIndex + 1] =
-              Arrays.asList(replaceCost, insertCost, deleteCost).stream().min(Integer::compareTo).get();
+              Collections.min(Arrays.asList(replaceCost, insertCost, deleteCost));
         }
       }
     }
