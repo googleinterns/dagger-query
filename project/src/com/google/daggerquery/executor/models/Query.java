@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,6 +45,11 @@ public class Query {
   private final static String SOMEPATH_QUERY_NAME = "somepath";
 
   private final static int MAX_NUMBER_OF_MISPLACED_LETTERS = 3;
+
+  /**
+   * An algorithm for measuring distances between node names in a binding graph to detect typos.
+   */
+  private final static LevenshteinDistance levenshteinDistanceCalculator = new LevenshteinDistance();
 
   /**
    * The key is the name of supported query and the value is the number of parameters,
@@ -298,50 +304,12 @@ public class Query {
     List<String> closestNodes = new ArrayList<>();
 
     for (String node: allNodes) {
-      int distance = calculateDistance(originalNode, node);
+      int distance = levenshteinDistanceCalculator.apply(originalNode, node);
       if (distance <= MAX_NUMBER_OF_MISPLACED_LETTERS) {
         closestNodes.add(node);
       }
     }
 
     return closestNodes;
-  }
-
-  /**
-   * Measures the difference between two strings.
-   *
-   * @return the number of changes required to get one string from another,
-   * where each change is a single character modification (substitution, deletion or insertion)
-   */
-  private int calculateDistance(String firstString, String secondString) {
-    int firstLength = firstString.length();
-    int secondLength = secondString.length();
-
-    int[][] distances = new int[firstLength + 1][secondLength + 1];
-
-    for (int index = 0; index <= firstLength; index++) {
-      distances[index][0] = index;
-    }
-
-    for (int index = 0; index <= secondLength; index++) {
-      distances[0][index] = index;
-    }
-
-    for (int firstIndex = 0; firstIndex < firstLength; firstIndex++) {
-      for (int secondIndex = 0; secondIndex < secondLength; secondIndex++) {
-        if (firstString.charAt(firstIndex) == secondString.charAt(secondIndex)) {
-          distances[firstIndex + 1][secondIndex + 1] = distances[firstIndex][secondIndex];
-        } else {
-          int replaceCost = distances[firstIndex][secondIndex] + 1;
-          int insertCost = distances[firstIndex][secondIndex + 1] + 1;
-          int deleteCost = distances[firstIndex + 1][secondIndex] + 1;
-
-          distances[firstIndex + 1][secondIndex + 1] =
-              Arrays.asList(replaceCost, insertCost, deleteCost).stream().min(Integer::compareTo).get();
-        }
-      }
-    }
-
-    return distances[firstLength][secondLength];
   }
 }
