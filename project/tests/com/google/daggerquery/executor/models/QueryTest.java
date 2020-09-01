@@ -20,6 +20,8 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
@@ -59,8 +61,8 @@ public class QueryTest {
 
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
 
-    String[] expectedOutput = {"com.google.CatsFactory", "com.google.Helper"};
-    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.CatsFactory", "com.google.Helper");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
   }
 
   @Test
@@ -70,8 +72,8 @@ public class QueryTest {
 
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
 
-    String[] expectedOutput = {"com.google.CatsFactory", "com.google.Helper"};
-    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.CatsFactory", "com.google.Helper");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
   }
 
   @Test

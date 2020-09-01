@@ -16,12 +16,11 @@ limitations under the License.
 
 package com.google.daggerquery.executor.models;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
-import java.util.List;
-import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Implementation of {@link Graph} that wraps the {@link BindingGraph} generated
@@ -36,18 +35,18 @@ public class GraphProto implements Graph {
   }
 
   @Override
-  public List<String> getDependencies(String node) {
-    return bindingGraph.getAdjacencyListMap().get(node).getDependencyList()
-        .stream().map(Dependency::getTarget).sorted().collect(toList());
+  public ImmutableSet<String> getDependencies(String node) {
+    return ImmutableSet.copyOf(bindingGraph.getAdjacencyListMap().get(node).getDependencyList()
+        .stream().map(Dependency::getTarget).sorted().collect(toSet()));
   }
 
   @Override
-  public Boolean containsNode(String node) {
+  public boolean containsNode(String node) {
     return bindingGraph.getAdjacencyListMap().containsKey(node);
   }
 
   @Override
-  public Set<String> getAllNodes() {
-    return bindingGraph.getAdjacencyListMap().keySet();
+  public ImmutableSet<String> getAllNodes() {
+    return ImmutableSet.copyOf(bindingGraph.getAdjacencyListMap().keySet());
   }
 }

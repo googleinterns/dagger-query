@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import static java.util.stream.Collectors.toList;
@@ -109,14 +110,14 @@ public class Query {
    *
    * @throws IllegalArgumentException if specified source node doesn't exist
    */
-  public List<String> execute(Graph bindingGraph) {
+  public ImmutableList<String> execute(Graph bindingGraph) {
     switch (name) {
       case DEPS_QUERY_NAME: {
         String source = parameters[0];
 
         checkNodeForCorrectness(source, bindingGraph);
 
-        return bindingGraph.getDependencies(source);
+        return bindingGraph.getDependencies(source).asList();
       }
       case ALLPATHS_QUERY_NAME: {
         String source = parameters[0];
@@ -129,7 +130,7 @@ public class Query {
         Path path = new Path<>();
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
-        return result.build().stream().map(Path::toString).collect(toList());
+        return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
       }
       case SOMEPATH_QUERY_NAME: {
         String source = parameters[0];
@@ -142,14 +143,14 @@ public class Query {
 
         findSomePath(source, target, path, bindingGraph, visitedNodes);
         if (path.isEmpty()) {
-          return new ArrayList<>();
+          return ImmutableList.of();
         }
 
-        return Arrays.asList(path.toString());
+        return ImmutableList.copyOf(Arrays.asList(path.toString()));
       }
     }
 
-    throw new UnsupportedOperationException("Query with specified name is not supported yet.");
+    throw new UnsupportedOperationException("Query with specified name " + name + " is not supported yet.");
   }
 
   /**
