@@ -16,19 +16,19 @@
 <head>
     <title>Dagger Query UI</title>
 
-    <link rel="stylesheet" href="page-style.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="third-party/css/bootstrap.min.css">
     <link rel="stylesheet" href="third-party/css/mdb.min.css">
     <link rel="stylesheet" href="third-party/css/roboto-fonts.css">
 
     <!-- JQuery -->
-    <script src="third-party/js/jquery.min.js"></script>
+    <script src="third-party/js/jquery.min.js" defer></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="third-party/js/mdb.min.js"></script>
+    <script src="third-party/js/mdb.min.js" defer></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="third-party/js/popper.min.js"></script>
+    <script src="third-party/js/popper.min.js" defer></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="third-party/js/bootstrap.min.js"></script>
+    <script src="third-party/js/bootstrap.min.js" defer></script>
 </head>
 <body>
 
@@ -37,10 +37,10 @@
         <div class="col-11">
             <div class="md-form form-lg">
                 <input type="text"
-                       id="inputLGEx"
+                       id="query-input"
                        class="form-control form-control-lg"
                        spellcheck="false">
-                <label for="inputLGEx">
+                <label for="query-input">
                     Your query
                 </label>
             </div>
@@ -80,5 +80,5 @@
     </div>
 </div>
 </body>
-<script type="text/javascript" src="scripts/enables-popover.js"></script>
+<script src="scripts/enables-popover.js" defer></script>
 </html>
