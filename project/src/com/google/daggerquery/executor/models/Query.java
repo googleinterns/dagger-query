@@ -275,7 +275,7 @@ public class Query {
     // The specified node could not be found on the graph, we need to check for typos.
     List<String> closestNodes = findNodesWithClosestName(node, bindingGraph.getAllNodes());
     if (closestNodes.isEmpty()) {
-      throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", node));
+      throw new IllegalArgumentException("Specified source node " + node + " doesn't exist.");
     } else {
       throw new MisspelledNodeNameException(/*nodeNameWithTypo =*/ node, /*correctNodeName =*/ closestNodes);
     }
