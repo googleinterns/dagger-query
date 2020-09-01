@@ -20,13 +20,16 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
-import com.google.daggerquery.protobuf.autogen.DependencyProto;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import org.junit.Test;
 
 public class QueryTest {
 
@@ -370,28 +373,12 @@ public class QueryTest {
    * com.google.Component --> com.google.CatsFactory --> com.google.Cat
    * com.google.Component --> com.google.Helper
    */
-  private BindingGraphProto.BindingGraph makeSimpleBindingGraph() {
-    DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
-    DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
-    DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
-
-    BindingGraphProto.BindingGraph.ListWithDependencies componentNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .addDependency(factoryNode)
-        .addDependency(helperNode)
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies catsFactoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .addDependency(catNode)
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies catNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .build();
-
-    return BindingGraphProto.BindingGraph.newBuilder()
-        .putAdjacencyList("com.google.Component", componentNodeDeps)
-        .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
-        .putAdjacencyList("com.google.Cat", catNodeDeps)
-        .putAdjacencyList("com.google.Helper", helperNodeDeps)
+  private Map<String, List<String>> makeSimpleBindingGraph() {
+    return new ImmutableMap.Builder<String, List<String>>()
+        .put("com.google.Component", Arrays.asList("com.google.CatsFactory", "com.google.Helper"))
+        .put("com.google.CatsFactory", Arrays.asList("com.google.Cat"))
+        .put("com.google.Cat", new ArrayList<>())
+        .put("com.google.Helper", new ArrayList<>())
         .build();
   }
 
@@ -403,36 +390,13 @@ public class QueryTest {
    * com.google.Component --> com.google.Cat --> com.google.Details
    * com.google.Component --> com.google.Details
    */
-  private BindingGraphProto.BindingGraph makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
-    DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
-    DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
-    DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
-    DependencyProto.Dependency detailsNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Details").build();
-
-    BindingGraphProto.BindingGraph.ListWithDependencies componentNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .addDependency(factoryNode)
-        .addDependency(helperNode)
-        .addDependency(catNode)
-        .addDependency(detailsNode)
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies catsFactoryNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .addDependency(catNode)
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .addDependency(factoryNode)
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies catNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .addDependency(detailsNode)
-        .build();
-    BindingGraphProto.BindingGraph.ListWithDependencies detailsNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
-        .build();
-
-    return BindingGraphProto.BindingGraph.newBuilder()
-        .putAdjacencyList("com.google.Component", componentNodeDeps)
-        .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
-        .putAdjacencyList("com.google.Helper", helperNodeDeps)
-        .putAdjacencyList("com.google.Cat", catNodeDeps)
-        .putAdjacencyList("com.google.Details", detailsNodeDeps)
+  private Map<String, List<String>> makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
+    return new ImmutableMap.Builder<String, List<String>>()
+        .put("com.google.Component", Arrays.asList("com.google.CatsFactory", "com.google.Helper", "com.google.Cat", "com.google.Details"))
+        .put("com.google.CatsFactory", Arrays.asList("com.google.Cat"))
+        .put("com.google.Helper", Arrays.asList("com.google.CatsFactory"))
+        .put("com.google.Cat", Arrays.asList("com.google.Details"))
+        .put("com.google.Details", new ArrayList<>())
         .build();
   }
 }

@@ -21,10 +21,15 @@ import com.google.daggerquery.executor.models.MisspelledNodeNameException;
 import com.google.daggerquery.executor.models.Query;
 import com.google.daggerquery.executor.services.SourcesLoader;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
+import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * A class which is responsible for parsing user's input and executing a query.
@@ -54,7 +59,7 @@ public class QueryExecutor {
       IllegalArgumentException lastIllegalArgumentException = null;
       for (BindingGraph bindingGraph: bindingGraphs) {
         try {
-          resultBuilder.addAll(query.execute(bindingGraph));
+          resultBuilder.addAll(query.execute(unwrapBindingGraph(bindingGraph)));
         } catch (IllegalArgumentException e) {
           lastIllegalArgumentException = e;
         } catch (MisspelledNodeNameException e) {
@@ -77,5 +82,23 @@ public class QueryExecutor {
     } catch (IOException e) {
       printStream.println("File with binding graph sources not found. Reason: " + e.getMessage());
     }
+  }
+
+
+  /**
+   * Takes an instance of {@link BindingGraph} and converts it to {@link Map<String, List<String>>}
+   * to get rid of proto models.
+   */
+  private static Map<String, List<String>> unwrapBindingGraph(BindingGraph bindingGraph) {
+    Map<String, List<String>> processedBindingGraph = new HashMap<>();
+
+    bindingGraph.getAdjacencyListMap().forEach(
+        (source, dependencies) -> processedBindingGraph.put(
+            source,
+            dependencies.getDependencyList().stream().map(Dependency::getTarget).sorted().collect(toList())
+        )
+    );
+
+    return processedBindingGraph;
   }
 }
