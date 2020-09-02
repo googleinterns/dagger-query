@@ -20,6 +20,8 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
@@ -59,8 +61,8 @@ public class QueryTest {
 
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
 
-    String[] expectedOutput = {"com.google.CatsFactory", "com.google.Helper"};
-    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.CatsFactory", "com.google.Helper");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
   }
 
   @Test
@@ -70,8 +72,8 @@ public class QueryTest {
 
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
 
-    String[] expectedOutput = {"com.google.CatsFactory", "com.google.Helper"};
-    assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.CatsFactory", "com.google.Helper");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
   }
 
   @Test
@@ -370,7 +372,7 @@ public class QueryTest {
    * com.google.Component --> com.google.CatsFactory --> com.google.Cat
    * com.google.Component --> com.google.Helper
    */
-  private BindingGraphProto.BindingGraph makeSimpleBindingGraph() {
+  private Graph makeSimpleBindingGraph() {
     DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
     DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
     DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
@@ -387,12 +389,13 @@ public class QueryTest {
     BindingGraphProto.BindingGraph.ListWithDependencies helperNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .build();
 
-    return BindingGraphProto.BindingGraph.newBuilder()
+    BindingGraphProto.BindingGraph bindingGraph = BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
         .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
         .putAdjacencyList("com.google.Helper", helperNodeDeps)
         .build();
+    return new GraphProto(bindingGraph);
   }
 
   /*
@@ -403,7 +406,7 @@ public class QueryTest {
    * com.google.Component --> com.google.Cat --> com.google.Details
    * com.google.Component --> com.google.Details
    */
-  private BindingGraphProto.BindingGraph makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
+  private Graph makeBindingGraph_WithMultiplePathsBetweenTwoNodes() {
     DependencyProto.Dependency factoryNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.CatsFactory").build();
     DependencyProto.Dependency catNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Cat").build();
     DependencyProto.Dependency helperNode = DependencyProto.Dependency.newBuilder().setTarget("com.google.Helper").build();
@@ -427,12 +430,13 @@ public class QueryTest {
     BindingGraphProto.BindingGraph.ListWithDependencies detailsNodeDeps = BindingGraphProto.BindingGraph.ListWithDependencies.newBuilder()
         .build();
 
-    return BindingGraphProto.BindingGraph.newBuilder()
+    BindingGraphProto.BindingGraph bindingGraph = BindingGraphProto.BindingGraph.newBuilder()
         .putAdjacencyList("com.google.Component", componentNodeDeps)
         .putAdjacencyList("com.google.CatsFactory", catsFactoryNodeDeps)
         .putAdjacencyList("com.google.Helper", helperNodeDeps)
         .putAdjacencyList("com.google.Cat", catNodeDeps)
         .putAdjacencyList("com.google.Details", detailsNodeDeps)
         .build();
+    return new GraphProto(bindingGraph);
   }
 }

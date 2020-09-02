@@ -16,8 +16,11 @@ public class MisspelledNodeNameException extends RuntimeException {
    * that exist in our binding graph.
    */
   public MisspelledNodeNameException(String nodeNameWithTypo, List<String> correctNodesName) {
-    super(String.format("Binding with name %s contains a typo and not found in a graph. Maybe you meant %s?",
-                        nodeNameWithTypo, String.join(" or ", correctNodesName)));
+    super("Binding with name "
+            + nodeNameWithTypo
+            + " contains a typo and not found in a graph. Maybe you meant "
+            + String.join(" or ", correctNodesName)
+            + "?");
   }
 
 }

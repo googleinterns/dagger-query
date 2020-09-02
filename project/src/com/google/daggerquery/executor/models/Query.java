@@ -18,8 +18,6 @@ package com.google.daggerquery.executor.models;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
-import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -75,14 +72,14 @@ public class Query {
     if (typeName == null || parameters == null) {
       throw new NullPointerException("Passed arguments cannot be null.");
     } else if (!supportedQueries.keySet().contains(typeName.toLowerCase())) {
-      throw new IllegalArgumentException(String.format("Query with name \"%s\" isn't supported.", typeName));
+      throw new IllegalArgumentException("Query with name \"" + typeName + "\" isn't supported.");
     }
 
     name = typeName.toLowerCase();
 
     if (supportedQueries.get(name) != parameters.length) {
-      String exceptionMessage = String.format("The number of passed parameters is incorrect. Expected: %d, got: %d.",
-          supportedQueries.get(name), parameters.length);
+      String exceptionMessage = "The number of passed parameters is incorrect. Expected: "
+                                  + supportedQueries.get(name) + ", got: " + parameters.length + ".";
       throw new IllegalArgumentException(exceptionMessage);
     }
 
@@ -91,7 +88,7 @@ public class Query {
 
 
   /**
-   * Executes query on a {@link BindingGraph}.
+   * Executes query on a {@link Graph}.
    *
    * <p>For all queries return a list with strings. The content of the strings depends on a query name.
    *
@@ -107,15 +104,14 @@ public class Query {
    *
    * @throws IllegalArgumentException if specified source node doesn't exist
    */
-  public List<String> execute(BindingGraph bindingGraph) {
+  public ImmutableList<String> execute(Graph bindingGraph) {
     switch (name) {
       case DEPS_QUERY_NAME: {
         String source = parameters[0];
 
         checkNodeForCorrectness(source, bindingGraph);
 
-        return bindingGraph.getAdjacencyListMap().get(source).getDependencyList()
-            .stream().map(Dependency::getTarget).sorted().collect(toList());
+        return bindingGraph.getDependencies(source).asList();
       }
       case ALLPATHS_QUERY_NAME: {
         String source = parameters[0];
@@ -128,7 +124,7 @@ public class Query {
         Path path = new Path<>();
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
-        return result.build().stream().map(Path::toString).collect(toList());
+        return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
       }
       case SOMEPATH_QUERY_NAME: {
         String source = parameters[0];
@@ -141,14 +137,14 @@ public class Query {
 
         findSomePath(source, target, path, bindingGraph, visitedNodes);
         if (path.isEmpty()) {
-          return new ArrayList<>();
+          return ImmutableList.of();
         }
 
-        return Arrays.asList(path.toString());
+        return ImmutableList.copyOf(Arrays.asList(path.toString()));
       }
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException("Query with specified name " + name + " is not supported yet.");
   }
 
   /**
@@ -191,7 +187,7 @@ public class Query {
   }
 
   /**
-   * Traverses a {@link BindingGraph} starting from {@code source} node to find all paths between nodes.
+   * Traverses a {@link Graph} starting from {@code source} node to find all paths between nodes.
    *
    * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops. Constructs a {@code path} which is
    * an instance of {@link Path<String>}. At each recursive level this variable contains a correct path in a graph from
@@ -200,7 +196,7 @@ public class Query {
    * <p>As the result fills provided {@link ImmutableList.Builder<Path>} {@code allPaths} with all possible paths between
    * root and target nodes.
    */
-  private void findAllPaths(String source, String target, Path path, BindingGraph bindingGraph,
+  private void findAllPaths(String source, String target, Path path, Graph bindingGraph,
                             Set<String> visitedNodes, ImmutableList.Builder<Path> allPaths) {
     path.addLast(source);
 
@@ -212,12 +208,12 @@ public class Query {
     }
 
     visitedNodes.add(source);
-    for (Dependency nextNode: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
-      if (visitedNodes.contains(nextNode.getTarget())) {
+    for (String nextNode: bindingGraph.getDependencies(source)) {
+      if (visitedNodes.contains(nextNode)) {
         continue;
       }
 
-      findAllPaths(nextNode.getTarget(), target, path, bindingGraph, visitedNodes, allPaths);
+      findAllPaths(nextNode, target, path, bindingGraph, visitedNodes, allPaths);
     }
 
     visitedNodes.remove(source);
@@ -225,7 +221,7 @@ public class Query {
   }
 
   /**
-   * Traverses a {@link BindingGraph} starting from {@code source} node to find some path between nodes.
+   * Traverses a {@link Graph} starting from {@code source} node to find some path between nodes.
    *
    * <p>Finds the first path from {@code source} node passed in the first call and
    * {@code target} node, which is the same for all calls. Constructs this {@code path}
@@ -236,7 +232,7 @@ public class Query {
    * <p>Puts all processed nodes in a {@code visitedNodes} set to avoid loops.
    */
   private boolean findSomePath(String source, String target, Path path,
-                               BindingGraph bindingGraph, Set<String> visitedNodes) {
+                               Graph bindingGraph, Set<String> visitedNodes) {
     path.addLast(source);
 
     // Checks if we've already constructed some path from `source` to `target` and don't need to go deeper.
@@ -245,12 +241,12 @@ public class Query {
     }
 
     visitedNodes.add(source);
-    for (Dependency nextNode: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
-      if (visitedNodes.contains(nextNode.getTarget())) {
+    for (String nextNode: bindingGraph.getDependencies(source)) {
+      if (visitedNodes.contains(nextNode)) {
         continue;
       }
 
-      if (findSomePath(nextNode.getTarget(), target, path, bindingGraph, visitedNodes)) {
+      if (findSomePath(nextNode, target, path, bindingGraph, visitedNodes)) {
         return true;
       }
     }
@@ -262,7 +258,7 @@ public class Query {
   }
 
   /**
-   * Checks if the passed {@code node} is in the {@link BindingGraph} or if the user misspelled the node's name.
+   * Checks if the passed {@code node} is in the {@link Graph} or if the user misspelled the node's name.
    *
    * <p>If the passed node is correct, does nothing.
    * Otherwise, it throws an exception, the type of which depends on the node's name.
@@ -272,13 +268,13 @@ public class Query {
    *
    * @throws IllegalArgumentException if specified source node doesn't exist
    */
-  private void checkNodeForCorrectness(String node, BindingGraph bindingGraph) {
-    if (bindingGraph.getAdjacencyListMap().containsKey(node)) {
+  private void checkNodeForCorrectness(String node, Graph bindingGraph) {
+    if (bindingGraph.containsNode(node)) {
       return;
     }
 
     // The specified node could not be found on the graph, we need to check for typos.
-    List<String> closestNodes = findNodesWithClosestName(node, bindingGraph.getAdjacencyListMap().keySet());
+    List<String> closestNodes = findNodesWithClosestName(node, bindingGraph.getAllNodes());
     if (closestNodes.isEmpty()) {
       throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", node));
     } else {

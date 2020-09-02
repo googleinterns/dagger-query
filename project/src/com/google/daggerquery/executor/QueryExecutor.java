@@ -17,6 +17,7 @@ limitations under the License.
 package com.google.daggerquery.executor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.daggerquery.executor.models.GraphProto;
 import com.google.daggerquery.executor.models.MisspelledNodeNameException;
 import com.google.daggerquery.executor.models.Query;
 import com.google.daggerquery.executor.services.SourcesLoader;
@@ -54,7 +55,7 @@ public class QueryExecutor {
       IllegalArgumentException lastIllegalArgumentException = null;
       for (BindingGraph bindingGraph: bindingGraphs) {
         try {
-          resultBuilder.addAll(query.execute(bindingGraph));
+          resultBuilder.addAll(query.execute(new GraphProto(bindingGraph)));
         } catch (IllegalArgumentException e) {
           lastIllegalArgumentException = e;
         } catch (MisspelledNodeNameException e) {
