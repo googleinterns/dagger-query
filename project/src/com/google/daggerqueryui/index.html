@@ -35,7 +35,8 @@
 <div class="container" id="query-text-field">
     <div class="row align-items-center">
         <div class="col-11">
-            <div class="md-form form-lg">
+            <div class="md-form form-lg interactive-input-container">
+                <div class="form-control form-control-lg query-name"></div>
                 <input type="text"
                        id="query-input"
                        class="form-control form-control-lg"
@@ -81,4 +82,8 @@
 </div>
 <script src="scripts/enables-popover.js" defer></script>
 </body>
+
+<!-- Highlights query name when it is valid -->
+<script src="scripts/highlight-query.js" defer></script>
+
 </html>

@@ -31,3 +31,13 @@
 .query-name {
     color: #09AF00;
 }
+
+.interactive-input-container .query-name {
+    position: absolute;
+    width: auto;
+    display: none;
+    border: 0px;
+    color: #09AF00;
+    background-color: white !important;
+    font-weight: bold;
+}
