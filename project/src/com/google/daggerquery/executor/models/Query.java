@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -107,14 +108,14 @@ public class Query {
    *
    * @throws IllegalArgumentException if specified source node doesn't exist
    */
-  public List<String> execute(Graph bindingGraph) {
+  public ImmutableList<String> execute(Graph bindingGraph) {
     switch (name) {
       case DEPS_QUERY_NAME: {
         String source = parameters[0];
 
         checkNodeForCorrectness(source, bindingGraph);
 
-        return bindingGraph.getDependencies(source);
+        return bindingGraph.getDependencies(source).asList();
       }
       case ALLPATHS_QUERY_NAME: {
         String source = parameters[0];
@@ -127,7 +128,7 @@ public class Query {
         Path path = new Path<>();
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
-        return result.build().stream().map(Path::toString).collect(toList());
+        return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
       }
       case SOMEPATH_QUERY_NAME: {
         String source = parameters[0];
@@ -140,14 +141,14 @@ public class Query {
 
         findSomePath(source, target, path, bindingGraph, visitedNodes);
         if (path.isEmpty()) {
-          return new ArrayList<>();
+          return ImmutableList.of();
         }
 
-        return Arrays.asList(path.toString());
+        return ImmutableList.copyOf(Arrays.asList(path.toString()));
       }
     }
 
-    throw new UnsupportedOperationException("Query with specified name is not supported yet.");
+    throw new UnsupportedOperationException("Query with specified name " + name + " is not supported yet.");
   }
 
   /**
@@ -312,7 +313,8 @@ public class Query {
   }
 
   /**
-   * Measures the difference between two strings.
+   * Measures the difference between two strings using a
+   * <a href = "https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance algorithm</a>.
    *
    * @return the number of changes required to get one string from another,
    * where each change is a single character modification (substitution, deletion or insertion)
@@ -341,7 +343,7 @@ public class Query {
           int deleteCost = distances[firstIndex + 1][secondIndex] + 1;
 
           distances[firstIndex + 1][secondIndex + 1] =
-              Arrays.asList(replaceCost, insertCost, deleteCost).stream().min(Integer::compareTo).get();
+              Collections.min(Arrays.asList(replaceCost, insertCost, deleteCost));
         }
       }
     }

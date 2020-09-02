@@ -16,8 +16,7 @@ limitations under the License.
 
 package com.google.daggerquery.executor.models;
 
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * The interface representing the graph created by the Dagger SPI plugin.
@@ -29,16 +28,16 @@ public interface Graph {
   /**
    * Returns all node's dependencies.
    */
-  List<String> getDependencies(String node);
+  ImmutableSet<String> getDependencies(String node);
 
   /**
    * Checks if a node is presented in the graph or not.
    */
-  Boolean containsNode(String node);
+  boolean containsNode(String node);
 
   /**
    * Returns all the nodes presented in the graph.
    */
-  Set<String> getAllNodes();
+  ImmutableSet<String> getAllNodes();
 
 }
