@@ -16,6 +16,27 @@
     margin-top: 5%;
 }
 
+.hidden {
+    display: none;
+}
+
+#help-button {
+    background: #FFF;
+}
+
+#question-icon {
+    width: 64px;
+    height: 64px;
+}
+
+#help-button:focus {
+    outline: 0 !important;
+}
+
+.query-name {
+    color: #09AF00;
+}
+
 .interactive-input-container .query-name {
     position: absolute;
     width: auto;

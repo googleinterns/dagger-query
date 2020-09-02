@@ -25,17 +25,62 @@
     <script src="third-party/js/jquery.min.js" defer></script>
     <!-- MDB core JavaScript -->
     <script src="third-party/js/mdb.min.js" defer></script>
+    <!-- Bootstrap tooltips -->
+    <script src="third-party/js/popper.min.js" defer></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="third-party/js/bootstrap.min.js" defer></script>
 </head>
 <body>
 
 <div class="container" id="query-text-field">
-    <div class="md-form form-lg interactive-input-container">
-        <div class="form-control form-control-lg query-name"></div>
-        <input type="text" id="query-input" class="form-control form-control-lg" spellcheck="false">
-        <label for="query-input">Your query</label>
+    <div class="row align-items-center">
+        <div class="col-11">
+            <div class="md-form form-lg interactive-input-container">
+                <div class="form-control form-control-lg query-name"></div>
+                <input type="text"
+                       id="query-input"
+                       class="form-control form-control-lg"
+                       spellcheck="false">
+                <label for="query-input">
+                    Your query
+                </label>
+            </div>
+        </div>
+        <div class="col-1" style="background: #FFF;">
+            <a tabindex="0"
+               id="help-button"
+               popover-content="#instructions"
+               data-toggle="popover"
+               data-trigger="active">
+                <img src="res/help-button-icon.svg" id="question-icon"/>
+            </a>
+
+            <div class="hidden" id="instructions">
+                <div class="popover-heading">
+                    How to use <b>Dagger Query UI</b>?
+                </div>
+                <div class="popover-body">
+                    You can execute the following queries by entering them in the input field:
+                    <ul>
+                        <li>
+                            <b class="query-name">deps</b>
+                            <b>binding</b> - to see all nodes dependencies
+                        </li>
+                        <li>
+                            <b class="query-name">allpaths</b>
+                            <b>source target</b> - to see all paths between source and target nodes
+                        </li>
+                        <li>
+                            <b class="query-name">somepath</b>
+                            <b>source target</b> - to see some path between source and target nodes
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
+<script src="scripts/enables-popover.js" defer></script>
 </body>
 
 <!-- Highlights query name when it is valid -->
