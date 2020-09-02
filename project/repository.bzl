@@ -16,7 +16,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-_JSINTEROP_BASE_VERSION = "master"
+_JSINTEROP_BASE_VERSION = "1.0.0"
 
 def load_j2cl_proto_repo_deps():
     http_archive(
