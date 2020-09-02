@@ -24,6 +24,11 @@
     background: #FFF;
 }
 
+#question-icon {
+    width: 64px;
+    height: 64px;
+}
+
 #help-button:focus {
     outline: 0 !important;
 }
