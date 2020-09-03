@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import jsinterop.annotations.JsType;
 
 import static java.util.stream.Collectors.toList;
 
@@ -37,7 +38,10 @@ import static java.util.stream.Collectors.toList;
  *
  * <p>Also each query contains parameters which were passed by user.
  * The number of parameters is completely defined by the query's name.
+ *
+ * <p>Class is marked as @JsType as we would like to use this class in JavaScript.
  */
+@JsType
 public class Query {
 
   private final static String DEPS_QUERY_NAME = "deps";
@@ -276,7 +280,7 @@ public class Query {
     // The specified node could not be found on the graph, we need to check for typos.
     List<String> closestNodes = findNodesWithClosestName(node, bindingGraph.getAllNodes());
     if (closestNodes.isEmpty()) {
-      throw new IllegalArgumentException(String.format("Specified source node %s doesn't exist.", node));
+      throw new IllegalArgumentException("Specified source node " + node + " doesn't exist.");
     } else {
       throw new MisspelledNodeNameException(/*nodeNameWithTypo =*/ node, /*correctNodeName =*/ closestNodes);
     }

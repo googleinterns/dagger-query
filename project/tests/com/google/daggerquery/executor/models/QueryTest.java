@@ -26,9 +26,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.DependencyProto;
-import org.junit.Test;
 import java.util.List;
 import java.util.Set;
+import org.junit.Test;
 
 public class QueryTest {
 

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+load("@com_google_j2cl//build_defs:rules.bzl", "j2cl_library")
 load("@rules_java//java:defs.bzl", "java_library")
 
 package(default_visibility = ["//visibility:public"])
@@ -23,5 +24,19 @@ java_library(
         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
         "//src/com/google/daggerquery/protobuf:dependency_java_proto",
         "//third_party/java/guava:guava",
+        "@com_google_j2cl//:jsinterop-annotations",
     ],
+)
+
+j2cl_library(
+    name = "query_executor_models-j2cl",
+    srcs = [
+        "Graph.java",
+        "Query.java",
+        "MisspelledNodeNameException.java",
+    ],
+    deps = [
+        "@com_google_j2cl//:jsinterop-annotations-j2cl",
+        "@com_google_guava-j2cl",
+    ]
 )
