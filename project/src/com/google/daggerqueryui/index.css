@@ -29,7 +29,7 @@
     height: 64px;
 }
 
-#help-button:focus {
+:focus {
     outline: 0 !important;
 }
 
