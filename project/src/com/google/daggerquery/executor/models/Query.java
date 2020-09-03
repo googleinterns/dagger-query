@@ -61,7 +61,7 @@ public class Query {
       .build();
 
   private String name;
-  private String[] parameters;
+  private String parameters;
 
   /**
    * Creates an instance of {@link Query} with specified type and parameters.
@@ -72,7 +72,7 @@ public class Query {
    * @throws IllegalArgumentException if number of parameters is invalid or query's name is invalid
    * @throws NullPointerException if any of arguments are equal to {@code null}
    */
-  public Query(String typeName, String... parameters) {
+  public Query(String typeName, String parameters) {
     if (typeName == null || parameters == null) {
       throw new NullPointerException("Passed arguments cannot be null.");
     } else if (!supportedQueries.keySet().contains(typeName.toLowerCase())) {
@@ -81,13 +81,17 @@ public class Query {
 
     name = typeName.toLowerCase();
 
-    if (supportedQueries.get(name) != parameters.length) {
-      String exceptionMessage = "The number of passed parameters is incorrect. Expected: "
-                                  + supportedQueries.get(name) + ", got: " + parameters.length + ".";
-      throw new IllegalArgumentException(exceptionMessage);
-    }
+//    if (supportedQueries.get(name) != parameters.length) {
+//      String exceptionMessage = "The number of passed parameters is incorrect. Expected: "
+//                                  + supportedQueries.get(name) + ", got: " + parameters.length + ".";
+//      throw new IllegalArgumentException(exceptionMessage);
+//    }
 
     this.parameters = parameters;
+  }
+
+  public String testMethod(){
+    return name + " " + parameters;
   }
 
 
@@ -111,41 +115,41 @@ public class Query {
   public ImmutableList<String> execute(Graph bindingGraph) {
     switch (name) {
       case DEPS_QUERY_NAME: {
-        String source = parameters[0];
+        String source = parameters;
 
         checkNodeForCorrectness(source, bindingGraph);
 
         return bindingGraph.getDependencies(source).asList();
       }
-      case ALLPATHS_QUERY_NAME: {
-        String source = parameters[0];
-
-        checkNodeForCorrectness(source, bindingGraph);
-
-        String target = parameters[1];
-        Set<String> visitedNodes = new HashSet<>();
-        ImmutableList.Builder<Path> result = new ImmutableList.Builder<>();
-        Path path = new Path<>();
-
-        findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
-        return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
-      }
-      case SOMEPATH_QUERY_NAME: {
-        String source = parameters[0];
-
-        checkNodeForCorrectness(source, bindingGraph);
-
-        String target = parameters[1];
-        Set<String> visitedNodes = new HashSet<>();
-        Path path = new Path<>();
-
-        findSomePath(source, target, path, bindingGraph, visitedNodes);
-        if (path.isEmpty()) {
-          return ImmutableList.of();
-        }
-
-        return ImmutableList.copyOf(Arrays.asList(path.toString()));
-      }
+//      case ALLPATHS_QUERY_NAME: {
+//        String source = parameters[0];
+//
+//        checkNodeForCorrectness(source, bindingGraph);
+//
+//        String target = parameters[1];
+//        Set<String> visitedNodes = new HashSet<>();
+//        ImmutableList.Builder<Path> result = new ImmutableList.Builder<>();
+//        Path path = new Path<>();
+//
+//        findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
+//        return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
+//      }
+//      case SOMEPATH_QUERY_NAME: {
+//        String source = parameters[0];
+//
+//        checkNodeForCorrectness(source, bindingGraph);
+//
+//        String target = parameters[1];
+//        Set<String> visitedNodes = new HashSet<>();
+//        Path path = new Path<>();
+//
+//        findSomePath(source, target, path, bindingGraph, visitedNodes);
+//        if (path.isEmpty()) {
+//          return ImmutableList.of();
+//        }
+//
+//        return ImmutableList.copyOf(Arrays.asList(path.toString()));
+//      }
     }
 
     throw new UnsupportedOperationException("Query with specified name " + name + " is not supported yet.");

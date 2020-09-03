@@ -17,12 +17,14 @@ limitations under the License.
 package com.google.daggerquery.executor.models;
 
 import com.google.common.collect.ImmutableSet;
+import jsinterop.annotations.JsType;
 
 /**
  * The interface representing the graph created by the Dagger SPI plugin.
  *
  * <p>Provides the methods needed to traverse this graph and to execute queries.
  */
+@JsType
 public interface Graph {
 
   /**
