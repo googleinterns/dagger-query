@@ -33,6 +33,7 @@ j2cl_library(
     srcs = [
         "Graph.java",
         "Query.java",
+        "GraphImpl.java",
         "MisspelledNodeNameException.java",
     ],
     deps = [
