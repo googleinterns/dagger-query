@@ -16,10 +16,21 @@ load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
 load("@com_google_j2cl//build_defs:rules.bzl", "j2cl_application")
 
 closure_js_library(
+    name = "vis-js",
+    srcs = ["vis-network.js"],
+    suppress = [
+        "lintChecks",
+        "nonStandardJsDocs",
+        "checkVars",
+    ],
+)
+
+closure_js_library(
     name = "js_app",
     srcs = ["app.js"],
     deps = [
         "//src/com/google/daggerquery/executor/models:query_executor_models-j2cl",
+        ":vis-js",
     ],
 )
 
