@@ -56,7 +56,7 @@ public class QueryExecutor {
    * @throws IOException when files with binding graphs cannot be found
    * @return an instance of {@link ImmutableList} which contains query's results
    */
-  public static ImmutableList execute(String[] args) throws IOException {
+  public static ImmutableList<String> execute(String[] args) throws IOException {
     if (args.length == 0) {
       throw new IllegalArgumentException("You did not specify the request and its parameters.");
     }
@@ -64,7 +64,7 @@ public class QueryExecutor {
     Query query = new Query(args[0], Arrays.copyOfRange(args, 1, args.length));
     List<BindingGraph> bindingGraphs = new SourcesLoader().loadBindingGraphs();
 
-    ImmutableList.Builder resultBuilder = new ImmutableList.Builder();
+    ImmutableList.Builder<String> resultBuilder = new ImmutableList.Builder();
 
     // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
     MisspelledNodeNameException lastMisspelledNodeNameException = null;
@@ -79,7 +79,7 @@ public class QueryExecutor {
       }
     }
 
-    ImmutableList resultList = resultBuilder.build();
+    ImmutableList<String> resultList = resultBuilder.build();
     if (resultList.isEmpty()) {
       if (lastMisspelledNodeNameException != null) {
         throw new IllegalArgumentException(lastMisspelledNodeNameException.getMessage());
