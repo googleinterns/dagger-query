@@ -32,51 +32,64 @@ import java.util.List;
  */
 public class QueryExecutor {
   /**
-   * Parses user's arguments and executes a query.
-   *
-   * <p>The first argument must always define the name of a query.
-   * Next arguments belong to a query as its parameters.
+   * An entry point which executes a query specified as a command-line {@code args} and prints the result.
    */
   public static void main(String[] args) {
     PrintStream printStream = System.out;
 
     try {
-      if (args.length == 0) {
-        throw new IllegalArgumentException("You did not specify the request and its parameters.");
-      }
-
-      Query query = new Query(args[0], Arrays.copyOfRange(args, 1, args.length));
-      List<BindingGraph> bindingGraphs = new SourcesLoader().loadBindingGraphs();
-
-      ImmutableList.Builder resultBuilder = new ImmutableList.Builder();
-
-      // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
-      MisspelledNodeNameException lastMisspelledNodeNameException = null;
-      IllegalArgumentException lastIllegalArgumentException = null;
-      for (BindingGraph bindingGraph: bindingGraphs) {
-        try {
-          resultBuilder.addAll(query.execute(new GraphProto(bindingGraph)));
-        } catch (IllegalArgumentException e) {
-          lastIllegalArgumentException = e;
-        } catch (MisspelledNodeNameException e) {
-          lastMisspelledNodeNameException = e;
-        }
-      }
-
-      ImmutableList resultList = resultBuilder.build();
-      if (resultList.isEmpty()) {
-        if (lastMisspelledNodeNameException != null) {
-          throw new IllegalArgumentException(lastMisspelledNodeNameException.getMessage());
-        } else if (lastIllegalArgumentException != null) {
-          throw lastIllegalArgumentException;
-        }
-      } else {
-        resultList.forEach(printStream::println);
-      }
+      ImmutableList resultList = execute(args);
+      resultList.forEach(printStream::println);
     } catch (IllegalArgumentException e) {
       printStream.println("Execution failed. Reason: " + e.getMessage());
     } catch (IOException e) {
       printStream.println("File with binding graph sources not found. Reason: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Parses user's arguments and executes a query.
+   *
+   * <p>The first argument must always define the name of a query.
+   * Next arguments belong to a query as its parameters.
+   *
+   * @throws IOException when files with binding graphs cannot be found
+   * @return an instance of {@link ImmutableList} which contains query's results
+   */
+  public static ImmutableList execute(String[] args) throws IOException {
+    if (args.length == 0) {
+      throw new IllegalArgumentException("You did not specify the request and its parameters.");
+    }
+
+    Query query = new Query(args[0], Arrays.copyOfRange(args, 1, args.length));
+    List<BindingGraph> bindingGraphs = new SourcesLoader().loadBindingGraphs();
+
+    ImmutableList.Builder resultBuilder = new ImmutableList.Builder();
+
+    // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
+    MisspelledNodeNameException lastMisspelledNodeNameException = null;
+    IllegalArgumentException lastIllegalArgumentException = null;
+    for (BindingGraph bindingGraph: bindingGraphs) {
+      try {
+        resultBuilder.addAll(query.execute(new GraphProto(bindingGraph)));
+      } catch (IllegalArgumentException e) {
+        lastIllegalArgumentException = e;
+      } catch (MisspelledNodeNameException e) {
+        lastMisspelledNodeNameException = e;
+      }
+    }
+
+    ImmutableList resultList = resultBuilder.build();
+    if (resultList.isEmpty()) {
+      if (lastMisspelledNodeNameException != null) {
+        throw new IllegalArgumentException(lastMisspelledNodeNameException.getMessage());
+      } else if (lastIllegalArgumentException != null) {
+        throw lastIllegalArgumentException;
+      } else {
+        throw new IllegalArgumentException("Nothing found, list with results is empty.");
+      }
+    } else {
+      return resultList;
     }
   }
 }
