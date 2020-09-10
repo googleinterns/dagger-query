@@ -92,7 +92,9 @@ $("#query-input").on('keydown keyup change', function (event) {
       }
     }
 
-    const url = `http://localhost:4921/daggerquery/?${query.map(element => `query=${element}`).join('&')}`;
+    const port = 4921;
+    const host = 'localhost';
+    const url = `http://${host}:${port}/daggerquery/?${query.map(element => `query=${element}`).join('&')}`;
 
     // Third parameter equals `true` which means that our call is asynchronous.
     request.open('GET', url, true);
