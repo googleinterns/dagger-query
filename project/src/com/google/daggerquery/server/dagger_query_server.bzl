@@ -16,8 +16,10 @@ load("@rules_java//java:defs.bzl", "java_binary")
 load("//src/com/google/daggerquery/plugin:dagger_query_textproto.bzl", "dagger_query_textproto")
 
 def dagger_query_server(name, dagger_app_target):
+   binding_graph_data_name = name + "_binding_graph_data"
+
    dagger_query_textproto(
-       name = "binding_graph_data",
+       name = binding_graph_data_name,
        dagger_app_target = dagger_app_target
    )
 
@@ -25,5 +27,5 @@ def dagger_query_server(name, dagger_app_target):
      name = name,
      main_class = "com.google.daggerquery.server.Server",
      runtime_deps = ["//src/com/google/daggerquery/server:server"],
-     resources = [":binding_graph_data"],
+     resources = [":" + binding_graph_data_name],
    )

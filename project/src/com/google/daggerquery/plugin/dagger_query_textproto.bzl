@@ -39,7 +39,7 @@ _dagger_query_textproto = rule(
         ),
     },
     outputs = {
-        "out": "%{name}.zip",
+        "out": "binding_graph_data.zip",
     },
     implementation = _dagger_query_textproto_impl,
 )
