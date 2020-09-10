@@ -167,3 +167,9 @@ maven_jar(
     name = "org_jboss_logging",
     artifact = "org.jboss.logging:jboss-logging:3.3.2.Final"
 )
+
+maven_jar(
+    name = "gson",
+    artifact = "com.google.code.gson:gson:jar:2.8.5",
+    sha1 = "02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0",
+)

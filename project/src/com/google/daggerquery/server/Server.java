@@ -2,9 +2,11 @@ package com.google.daggerquery.server;
 
 import com.google.common.collect.ImmutableList;
 import com.google.daggerquery.executor.QueryExecutor;
+import com.google.gson.Gson;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.RoutingHandler;
 import io.undertow.Undertow;
+import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
@@ -55,13 +57,10 @@ public class Server {
     String[] args = deque.getFirst().split(" ");
     try {
       ImmutableList<String> results = QueryExecutor.execute(args);
-      ByteBuffer[] buffers = results
-        .stream()
-        .map(result -> ByteBuffer.wrap(result.getBytes()))
-        .toArray(ByteBuffer[]::new);
 
       exchange.setStatusCode(StatusCodes.OK);
-      exchange.getResponseSender().send(buffers);
+      exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+      exchange.getResponseSender().send(new Gson().toJson(results));
     } catch (IllegalArgumentException e) {
       exchange.setStatusCode(StatusCodes.BAD_REQUEST);
       exchange.getResponseSender().send("Execution failed. Reason: " + e.getMessage());

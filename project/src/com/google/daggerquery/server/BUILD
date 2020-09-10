@@ -24,5 +24,6 @@ java_library(
          "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
          "//third_party/java/guava:guava",
          "//third_party/java/undertow:undertow",
+         "@com_google_code_gson//jar"
     ],
 )
