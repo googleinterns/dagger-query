@@ -82,22 +82,19 @@ $("#query-input").on('keydown keyup change', function (event) {
   queryNameElement.html(queryName).show();
 
   if (event.key === 'Enter' && $(this).validateParameters(query)) {
-    const request = new XMLHttpRequest();
+    async function getQueryResults(url) {
+      let response = await fetch(url);
 
-    request.onreadystatechange = function () {
-      if (request.status === 200) {
-        $(this).markInputFieldAsValid();
-      } else if (request.status === 404 || request.status === 400) {
-        $(this).markInputFieldAsInvalid(request.responseText);
+      if (response.status === 200) {
+        return await response.json();
       }
+
+      throw await response.text();
     }
 
-    const port = 4921;
-    const host = 'localhost';
-    const url = `http://${host}:${port}/daggerquery/?${query.map(element => `query=${element}`).join('&')}`;
+    const url = new URL(`http://localhost:4921/daggerquery/`);
+    url.searchParams.append('query', query.join(' '));
 
-    // Third parameter equals `true` which means that our call is asynchronous.
-    request.open('GET', url, true);
-    request.send(null);
+    const graph = getQueryResults(url).then($(this).markInputFieldAsValid).catch($(this).markInputFieldAsInvalid);
   }
 });
