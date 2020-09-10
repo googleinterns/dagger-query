@@ -52,7 +52,7 @@ public class Server {
       return;
     }
 
-    String[] args = deque.stream().filter(value -> value.length() > 0).toArray(String[]::new);
+    String[] args = deque.getFirst().split(" ");
     try {
       ImmutableList<String> results = QueryExecutor.execute(args);
       ByteBuffer[] buffers = results
