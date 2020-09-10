@@ -46,25 +46,16 @@ $(function () {
    * @param {string} errorMessage a error message which will be shown under the input field
    */
   $.fn.markInputFieldAsInvalid = function (errorMessage) {
-    const inputField = document.getElementById("query-input");
-    const errorContainer = document.getElementById("error-message");
-
-    inputField.classList.remove("is-valid");
-    inputField.classList.add("is-invalid");
-    errorContainer.classList.remove("hidden");
-    errorContainer.innerHTML = errorMessage;
+    $("#query-input").removeClass("is-valid").addClass("is-invalid");
+    $("#error-message").removeClass("hidden").text(errorMessage);
   };
 
   /**
    * Marks the input field as valid and hides the container with an error message if shown earlier.
    */
   $.fn.markInputFieldAsValid = function () {
-    const inputField = document.getElementById("query-input");
-    const errorContainer = document.getElementById("error-message");
-
-    inputField.classList.remove("is-invalid");
-    inputField.classList.add("is-valid");
-    errorContainer.classList.add("hidden");
+    $("#query-input").removeClass("is-invalid").addClass("is-valid");
+    $("#error-message").addClass("hidden");
   };
 });
 
