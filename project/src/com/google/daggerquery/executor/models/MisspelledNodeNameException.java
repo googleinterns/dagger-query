@@ -1,17 +1,13 @@
 package com.google.daggerquery.executor.models;
 
 import java.util.List;
-import jsinterop.annotations.JsType;
 
 /**
  * An exception is thrown to indicate that a binding name contains a typo.
  *
  * <p>This exception <b>should</b> be used to report a typo in a binding node name,
  * which user has provided as a query parameter.
- *
- * <p>Class is marked as @JsType as we would like to use this class in JavaScript.
  */
-@JsType
 public class MisspelledNodeNameException extends RuntimeException {
 
   /**
