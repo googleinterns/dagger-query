@@ -87,7 +87,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "gson",
-    artifact = "com.google.code.gson:gson:jar:2.8.5",
-    sha1 = "02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0",
+    name = "com_google_code_gson",
+    artifact = "com.google.code.gson:gson:2.8.6",
+    sha1 = "9180733b7df8542621dc12e21e87557e8c99b8cb",
 )
