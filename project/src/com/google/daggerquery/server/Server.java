@@ -74,10 +74,16 @@ public class Server {
       exchange.getResponseSender().send(new Gson().toJson(results));
     } catch (IllegalArgumentException e) {
       exchange.setStatusCode(StatusCodes.BAD_REQUEST);
-      exchange.getResponseSender().send("Execution failed. Reason: " + e.getMessage());
+
+      String errorMessage = "Execution failed. Reason: " + e.getMessage();
+      exchange.getResponseSender().send(errorMessage);
+      System.err.println(errorMessage);
     } catch (IOException e) {
       exchange.setStatusCode(StatusCodes.NOT_FOUND);
-      exchange.getResponseSender().send("File with binding graph sources not found. Reason: " + e.getMessage());
+
+      String errorMessage = "File with binding graph sources not found. Reason: " + e.getMessage();
+      exchange.getResponseSender().send(errorMessage);
+      System.err.println(errorMessage);
     }
   }
 }
