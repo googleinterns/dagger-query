@@ -91,3 +91,15 @@ maven_jar(
     artifact = "com.google.code.gson:gson:2.8.6",
     sha1 = "9180733b7df8542621dc12e21e87557e8c99b8cb",
 )
+
+maven_jar(
+    name = "org_apache_httpcomponents_client",
+    artifact = "org.apache.httpcomponents:httpclient:4.5.12",
+    sha1 = "4023a2a80b64c25926911faf350b50cd2a29220f",
+)
+
+maven_jar(
+    name = "org_apache_httpcomponents_core",
+    artifact = "org.apache.httpcomponents:httpcore:4.4.13",
+    sha1 = "853b96d3afbb7bf8cc303fe27ee96836a10c1834",
+)
