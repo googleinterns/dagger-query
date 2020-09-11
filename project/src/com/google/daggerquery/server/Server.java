@@ -19,6 +19,8 @@ public class Server {
   private static final int PORT = 4921;
   private static final String HOST = "localhost";
 
+  private static Undertow undertowServer;
+
   /**
    * Starts a server that accepts a single <b>GET</b> request with the specified query.
    */
@@ -26,11 +28,20 @@ public class Server {
     RoutingHandler routingHandler = new RoutingHandler();
     routingHandler.add("GET", "/daggerquery/{query}", Server::executeQuery);
 
-    Undertow undertowServer = Undertow.builder()
+    undertowServer = Undertow.builder()
         .addHttpListener(PORT, HOST)
         .setHandler(routingHandler)
         .build();
     undertowServer.start();
+  }
+
+  /**
+   * Stops a server if it is not null. Otherwise does nothing.
+   */
+  public static void stop() {
+    if (undertowServer != null) {
+      undertowServer.stop();
+    }
   }
 
   /**
