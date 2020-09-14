@@ -97,7 +97,7 @@ $(function () {
   }
 });
 
-$("#query-input").on('keydown keyup change', function (event) {
+$("#query-input").on('keyup', function (event) {
   const query = $(this).val().trim().split(' ');
   const queryName = query[0];
 
