@@ -47,3 +47,59 @@ google_common_workspace_rules()
 
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
+  name = "com_googlesource_gerrit_bazlets",
+  remote = "https://gerrit.googlesource.com/bazlets",
+  commit = "928c928345646ae958b946e9bbdb462f58dd1384",
+)
+
+load("@com_googlesource_gerrit_bazlets//:gerrit_api.bzl", "gerrit_api")
+gerrit_api()
+
+load("@com_googlesource_gerrit_bazlets//tools:maven_jar.bzl", "maven_jar")
+
+maven_jar(
+    name = "io_undertow_core",
+    artifact = "io.undertow:undertow-core:2.0.13.Final"
+)
+
+maven_jar(
+    name = "io_undertow_websockets_jsr",
+    artifact = "io.undertow:undertow-websockets-jsr:2.0.13.Final"
+)
+
+maven_jar(
+    name = "org_jboss_xnio_api",
+    artifact = "org.jboss.xnio:xnio-api:3.3.8.Final"
+)
+
+maven_jar(
+    name = "org_jboss_xnio_nio",
+    artifact = "org.jboss.xnio:xnio-nio:3.3.8.Final"
+)
+
+maven_jar(
+    name = "org_jboss_logging",
+    artifact = "org.jboss.logging:jboss-logging:3.3.2.Final"
+)
+
+maven_jar(
+    name = "com_google_code_gson",
+    artifact = "com.google.code.gson:gson:2.8.6",
+    sha1 = "9180733b7df8542621dc12e21e87557e8c99b8cb",
+)
+
+maven_jar(
+    name = "org_apache_httpcomponents_client",
+    artifact = "org.apache.httpcomponents:httpclient:4.5.12",
+    sha1 = "4023a2a80b64c25926911faf350b50cd2a29220f",
+)
+
+maven_jar(
+    name = "org_apache_httpcomponents_core",
+    artifact = "org.apache.httpcomponents:httpcore:4.4.13",
+    sha1 = "853b96d3afbb7bf8cc303fe27ee96836a10c1834",
+)
