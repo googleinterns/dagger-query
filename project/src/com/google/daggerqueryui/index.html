@@ -29,6 +29,8 @@
     <script src="third-party/js/popper.min.js" defer></script>
     <!-- Bootstrap core JavaScript -->
     <script src="third-party/js/bootstrap.min.js" defer></script>
+    <!-- Vis.js -->
+    <script src="third-party/js/vis-network.min.js" defer></script>
 </head>
 <body>
 
@@ -81,8 +83,11 @@
     </div>
     <div id="error-message" class="text-danger"></div>
 </div>
+<div id="binding-graph"></div>
 <!-- Activates popover from Bootstrap -->
 <script src="scripts/enables-popover.js" defer></script>
+<!-- Interactive binding graph displayed on the page -->
+<script src="scripts/binding_graph.js" defer></script>
 <!-- Tries to execute a query and highlights its name when it is valid -->
 <script src="scripts/analyze_input_field_content.js" defer></script>
 </body>
