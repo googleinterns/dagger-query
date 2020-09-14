@@ -13,10 +13,14 @@
 // limitations under the License.
 
 $(function () {
+  $.DEPS_QUERY_NAME = 'deps';
+  $.SOMEPATH_QUERY_NAME = 'somepath';
+  $.ALLPATHS_QUERY_NAME = 'allpaths';
+
   $.supportedQueries = new Map([
-    ['deps', 1],
-    ['allpaths', 2],
-    ['somepath', 2],
+    [$.DEPS_QUERY_NAME, 1],
+    [$.ALLPATHS_QUERY_NAME, 2],
+    [$.SOMEPATH_QUERY_NAME, 2],
   ]);
 
   /**
