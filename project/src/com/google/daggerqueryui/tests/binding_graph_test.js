@@ -15,8 +15,11 @@
 var assert = chai.assert;
 
 describe('Binding Graph', function() {
-  it('adds one edge correctly', function() {
+  beforeEach(function () {
     bindingGraph.clear();
+  });
+
+  it('adds one edge correctly', function() {
     bindingGraph.addEdge('com.google.A', 'com.google.B');
 
     const expectedNodes = [
@@ -29,7 +32,6 @@ describe('Binding Graph', function() {
   });
 
   it('extracts the simple name from the complex node name correctly', function() {
-    bindingGraph.clear();
     bindingGraph.addEdge('com.google.List<com.google.A>', 'com.google.List<com.google.common.collect.ImmutableSet<com.google.A>>');
 
     const expectedNodes = [
@@ -41,7 +43,6 @@ describe('Binding Graph', function() {
   });
 
   it('removes all deps and isolated nodes correctly', function() {
-    bindingGraph.clear();
     bindingGraph.addEdge('com.google.A', 'com.google.B');
     bindingGraph.addEdge('com.google.A', 'com.google.C');
     bindingGraph.addEdge('com.google.A', 'com.google.D');
@@ -57,7 +58,6 @@ describe('Binding Graph', function() {
   });
 
   it('removes all deps and keeps nodes correctly', function() {
-    bindingGraph.clear();
     bindingGraph.addEdge('com.google.A', 'com.google.B');
     bindingGraph.addEdge('com.google.C', 'com.google.B');
     bindingGraph.addEdge('com.google.C', 'com.google.D');
@@ -80,7 +80,6 @@ describe('Binding Graph', function() {
   });
 
   it('adds one path correctly', function() {
-    bindingGraph.clear();
     bindingGraph.addPath('com.google.A -> com.google.B -> com.google.C');
 
     const expectedNodes = [
@@ -98,7 +97,6 @@ describe('Binding Graph', function() {
   });
 
   it('adds multiple paths correctly', function() {
-    bindingGraph.clear();
     bindingGraph.addPath('com.google.A -> com.google.B -> com.google.C');
     bindingGraph.addPath('com.google.B -> com.google.D -> com.google.E');
 
