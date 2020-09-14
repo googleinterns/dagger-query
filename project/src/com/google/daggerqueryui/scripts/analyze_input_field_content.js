@@ -83,10 +83,12 @@ $(function () {
    * Processes a valid query by sending a request to the specified URL,
    * receiving a response, and performing UI actions in response.
    *
-   * @param url an address with the correct path and request parameters in it
+   * @param {string[]} query a valid query which will be executed
    */
-  $.fn.processQuery = async function (url) {
+  $.fn.processQuery = async function (query) {
     try {
+      const url = new URL(`http://localhost:4921/daggerquery/`);
+      url.searchParams.append('query', query.join(' '));
       const graph = await $(this).getQueryResults(url);
       $(this).markInputFieldAsValid();
     } catch (error) {
@@ -109,9 +111,6 @@ $("#query-input").on('keydown keyup change', function (event) {
   queryNameElement.html(queryName).show();
 
   if (event.key === 'Enter' && $(this).validateParameters(query)) {
-    const url = new URL(`http://localhost:4921/daggerquery/`);
-    url.searchParams.append('query', query.join(' '));
-
-    $(this).processQuery(url);
+    $(this).processQuery(query);
   }
 });
