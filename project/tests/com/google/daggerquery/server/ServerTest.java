@@ -41,9 +41,9 @@ public class ServerTest {
 
     uriBuilder = new URIBuilder()
       .setScheme("http")
-      .setHost("localhost")
-      .setPort(4921)
-      .setPath("/daggerquery/");
+      .setHost(Server.HOST)
+      .setPort(Server.PORT)
+      .setPath(Server.PATH);
   }
 
   @Test

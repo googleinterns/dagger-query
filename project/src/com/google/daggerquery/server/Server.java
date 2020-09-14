@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 
 public class Server {
 
-  private static final int PORT = 4921;
-  private static final String HOST = "localhost";
+  public static final int PORT = 4921;
+  public static final String HOST = "localhost";
+  public static final String PATH = "/daggerquery/";
 
   private static Undertow undertowServer;
 
@@ -26,7 +27,7 @@ public class Server {
    */
   public static void main(String[] args) {
     RoutingHandler routingHandler = new RoutingHandler();
-    routingHandler.add("GET", "/daggerquery/{query}", Server::executeQuery);
+    routingHandler.add("GET", PATH + "{query}", Server::executeQuery);
 
     undertowServer = Undertow.builder()
         .addHttpListener(PORT, HOST)
