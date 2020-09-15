@@ -94,9 +94,7 @@ $(function () {
 
       if (query[0] === $.DEPS_QUERY_NAME) {
         bindingGraph.clear();
-        for (let childNode of graph) {
-          bindingGraph.addEdge(query[1], childNode);
-        }
+        bindingGraph.addDeps(query[1], graph);
       } else if (query[0] === $.ALLPATHS_QUERY_NAME || query[0] === $.SOMEPATH_QUERY_NAME) {
         bindingGraph.clear();
         for (let path of graph) {

@@ -123,20 +123,20 @@ const bindingGraph = (function() {
     tryToRemoveNode(edge.to);
   }
 
+  /**
+   * Adds an edge from the <b>source</b> node to the <b>target</b>.
+   *
+   * @param {string} source the first node of the given edge
+   * @param {string} target the second node of the given edge
+   */
+  function addEdge(source, target, style) {
+    const sourceId = addNode(source);
+    const targetId = addNode(target);
+
+    edges.add({from: sourceId, to: targetId});
+  }
+
   return {
-    /**
-     * Adds an edge from the <b>source</b> node to the <b>target</b>.
-     *
-     * @param {string} source the first node of the given edge
-     * @param {string} target the second node of the given edge
-     */
-    addEdge: function (source, target) {
-      const sourceId = addNode(source);
-      const targetId = addNode(target);
-
-      edges.add({from: sourceId, to: targetId});
-    },
-
     /**
      * Removes all edges with the given start node from the subgraph.
      *
@@ -162,7 +162,18 @@ const bindingGraph = (function() {
     addPath: function (path) {
       const nodesInPath = path.split( ' -> ');
       for (let index = 0; index + 1 < nodesInPath.length; ++index) {
-        bindingGraph.addEdge(nodesInPath[index], nodesInPath[index + 1]);
+        addEdge(nodesInPath[index], nodesInPath[index + 1]);
+      }
+    },
+
+    /**
+     * Adds all source node's dependencies to the subgraph.
+     * @param {string} source
+     * @param {string[]} deps
+     */
+    addDeps: function (source, deps) {
+      for (const childNode of deps) {
+        addEdge(source, childNode);
       }
     },
 
