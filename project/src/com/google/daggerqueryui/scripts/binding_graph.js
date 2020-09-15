@@ -123,20 +123,6 @@ const bindingGraph = (function() {
 
   return {
     /**
-     * Removes all edges with the given start node from the subgraph.
-     *
-     * @param {string} node a source node which dependencies will be removed
-     */
-    deleteDeps: function (node) {
-      // Retrieves all edges having a start node with value `node`.
-      const edgesToBeRemoved = getAllDeps(nodesToNumbers.get(node));
-
-      for (const edge of edgesToBeRemoved) {
-        removeEdge(edge);
-      }
-    },
-
-    /**
      * Takes a string representing a path where two adjacent nodes are connected by an edge,
      * and adds all these edges to the subgraph.
      *
