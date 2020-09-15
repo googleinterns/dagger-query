@@ -146,7 +146,7 @@ const bindingGraph = (function() {
       // Retrieves all edges having a start node with value `node`.
       const edgesToBeRemoved = getAllDeps(nodesToNumbers.get(node));
 
-      for (let edge of edgesToBeRemoved) {
+      for (const edge of edgesToBeRemoved) {
         removeEdge(edge);
       }
     },
