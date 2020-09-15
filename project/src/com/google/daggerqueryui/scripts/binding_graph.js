@@ -78,11 +78,15 @@ const bindingGraph = (function() {
    * to any other node in the graph.
    *
    * @param {number} nodeId an identifier of a node to be removed
+   * @return {boolean} a boolean flag which indicates if a node was removed or not
    */
   function tryToRemoveNode(nodeId) {
     if (getAllEdges(nodeId).length === 0) {
       nodes.remove(nodeId);
+      return true;
     }
+
+    return false;
   }
 
   /**
