@@ -22,62 +22,34 @@ describe('Binding Graph', function() {
   it('adds one edge correctly', function() {
     bindingGraph.addDeps('com.google.A', ['com.google.B']);
 
-    const expectedNodes = [
-      [0, 'A', 'com.google.A'],
-      [1, 'B', 'com.google.B']
-    ];
-
-    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
+    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]),
+                           [[0, 'A', 'com.google.A'], [1, 'B', 'com.google.B']]);
     assert.sameDeepMembers(bindingGraph.getEdges().map(node => [node.from, node.to]), [[0, 1]]);
   });
 
   it('extracts the simple name from the complex node name correctly', function() {
     bindingGraph.addDeps('com.google.List<com.google.A>', ['com.google.List<com.google.common.collect.ImmutableSet<com.google.A>>']);
 
-    const expectedNodes = [
-      [0, 'List[A]', 'com.google.List[com.google.A]'],
-      [1, 'List[ImmutableSet[A]]', 'com.google.List[com.google.common.collect.ImmutableSet[com.google.A]]']
-    ];
-
-    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
+    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]),
+                           [[0, 'List[A]', 'com.google.List[com.google.A]'], [1, 'List[ImmutableSet[A]]', 'com.google.List[com.google.common.collect.ImmutableSet[com.google.A]]']]);
   });
 
   it('adds one path correctly', function() {
     bindingGraph.addPath('com.google.A -> com.google.B -> com.google.C');
 
-    const expectedNodes = [
-      [0, 'A', 'com.google.A'],
-      [1, 'B', 'com.google.B'],
-      [2, 'C', 'com.google.C'],
-    ];
-    const expectedEdges = [
-      [0, 1],
-      [1, 2],
-    ];
-
-    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
-    assert.sameDeepMembers(bindingGraph.getEdges().map(node => [node.from, node.to]), expectedEdges);
+    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]),
+                           [[0, 'A', 'com.google.A'], [1, 'B', 'com.google.B'], [2, 'C', 'com.google.C']]);
+    assert.sameDeepMembers(bindingGraph.getEdges().map(node => [node.from, node.to]),
+                           [[0, 1], [1, 2]]);
   });
 
   it('adds multiple paths correctly', function() {
     bindingGraph.addPath('com.google.A -> com.google.B -> com.google.C');
     bindingGraph.addPath('com.google.B -> com.google.D -> com.google.E');
 
-    const expectedNodes = [
-      [0, 'A', 'com.google.A'],
-      [1, 'B', 'com.google.B'],
-      [2, 'C', 'com.google.C'],
-      [3, 'D', 'com.google.D'],
-      [4, 'E', 'com.google.E'],
-    ];
-    const expectedEdges = [
-      [0, 1],
-      [1, 2],
-      [1, 3],
-      [3, 4],
-    ];
-
-    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
-    assert.sameDeepMembers(bindingGraph.getEdges().map(node => [node.from, node.to]), expectedEdges);
+    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]),
+                           [[0, 'A', 'com.google.A'], [1, 'B', 'com.google.B'], [2, 'C', 'com.google.C'], [3, 'D', 'com.google.D'], [4, 'E', 'com.google.E']]);
+    assert.sameDeepMembers(bindingGraph.getEdges().map(node => [node.from, node.to]),
+                           [[0, 1], [1, 2], [1, 3], [3, 4]]);
   });
 });
