@@ -32,25 +32,6 @@ const bindingGraph = (function() {
   const edges = new vis.DataSet();
 
   /**
-   * Constructs a simple name from the full node name.
-   *
-   * @example from com.google.List[com.google.Beach] it will construct List[Beach].
-   * @param {string} node a full name of the node
-   */
-  function getSimpleName(node) {
-    const firstIndex = node.indexOf('[');
-
-    if (firstIndex === -1) {
-      const components = node.split('.');
-      return components[components.length - 1];
-    }
-
-    const container = node.substring(0, firstIndex).split('.').slice(-1);
-    const content = getSimpleName(node.substring(firstIndex + 1, node.lastIndexOf(']')));
-    return `${container}[${content}]`;
-  }
-
-  /**
    * Associates given node with an identifier, if the node was not represented in the graph.
    *
    * @param {string} node a node to be added if it doesn't exist
@@ -65,7 +46,7 @@ const bindingGraph = (function() {
     if (nodes.get(id) === null) {
       // Since angle brackets have a special meaning in html, we replace them with square brackets.
       const fullName = node.replace(/</g, "[").replace(/>/g, "]");
-      const simpleName = getSimpleName(fullName);
+      const simpleName = fullName.replace(/(?:\w+\.)+(\w+)/g, '$1');
       nodes.add({id: id, label: simpleName, title: fullName});
     }
     return id;
