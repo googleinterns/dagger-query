@@ -89,17 +89,15 @@ $(function () {
     try {
       const url = new URL(`http://localhost:4921/daggerquery/`);
       url.searchParams.append('query', query.join(' '));
-      const graph = await $(this).getQueryResults(url);
+      const results = await $(this).getQueryResults(url);
       $(this).markInputFieldAsValid();
 
       if (query[0] === $.DEPS_QUERY_NAME) {
         bindingGraph.clear();
-        for (let childNode of graph) {
-          bindingGraph.addEdge(query[1], childNode);
-        }
+        bindingGraph.addDeps(query[1], results);
       } else if (query[0] === $.ALLPATHS_QUERY_NAME || query[0] === $.SOMEPATH_QUERY_NAME) {
         bindingGraph.clear();
-        for (let path of graph) {
+        for (let path of results) {
           bindingGraph.addPath(path);
         }
       }

@@ -17,11 +17,13 @@ load("@rules_java//java:defs.bzl", "java_library")
 package(default_visibility = ["//visibility:public"])
 
 java_library(
-    name = "query_executor_models",
+    name = "server",
     srcs = glob(["*.java"]),
     deps = [
-        "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
-        "//src/com/google/daggerquery/protobuf:dependency_java_proto",
-        "//third_party/java/guava:guava",
+         "//src/com/google/daggerquery/executor:query_executor",
+         "//src/com/google/daggerquery/protobuf:binding_graph_java_proto",
+         "//third_party/java/guava:guava",
+         "//third_party/java/undertow:undertow",
+         "@com_google_code_gson//jar"
     ],
 )

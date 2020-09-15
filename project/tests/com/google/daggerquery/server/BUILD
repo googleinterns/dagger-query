@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Bazel rule for loading external repository deps for j2cl_proto."""
+load("@rules_java//java:defs.bzl", "java_test")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-_JSINTEROP_BASE_VERSION = "1.0.0"
-
-def load_j2cl_proto_repo_deps():
-    http_archive(
-        name = "com_google_jsinterop_base",
-        strip_prefix = "jsinterop-base-%s" % _JSINTEROP_BASE_VERSION,
-        url = "https://github.com/google/jsinterop-base/archive/%s.zip" % _JSINTEROP_BASE_VERSION,
-    )
+java_test(
+    name = "ServerTest",
+    size = "small",
+    srcs = ["ServerTest.java"],
+    test_class = "com.google.daggerquery.server.ServerTest",
+    deps = [
+        "//src/com/google/daggerquery/server:server",
+        "//third_party/java/junit:junit",
+        "@org_apache_httpcomponents_client//jar",
+        "@org_apache_httpcomponents_core//jar",
+    ],
+)

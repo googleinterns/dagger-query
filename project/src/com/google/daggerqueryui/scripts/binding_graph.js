@@ -32,25 +32,6 @@ const bindingGraph = (function() {
   const edges = new vis.DataSet();
 
   /**
-   * Constructs a simple name from the full node name.
-   *
-   * @example from com.google.List[com.google.Beach] it will construct List[Beach].
-   * @param {string} node a full name of the node
-   */
-  function getSimpleName(node) {
-    const firstIndex = node.indexOf('[');
-
-    if (firstIndex === -1) {
-      const components = node.split('.');
-      return components[components.length - 1];
-    }
-
-    const container = node.substring(0, firstIndex).split('.').slice(-1);
-    const content = getSimpleName(node.substring(firstIndex + 1, node.lastIndexOf(']')));
-    return `${container}[${content}]`;
-  }
-
-  /**
    * Associates given node with an identifier, if the node was not represented in the graph.
    *
    * @param {string} node a node to be added if it doesn't exist
@@ -65,7 +46,7 @@ const bindingGraph = (function() {
     if (nodes.get(id) === null) {
       // Since angle brackets have a special meaning in html, we replace them with square brackets.
       const fullName = node.replace(/</g, "[").replace(/>/g, "]");
-      const simpleName = getSimpleName(fullName);
+      const simpleName = fullName.replace(/(?:\w+\.)+(\w+)/g, '$1');
       nodes.add({id: id, label: simpleName, title: fullName});
     }
     return id;
@@ -78,11 +59,15 @@ const bindingGraph = (function() {
    * to any other node in the graph.
    *
    * @param {number} nodeId an identifier of a node to be removed
+   * @return {boolean} a boolean flag which indicates if a node was removed or not
    */
   function tryToRemoveNode(nodeId) {
     if (getAllEdges(nodeId).length === 0) {
       nodes.remove(nodeId);
+      return true;
     }
+
+    return false;
   }
 
   /**
@@ -123,34 +108,20 @@ const bindingGraph = (function() {
     tryToRemoveNode(edge.to);
   }
 
+  /**
+   * Adds an edge from the <b>source</b> node to the <b>target</b>.
+   *
+   * @param {string} source the first node of the given edge
+   * @param {string} target the second node of the given edge
+   */
+  function addEdge(source, target, style) {
+    const sourceId = addNode(source);
+    const targetId = addNode(target);
+
+    edges.add({from: sourceId, to: targetId});
+  }
+
   return {
-    /**
-     * Adds an edge from the <b>source</b> node to the <b>target</b>.
-     *
-     * @param {string} source the first node of the given edge
-     * @param {string} target the second node of the given edge
-     */
-    addEdge: function (source, target) {
-      const sourceId = addNode(source);
-      const targetId = addNode(target);
-
-      edges.add({from: sourceId, to: targetId});
-    },
-
-    /**
-     * Removes all edges with the given start node from the subgraph.
-     *
-     * @param {string} node a source node which dependencies will be removed
-     */
-    deleteDeps: function (node) {
-      // Retrieves all edges having a start node with value `node`.
-      const edgesToBeRemoved = getAllDeps(nodesToNumbers.get(node));
-
-      for (let edge of edgesToBeRemoved) {
-        removeEdge(edge);
-      }
-    },
-
     /**
      * Takes a string representing a path where two adjacent nodes are connected by an edge,
      * and adds all these edges to the subgraph.
@@ -162,7 +133,18 @@ const bindingGraph = (function() {
     addPath: function (path) {
       const nodesInPath = path.split( ' -> ');
       for (let index = 0; index + 1 < nodesInPath.length; ++index) {
-        bindingGraph.addEdge(nodesInPath[index], nodesInPath[index + 1]);
+        addEdge(nodesInPath[index], nodesInPath[index + 1]);
+      }
+    },
+
+    /**
+     * Adds all source node's dependencies to the subgraph.
+     * @param {string} source
+     * @param {string[]} deps
+     */
+    addDeps: function (source, deps) {
+      for (const childNode of deps) {
+        addEdge(source, childNode);
       }
     },
 
@@ -205,7 +187,9 @@ const bindingGraph = (function() {
         edges: edges
       };
 
-      const options = {};
+      var options = {
+        physics: false
+      };
       const network = new vis.Network(container, data, options);
     }
   };

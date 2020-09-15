@@ -48,84 +48,58 @@ google_common_workspace_rules()
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-http_jar (
-    name = "apache-commons-text",
-    url = "https://repo1.maven.org/maven2/org/apache/commons/commons-text/1.9/commons-text-1.9.jar"
+git_repository(
+  name = "com_googlesource_gerrit_bazlets",
+  remote = "https://gerrit.googlesource.com/bazlets",
+  commit = "928c928345646ae958b946e9bbdb462f58dd1384",
 )
 
-J2CL_TAG = "master"
-http_archive(
-    name = "com_google_j2cl",
-    strip_prefix = "j2cl-%s" % J2CL_TAG,
-    url = "https://github.com/google/j2cl/archive/%s.zip" % J2CL_TAG,
+load("@com_googlesource_gerrit_bazlets//:gerrit_api.bzl", "gerrit_api")
+gerrit_api()
+
+load("@com_googlesource_gerrit_bazlets//tools:maven_jar.bzl", "maven_jar")
+
+maven_jar(
+    name = "io_undertow_core",
+    artifact = "io.undertow:undertow-core:2.0.13.Final"
 )
 
-load("@com_google_j2cl//build_defs:repository.bzl", "load_j2cl_repo_deps")
-load_j2cl_repo_deps()
-
-load("@com_google_j2cl//build_defs:rules.bzl", "setup_j2cl_workspace", "j2cl_maven_import_external")
-setup_j2cl_workspace()
-
-ELEMENTAL_TAG = "1.1.0"
-http_archive(
-    name = "com_google_elemental2",
-    strip_prefix = "elemental2-%s" % ELEMENTAL_TAG,
-    url = "https://github.com/google/elemental2/archive/%s.zip" % ELEMENTAL_TAG,
+maven_jar(
+    name = "io_undertow_websockets_jsr",
+    artifact = "io.undertow:undertow-websockets-jsr:2.0.13.Final"
 )
 
-load("@com_google_elemental2//build_defs:repository.bzl", "load_elemental2_repo_deps")
-
-load_elemental2_repo_deps()
-
-load("@com_google_elemental2//build_defs:workspace.bzl", "setup_elemental2_workspace")
-
-setup_elemental2_workspace()
-
-_MAVEN_CENTRAL_URLS = ["https://repo1.maven.org/maven2/"]
-
-j2cl_maven_import_external(
-    name = "org_checkerframework_checker_qual-j2cl",
-    annotation_only = True,
-    artifact = "org.checkerframework:checker-qual:2.5.3",
-    artifact_sha256= "7be622bd25208ccfbb9b634af8bd37aef54368403a1fdce84d908078330a189d",
-    server_urls = _MAVEN_CENTRAL_URLS,
+maven_jar(
+    name = "org_jboss_xnio_api",
+    artifact = "org.jboss.xnio:xnio-api:3.3.8.Final"
 )
 
-j2cl_maven_import_external(
-    name = "com_google_errorprone_error_prone_annotations-j2cl",
-    annotation_only = True,
-    artifact = "com.google.errorprone:error_prone_annotations:2.4.0",
-    artifact_sha256= "5f2a0648230a662e8be049df308d583d7369f13af683e44ddf5829b6d741a228",
-    server_urls = _MAVEN_CENTRAL_URLS,
+maven_jar(
+    name = "org_jboss_xnio_nio",
+    artifact = "org.jboss.xnio:xnio-nio:3.3.8.Final"
 )
 
-j2cl_maven_import_external(
-    name = "com_google_code_findbugs_jsr305-j2cl",
-    annotation_only = True,
-    artifact = "com.google.code.findbugs:jsr305:3.0.2",
-    server_urls = _MAVEN_CENTRAL_URLS,
+maven_jar(
+    name = "org_jboss_logging",
+    artifact = "org.jboss.logging:jboss-logging:3.3.2.Final"
 )
 
-j2cl_maven_import_external(
-    name = "com_google_j2objc_annotations-j2cl",
-    annotation_only = True,
-    artifact = "com.google.j2objc:j2objc-annotations:jar:1.3",
-    artifact_sha256= "21af30c92267bd6122c0e0b4d20cccb6641a37eaf956c6540ec471d584e64a7b",
-    server_urls = _MAVEN_CENTRAL_URLS,
+maven_jar(
+    name = "com_google_code_gson",
+    artifact = "com.google.code.gson:gson:2.8.6",
+    sha1 = "9180733b7df8542621dc12e21e87557e8c99b8cb",
 )
 
-j2cl_maven_import_external(
-    name = "com_google_guava-j2cl",
-    artifact = "com.google.guava:guava-gwt:29.0-jre",
-    artifact_sha256= "39e899acd9f9f09da2871eaaab0024cae2506da24457c9542955ed754f653292",
-    server_urls = _MAVEN_CENTRAL_URLS,
-    deps = [
-        "@com_google_elemental2//:elemental2-promise-j2cl",
-        "@com_google_errorprone_error_prone_annotations-j2cl",
-        "@com_google_j2cl//:jsinterop-annotations-j2cl",
-        "@com_google_j2objc_annotations-j2cl",
-        "@org_checkerframework_checker_qual-j2cl",
-    ],
+maven_jar(
+    name = "org_apache_httpcomponents_client",
+    artifact = "org.apache.httpcomponents:httpclient:4.5.12",
+    sha1 = "4023a2a80b64c25926911faf350b50cd2a29220f",
+)
+
+maven_jar(
+    name = "org_apache_httpcomponents_core",
+    artifact = "org.apache.httpcomponents:httpcore:4.4.13",
+    sha1 = "853b96d3afbb7bf8cc303fe27ee96836a10c1834",
 )
