@@ -8,3 +8,7 @@ out/
 
 # Bazel Plugin for IntelliJ IDEA
 */.ijwb
+
+# npm modules
+*node_modules
+*package-lock.json
