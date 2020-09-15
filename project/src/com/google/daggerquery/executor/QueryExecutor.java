@@ -24,8 +24,13 @@ import com.google.daggerquery.executor.services.SourcesLoader;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A class which is responsible for parsing user's input and executing a query.
@@ -67,27 +72,22 @@ public class QueryExecutor {
     ImmutableList.Builder<String> resultBuilder = new ImmutableList.Builder();
 
     // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
-    MisspelledNodeNameException lastMisspelledNodeNameException = null;
-    IllegalArgumentException lastIllegalArgumentException = null;
+    Set<Entry<Integer, Exception>> exceptions = new TreeSet<>(Entry.comparingByKey());
     for (BindingGraph bindingGraph: bindingGraphs) {
       try {
         resultBuilder.addAll(query.execute(new GraphProto(bindingGraph)));
       } catch (IllegalArgumentException e) {
-        lastIllegalArgumentException = e;
+        exceptions.add(new SimpleEntry<>(3, e));
+      } catch (NoSuchElementException e) {
+        exceptions.add(new SimpleEntry<>(2, e));
       } catch (MisspelledNodeNameException e) {
-        lastMisspelledNodeNameException = e;
+        exceptions.add(new SimpleEntry<>(1, e));
       }
     }
 
     ImmutableList<String> resultList = resultBuilder.build();
     if (resultList.isEmpty()) {
-      if (lastMisspelledNodeNameException != null) {
-        throw new IllegalArgumentException(lastMisspelledNodeNameException.getMessage());
-      } else if (lastIllegalArgumentException != null) {
-        throw lastIllegalArgumentException;
-      } else {
-        throw new IllegalArgumentException("Nothing found, list with results is empty.");
-      }
+      throw new IllegalArgumentException(exceptions.iterator().next().getValue().getMessage());
     } else {
       return resultList;
     }

@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.DependencyProto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import org.junit.Test;
 
@@ -192,24 +193,20 @@ public class QueryTest {
     assertTrue(queryExecutionResult.containsAll(expectedOutput) && expectedOutput.containsAll(queryExecutionResult));
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingAllPathsQuery_WithLeafAsSourceNode() {
     String[] parameters = {"com.google.Details", "com.google.Component"};
     Query query = new Query("allpaths", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingAllPathsQuery_WhenThereIsNoPaths() {
     String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
     Query query = new Query("allpaths", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -308,24 +305,20 @@ public class QueryTest {
     assertTrue(possibleOutputs.contains(queryExecutionResult.get(0)));
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingSomePathQuery_WithLeafAsSourceNode() {
     String[] parameters = {"com.google.Details", "com.google.Component"};
     Query query = new Query("somepath", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingSomePathQuery_WhenThereIsNoPaths() {
     String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
     Query query = new Query("somepath", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
   @Test(expected = IllegalArgumentException.class)

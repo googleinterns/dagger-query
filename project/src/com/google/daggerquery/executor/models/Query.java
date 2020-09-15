@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -124,6 +125,11 @@ public class Query {
         Path path = new Path<>();
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
+
+        if (result.build().isEmpty() || source.equals(target)) {
+          throw new NoSuchElementException("Nothing found, list with results is empty.");
+        }
+
         return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
       }
       case SOMEPATH_QUERY_NAME: {
@@ -136,8 +142,9 @@ public class Query {
         Path path = new Path<>();
 
         findSomePath(source, target, path, bindingGraph, visitedNodes);
-        if (path.isEmpty()) {
-          return ImmutableList.of();
+
+        if (path.isEmpty() || source.equals(target)) {
+          throw new NoSuchElementException("Nothing found, list with results is empty.");
         }
 
         return ImmutableList.copyOf(Arrays.asList(path.toString()));
