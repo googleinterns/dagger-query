@@ -20,7 +20,7 @@ describe('Binding Graph', function() {
   });
 
   it('adds one edge correctly', function() {
-    bindingGraph.addEdge('com.google.A', 'com.google.B');
+    bindingGraph.addDeps('com.google.A', ['com.google.B']);
 
     const expectedNodes = [
       [0, 'A', 'com.google.A'],
@@ -32,7 +32,7 @@ describe('Binding Graph', function() {
   });
 
   it('extracts the simple name from the complex node name correctly', function() {
-    bindingGraph.addEdge('com.google.List<com.google.A>', 'com.google.List<com.google.common.collect.ImmutableSet<com.google.A>>');
+    bindingGraph.addDeps('com.google.List<com.google.A>', ['com.google.List<com.google.common.collect.ImmutableSet<com.google.A>>']);
 
     const expectedNodes = [
       [0, 'List[A]', 'com.google.List[com.google.A]'],
@@ -40,43 +40,6 @@ describe('Binding Graph', function() {
     ];
 
     assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
-  });
-
-  it('removes all deps and isolated nodes correctly', function() {
-    bindingGraph.addEdge('com.google.A', 'com.google.B');
-    bindingGraph.addEdge('com.google.A', 'com.google.C');
-    bindingGraph.addEdge('com.google.A', 'com.google.D');
-
-    const expectedNodes = [
-      [0, 'A', 'com.google.A'],
-    ];
-
-    bindingGraph.deleteDeps('com.google.A');
-
-    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
-    assert.isOk(bindingGraph.getEdges().length === 0);
-  });
-
-  it('removes all deps and keeps nodes correctly', function() {
-    bindingGraph.addEdge('com.google.A', 'com.google.B');
-    bindingGraph.addEdge('com.google.C', 'com.google.B');
-    bindingGraph.addEdge('com.google.C', 'com.google.D');
-
-    const expectedNodes = [
-      [0, 'A', 'com.google.A'],
-      [1, 'B', 'com.google.B'],
-      [2, 'C', 'com.google.C'],
-      [3, 'D', 'com.google.D'],
-    ];
-    const expectedEdges = [
-      [2, 1],
-      [2, 3],
-    ];
-
-    bindingGraph.deleteDeps('com.google.A');
-
-    assert.sameDeepMembers(bindingGraph.getNodes().map(node => [node.id, node.label, node.title]), expectedNodes);
-    assert.sameDeepMembers(bindingGraph.getEdges().map(node => [node.from, node.to]), expectedEdges);
   });
 
   it('adds one path correctly', function() {
