@@ -220,7 +220,9 @@ const bindingGraph = (function() {
         edges: edges
       };
 
-      const options = {};
+      var options = {
+        physics: false
+      };
       const network = new vis.Network(container, data, options);
     }
   };
