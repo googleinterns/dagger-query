@@ -31,7 +31,7 @@ public interface Graph {
   ImmutableSet<String> getDependencies(String node);
 
   /**
-   * Returns all node's ancestors.
+   * Returns all of a node's ancestors (nodes that depend on this node).
    */
   ImmutableSet<String> getAncestors(String node);
 
