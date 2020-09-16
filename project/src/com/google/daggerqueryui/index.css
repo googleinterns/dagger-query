@@ -46,3 +46,25 @@
     background-color: white !important;
     font-weight: bold;
 }
+
+.custom-switch.custom-switch-large .custom-control-label {
+    padding-left: 3rem;
+    padding-bottom: 2rem;
+}
+
+.custom-switch.custom-switch-large .custom-control-label::before {
+    height: 2rem;
+    width: 3.75rem;
+    box-shadow: none;
+    border-radius: 4rem;
+}
+
+.custom-switch.custom-switch-large .custom-control-label::after {
+    height: calc(2rem - 4px);
+    width: calc(2rem - 4px);
+    border-radius: 2rem;
+}
+
+.custom-switch.custom-switch-large .custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(1.75rem);
+}
