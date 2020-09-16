@@ -17,6 +17,9 @@ limitations under the License.
 package com.google.daggerquery.executor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.SortedSetMultimap;
+import com.google.common.collect.TreeMultimap;
 import com.google.daggerquery.executor.models.GraphProto;
 import com.google.daggerquery.executor.models.MisspelledNodeNameException;
 import com.google.daggerquery.executor.models.Query;
@@ -24,13 +27,9 @@ import com.google.daggerquery.executor.services.SourcesLoader;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * A class which is responsible for parsing user's input and executing a query.
@@ -72,22 +71,22 @@ public class QueryExecutor {
     ImmutableList.Builder<String> resultBuilder = new ImmutableList.Builder();
 
     // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
-    Set<Entry<Integer, Exception>> exceptions = new TreeSet<>(Entry.comparingByKey());
+    SortedSetMultimap<Integer, Exception> exceptions = TreeMultimap.create(Ordering.natural(), Ordering.allEqual());
     for (BindingGraph bindingGraph: bindingGraphs) {
       try {
         resultBuilder.addAll(query.execute(new GraphProto(bindingGraph)));
-      } catch (IllegalArgumentException e) {
-        exceptions.add(new SimpleEntry<>(3, e));
-      } catch (NoSuchElementException e) {
-        exceptions.add(new SimpleEntry<>(2, e));
-      } catch (MisspelledNodeNameException e) {
-        exceptions.add(new SimpleEntry<>(1, e));
+      } catch (IllegalArgumentException exception) {
+        exceptions.put(3, exception);
+      } catch (NoSuchElementException exception) {
+        exceptions.put(2, exception);
+      } catch (MisspelledNodeNameException exception) {
+        exceptions.put(1, exception);
       }
     }
 
     ImmutableList<String> resultList = resultBuilder.build();
     if (resultList.isEmpty()) {
-      throw new IllegalArgumentException(exceptions.iterator().next().getValue().getMessage());
+      throw new IllegalArgumentException(exceptions.entries().iterator().next().getValue().getMessage());
     } else {
       return resultList;
     }
