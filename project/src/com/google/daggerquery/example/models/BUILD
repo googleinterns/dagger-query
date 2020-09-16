@@ -12,19 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@rules_java//java:defs.bzl", "java_plugin")
-load("//src/com/google/daggerquery/server:dagger_query_server.bzl", "dagger_query_server")
+load("@rules_java//java:defs.bzl", "java_library")
+load("@dagger//:workspace_defs.bzl", "dagger_rules")
 
+dagger_rules()
 package(default_visibility = ["//visibility:public"])
 
-java_plugin(
-    name = "dagger_query_plugin",
+java_library(
+    name = "example_models",
+    srcs = glob(["*.java"]),
     deps = [
-        "//src/com/google/daggerquery/plugin:plugin_sources",
-    ]
-)
-
-dagger_query_server(
-    name = "example_java_server",
-    dagger_app_target = "//src/com/google/daggerquery/example:beach_example"
+        ":dagger",
+    ],
 )
