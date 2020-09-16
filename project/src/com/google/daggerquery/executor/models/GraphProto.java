@@ -37,26 +37,7 @@ public class GraphProto implements Graph {
 
   public GraphProto(BindingGraph bindingGraph) {
     this.bindingGraph = bindingGraph;
-
-    Map<String, ImmutableSet.Builder<String>> reversedGraphModel = new HashMap<>();
-
-    for (String source: bindingGraph.getAdjacencyListMap().keySet()) {
-      reversedGraphModel.put(source, new ImmutableSet.Builder<>());
-    }
-
-    for (String source: bindingGraph.getAdjacencyListMap().keySet()) {
-      for (Dependency dependency: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
-        String target = dependency.getTarget();
-        reversedGraphModel.get(target).add(source);
-      }
-    }
-
-    this.reversedBindingGraph = ImmutableMap.copyOf(
-      Maps.transformValues(
-        reversedGraphModel,
-        ImmutableSet.Builder::build
-      )
-    );
+    this.reversedBindingGraph = makeBindingReversedGraph(bindingGraph);
   }
 
   @Override
@@ -78,5 +59,32 @@ public class GraphProto implements Graph {
   @Override
   public ImmutableSet<String> getAllNodes() {
     return ImmutableSet.copyOf(bindingGraph.getAdjacencyListMap().keySet());
+  }
+
+  /**
+   * Makes a reversed binding graph from the given {@code sourceBindingGraph}.
+   *
+   * <p>A reverse graph is created by reversing the direction of each edge of the original graph.
+   */
+  private ImmutableMap<String, ImmutableSet<String>> makeBindingReversedGraph(BindingGraph sourceBindingGraph) {
+    Map<String, ImmutableSet.Builder<String>> reversedGraphModel = new HashMap<>();
+
+    for (String source: sourceBindingGraph.getAdjacencyListMap().keySet()) {
+      reversedGraphModel.put(source, new ImmutableSet.Builder<>());
+    }
+
+    for (String source: sourceBindingGraph.getAdjacencyListMap().keySet()) {
+      for (Dependency dependency: sourceBindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
+        String target = dependency.getTarget();
+        reversedGraphModel.get(target).add(source);
+      }
+    }
+
+    return ImmutableMap.copyOf(
+      Maps.transformValues(
+        reversedGraphModel,
+        ImmutableSet.Builder::build
+      )
+    );
   }
 }
