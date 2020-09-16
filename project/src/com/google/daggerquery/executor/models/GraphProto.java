@@ -16,9 +16,13 @@ limitations under the License.
 
 package com.google.daggerquery.executor.models;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto.BindingGraph;
 import com.google.daggerquery.protobuf.autogen.DependencyProto.Dependency;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -29,15 +33,41 @@ import static java.util.stream.Collectors.toSet;
 public class GraphProto implements Graph {
 
   private BindingGraph bindingGraph;
+  private ImmutableMap<String, ImmutableSet<String>> reversedBindingGraph;
 
   public GraphProto(BindingGraph bindingGraph) {
     this.bindingGraph = bindingGraph;
+
+    Map<String, ImmutableSet.Builder<String>> reversedGraphModel = new HashMap<>();
+
+    for (String source: bindingGraph.getAdjacencyListMap().keySet()) {
+      reversedGraphModel.put(source, new ImmutableSet.Builder<>());
+    }
+
+    for (String source: bindingGraph.getAdjacencyListMap().keySet()) {
+      for (Dependency dependency: bindingGraph.getAdjacencyListMap().get(source).getDependencyList()) {
+        String target = dependency.getTarget();
+        reversedGraphModel.get(target).add(source);
+      }
+    }
+
+    this.reversedBindingGraph = ImmutableMap.copyOf(
+      Maps.transformValues(
+        reversedGraphModel,
+        ImmutableSet.Builder::build
+      )
+    );
   }
 
   @Override
   public ImmutableSet<String> getDependencies(String node) {
     return ImmutableSet.copyOf(bindingGraph.getAdjacencyListMap().get(node).getDependencyList()
         .stream().map(Dependency::getTarget).sorted().collect(toSet()));
+  }
+
+  @Override
+  public ImmutableSet<String> getAncestors(String node) {
+    return reversedBindingGraph.get(node);
   }
 
   @Override

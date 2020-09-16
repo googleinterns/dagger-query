@@ -31,6 +31,11 @@ public interface Graph {
   ImmutableSet<String> getDependencies(String node);
 
   /**
+   * Returns all node's ancestors.
+   */
+  ImmutableSet<String> getAncestors(String node);
+
+  /**
    * Checks if a node is presented in the graph or not.
    */
   boolean containsNode(String node);
