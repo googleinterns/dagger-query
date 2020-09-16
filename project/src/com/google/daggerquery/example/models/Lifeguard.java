@@ -19,11 +19,11 @@ package com.google.daggerquery.example.models;
 import javax.inject.Inject;
 
 public class Lifeguard implements Staff {
-  @Inject
-  LifeVest lifeVest;
+  private final LifeVest lifeVest;
 
   @Inject
-  public Lifeguard() {
+  Lifeguard(LifeVest lifeVest) {
+    this.lifeVest = lifeVest;
   }
 
   @Override

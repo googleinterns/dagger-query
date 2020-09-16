@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class Towel {
   @Inject
-  public Towel() {
+  Towel() {
   }
 }

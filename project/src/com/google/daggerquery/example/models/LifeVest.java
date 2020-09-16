@@ -23,7 +23,7 @@ public class LifeVest {
   private String surfaceColor;
 
   @Inject
-  public LifeVest() {
+  LifeVest() {
     switch (Math.abs((new Random().nextInt()) % 5)) {
       case 0:
         surfaceColor = "red";

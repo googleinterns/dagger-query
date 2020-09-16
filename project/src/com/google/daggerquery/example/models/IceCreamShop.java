@@ -20,8 +20,7 @@ import javax.inject.Inject;
 import java.util.Random;
 
 public class IceCreamShop {
-
-  private int numberOfIceCream;
+  private final int numberOfIceCream;
 
   @Inject
   IceCreamShop() {

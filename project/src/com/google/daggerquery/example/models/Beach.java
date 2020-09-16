@@ -20,10 +20,9 @@ import javax.inject.Inject;
 import java.util.Set;
 
 public class Beach {
-
-  private Set<Tourist> tourists;
-  private Set<Staff> lifeguards;
-  private IceCreamShop iceCreamShop;
+  private final Set<Tourist> tourists;
+  private final Set<Staff> lifeguards;
+  private final IceCreamShop iceCreamShop;
 
   @Inject
   Beach(Set<Tourist> tourists, Set<Staff> lifeguards, IceCreamShop iceCreamShop) {

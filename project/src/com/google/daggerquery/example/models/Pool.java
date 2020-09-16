@@ -19,16 +19,14 @@ package com.google.daggerquery.example.models;
 import javax.inject.Inject;
 
 public class Pool {
-  @Inject
-  InflatableDonut inflatableDonut;
+  private final InflatableDonut inflatableDonut;
+  private final InflatableFlamingo inflatableFlamingo;
+  private final InflatableUnicorn inflatableUnicorn;
 
   @Inject
-  InflatableFlamingo inflatableFlamingo;
-
-  @Inject
-  InflatableUnicorn inflatableUnicorn;
-
-  @Inject
-  Pool() {
+  Pool(InflatableUnicorn unicorn, InflatableFlamingo flamingo, InflatableDonut donut) {
+    this.inflatableDonut = donut;
+    this.inflatableFlamingo = flamingo;
+    this.inflatableUnicorn = unicorn;
   }
 }

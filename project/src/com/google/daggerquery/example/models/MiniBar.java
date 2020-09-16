@@ -19,16 +19,14 @@ package com.google.daggerquery.example.models;
 import javax.inject.Inject;
 
 public class MiniBar {
-  @Inject
-  CocaCola cocaCola;
+  private final CocaCola cocaCola;
+  private final Fanta fanta;
+  private final Sprite sprite;
 
   @Inject
-  Fanta fanta;
-
-  @Inject
-  Sprite sprite;
-
-  @Inject
-  public MiniBar() {
+  MiniBar(CocaCola cocaCola, Fanta fanta, Sprite sprite) {
+    this.cocaCola = cocaCola;
+    this.fanta = fanta;
+    this.sprite = sprite;
   }
 }

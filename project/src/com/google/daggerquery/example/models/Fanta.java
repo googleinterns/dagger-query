@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class Fanta {
   @Inject
-  public Fanta() {
+  Fanta() {
   }
 }

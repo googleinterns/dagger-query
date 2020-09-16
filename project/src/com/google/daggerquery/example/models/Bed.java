@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class Bed {
   @Inject
-  public Bed() {
+  Bed() {
   }
 }

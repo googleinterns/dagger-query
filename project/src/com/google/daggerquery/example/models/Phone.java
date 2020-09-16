@@ -23,7 +23,7 @@ public class Phone {
   private String model;
 
   @Inject
-  public Phone() {
+  Phone() {
     switch (Math.abs((new Random().nextInt()) % 2)) {
       case 0:
         model = "Google Pixel 4 XL";

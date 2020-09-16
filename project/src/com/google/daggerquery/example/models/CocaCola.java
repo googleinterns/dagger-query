@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class CocaCola {
   @Inject
-  public CocaCola() {
+  CocaCola() {
   }
 }

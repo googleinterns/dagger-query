@@ -19,13 +19,12 @@ package com.google.daggerquery.example.models;
 import javax.inject.Inject;
 
 public class Tourist {
-  @Inject
-  Towel towel;
+  private final Towel towel;
+  private final Phone phone;
 
   @Inject
-  Phone phone;
-
-  @Inject
-  public Tourist() {
+  Tourist(Towel towel, Phone phone) {
+    this.towel = towel;
+    this.phone = phone;
   }
 }

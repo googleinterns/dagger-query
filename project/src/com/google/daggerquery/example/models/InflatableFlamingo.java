@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class InflatableFlamingo {
   @Inject
-  public InflatableFlamingo() {
+  InflatableFlamingo() {
   }
 }

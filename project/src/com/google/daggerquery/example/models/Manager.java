@@ -19,11 +19,11 @@ package com.google.daggerquery.example.models;
 import javax.inject.Inject;
 
 public class Manager implements Staff {
-  @Inject
-  Phone phone;
+  private final Phone phone;
 
   @Inject
-  public Manager() {
+  Manager(Phone phone) {
+    this.phone = phone;
   }
 
   @Override

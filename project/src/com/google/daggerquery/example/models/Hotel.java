@@ -22,10 +22,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class Hotel {
-  private Set<Apartment> apartments;
-  private Map<Villa, Integer> villas;
-  private List<Staff> managers;
-  private Pool pool;
+  private final Set<Apartment> apartments;
+  private final Map<Villa, Integer> villas;
+  private final List<Staff> managers;
+  private final Pool pool;
 
   @Inject
   Hotel(Set<Apartment> apartments, Map<Villa, Integer> villas, List<Staff> managers, Pool pool) {

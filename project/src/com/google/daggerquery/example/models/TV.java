@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class TV {
   @Inject
-  public TV() {
+  TV() {
   }
 }

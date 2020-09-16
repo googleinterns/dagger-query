@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class InflatableDonut {
   @Inject
-  public InflatableDonut() {
+  InflatableDonut() {
   }
 }

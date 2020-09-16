@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class Sprite {
   @Inject
-  public Sprite() {
+  Sprite() {
   }
 }

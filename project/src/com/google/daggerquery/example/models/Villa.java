@@ -19,25 +19,20 @@ package com.google.daggerquery.example.models;
 import javax.inject.Inject;
 
 public class Villa {
-  @Inject
-  Bed bed;
+  private final Bed bed;
+  private final MiniBar miniBar;
+  private final TV tv;
+  private final Phone phone;
+  private final Pool pool;
+  private final Tourist tourist;
 
   @Inject
-  MiniBar miniBar;
-
-  @Inject
-  TV tv;
-
-  @Inject
-  Phone phone;
-
-  @Inject
-  Pool pool;
-
-  @Inject
-  Tourist tourist;
-
-  @Inject
-  Villa() {
+  Villa(Bed bed, MiniBar miniBar, TV tv, Phone phone, Pool pool, Tourist tourist) {
+    this.bed = bed;
+    this.miniBar = miniBar;
+    this.tv = tv;
+    this.phone = phone;
+    this.pool = pool;
+    this.tourist = tourist;
   }
 }

@@ -20,6 +20,6 @@ import javax.inject.Inject;
 
 public class InflatableUnicorn {
   @Inject
-  public InflatableUnicorn() {
+  InflatableUnicorn() {
   }
 }
