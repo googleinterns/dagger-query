@@ -106,12 +106,15 @@ public class GraphConverter<NodeT, EdgeT> {
    * For other nodes returns their string representation constructed with {@code toString()} method.
    */
   private String makeStringFromNode(NodeT node) {
+    String nodeName;
     if (node instanceof Binding) {
-      return ((Binding) node).key().toString();
+      nodeName = ((Binding) node).key().toString();
     } else if (node instanceof BindingGraph.ComponentNode) {
-      return ((BindingGraph.ComponentNode) node).componentPath().currentComponent().toString();
+      nodeName = ((BindingGraph.ComponentNode) node).componentPath().currentComponent().toString();
+    } else {
+      nodeName = node.toString();
     }
 
-    return node.toString();
+    return nodeName.replace("<", "[").replace(">", "]");
   }
 }
