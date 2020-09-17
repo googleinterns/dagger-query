@@ -82,9 +82,7 @@ const bindingGraph = (function() {
    */
   function getAllEdges(nodeId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === nodeId || edge.to === nodeId);
-      }
+      filter: edge => edge.from === nodeId || edge.to === nodeId
     });
   }
 
@@ -95,9 +93,7 @@ const bindingGraph = (function() {
    */
   function getAllDeps(nodeId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === nodeId);
-      }
+      filter: edge => edge.from === nodeId
     });
   }
 
@@ -140,9 +136,7 @@ const bindingGraph = (function() {
    */
   function isEdgeExists(sourceId, targetId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === sourceId && edge.to === targetId);
-      }
+      filter: edge => edge.from === sourceId && edge.to === targetId
     }).length !== 0;
   }
 
