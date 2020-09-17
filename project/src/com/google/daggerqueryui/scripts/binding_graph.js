@@ -91,9 +91,7 @@ const bindingGraph = (function() {
    */
   function getAllEdges(nodeId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === nodeId || edge.to === nodeId);
-      }
+      filter: edge => edge.from === nodeId || edge.to === nodeId
     });
   }
 
@@ -104,9 +102,7 @@ const bindingGraph = (function() {
    */
   function getAllEdgesToDeps(nodeId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === nodeId);
-      }
+      filter: edge => edge.from === nodeId
     });
   }
 
@@ -151,7 +147,7 @@ const bindingGraph = (function() {
     const targetId = addNode(target);
 
     // Checks if an edge already exists.
-    if (isEdgeExists(sourceId, targetId)) {
+    if (hasEdge(sourceId, targetId)) {
       return;
     }
 
@@ -165,11 +161,9 @@ const bindingGraph = (function() {
    * @param {number} targetId
    * @return {boolean}
    */
-  function isEdgeExists(sourceId, targetId) {
+  function hasEdge(sourceId, targetId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === sourceId && edge.to === targetId);
-      }
+      filter: edge => edge.from === sourceId && edge.to === targetId
     }).length !== 0;
   }
 

@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,7 @@ public class Query {
   private final static String DEPS_QUERY_NAME = "deps";
   private final static String ALLPATHS_QUERY_NAME = "allpaths";
   private final static String SOMEPATH_QUERY_NAME = "somepath";
+  private final static String RDEPS_QUERY_NAME = "rdeps";
 
   private final static int MAX_NUMBER_OF_MISPLACED_LETTERS = 3;
 
@@ -54,6 +56,7 @@ public class Query {
       .put(DEPS_QUERY_NAME, 1)
       .put(ALLPATHS_QUERY_NAME, 2)
       .put(SOMEPATH_QUERY_NAME, 2)
+      .put(RDEPS_QUERY_NAME, 1)
       .build();
 
   private String name;
@@ -124,6 +127,11 @@ public class Query {
         Path path = new Path<>();
 
         findAllPaths(source, target, path, bindingGraph, visitedNodes, result);
+
+        if (result.build().isEmpty() || source.equals(target)) {
+          throw new NoSuchElementException("Nothing found, list with results is empty.");
+        }
+
         return ImmutableList.copyOf(result.build().stream().map(Path::toString).collect(toList()));
       }
       case SOMEPATH_QUERY_NAME: {
@@ -136,11 +144,19 @@ public class Query {
         Path path = new Path<>();
 
         findSomePath(source, target, path, bindingGraph, visitedNodes);
-        if (path.isEmpty()) {
-          return ImmutableList.of();
+
+        if (path.isEmpty() || source.equals(target)) {
+          throw new NoSuchElementException("Nothing found, list with results is empty.");
         }
 
         return ImmutableList.copyOf(Arrays.asList(path.toString()));
+      }
+      case RDEPS_QUERY_NAME: {
+        String source = parameters[0];
+
+        checkNodeForCorrectness(source, bindingGraph);
+
+        return bindingGraph.getAncestors(source).asList();
       }
     }
 

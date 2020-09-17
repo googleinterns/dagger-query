@@ -26,7 +26,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.daggerquery.protobuf.autogen.BindingGraphProto;
 import com.google.daggerquery.protobuf.autogen.DependencyProto;
+import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import org.junit.Test;
 
@@ -192,24 +194,20 @@ public class QueryTest {
     assertTrue(queryExecutionResult.containsAll(expectedOutput) && expectedOutput.containsAll(queryExecutionResult));
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingAllPathsQuery_WithLeafAsSourceNode() {
     String[] parameters = {"com.google.Details", "com.google.Component"};
     Query query = new Query("allpaths", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingAllPathsQuery_WhenThereIsNoPaths() {
     String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
     Query query = new Query("allpaths", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -308,24 +306,20 @@ public class QueryTest {
     assertTrue(possibleOutputs.contains(queryExecutionResult.get(0)));
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingSomePathQuery_WithLeafAsSourceNode() {
     String[] parameters = {"com.google.Details", "com.google.Component"};
     Query query = new Query("somepath", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
-  @Test
+  @Test(expected = NoSuchElementException.class)
   public void testExecutingSomePathQuery_WhenThereIsNoPaths() {
     String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
     Query query = new Query("somepath", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -364,6 +358,102 @@ public class QueryTest {
     Query query = new Query("somepath", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+  }
+
+  // Tests for `RDEPS` query
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingRdepsQuery_WithTwoStringParameters_ThrowsIllegalArgumentException() {
+    Query query = new Query("rdeps", "com.google.cats.FirstCat", "com.google.cats.SecondCat");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingRdepsQuery_WithoutParameters_ThrowsIllegalArgumentException() {
+    Query query = new Query("rdeps");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testParsingRdepsQuery_WithNullParameters_ThrowsNullPointerException() {
+    Query query = new Query("rdeps", /*parameters = */ null);
+  }
+
+  @Test
+  public void testExecutingRdepsQuery_WithFactorySourceNode() {
+    String[] parameters = {"com.google.CatsFactory"};
+    Query query = new Query("rdeps", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+
+    assertEquals(Collections.singletonList("com.google.Component"), queryExecutionResult);
+  }
+
+  @Test
+  public void testExecutingRdepsQuery_WithCapitalizedName_WithFactorySourceNode() {
+    String[] parameters = {"com.google.CatsFactory"};
+    Query query = new Query("RDePs", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+
+    assertEquals(Collections.singletonList("com.google.Component"), queryExecutionResult);
+  }
+
+  @Test
+  public void testExecutingRdepsQuery_WithDetailsSourceNode() {
+    String[] parameters = {"com.google.Details"};
+    Query query = new Query("rdeps", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.Component", "com.google.Cat");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
+  }
+
+  @Test
+  public void testExecutingRdepsQuery_WithRootAsSourceNode() {
+    String[] parameters = {"com.google.Component"};
+    Query query = new Query("rdeps", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+
+    assertEquals(0, queryExecutionResult.size());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingRdepsQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.Kitten"};
+    Query query = new Query("rdeps", parameters);
+
+    query.execute(makeSimpleBindingGraph());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testExecutingRdepsQuery_WithNullBindingGraph_ThrowsNullPointerException() {
+    String[] parameters = {"com.google.Cat"};
+    Query query = new Query("rdeps", parameters);
+
+    query.execute(null);
+  }
+
+  @Test
+  public void testExecutingRdepsQuery_WithOneTypoInNodeName_ThrowsMisspelledNodeNameException() {
+    try {
+      String[] parameters = {"com.google.CatsFactoryy"};
+      Query query = new Query("rdeps", parameters);
+
+      List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+      fail();
+    } catch (MisspelledNodeNameException e) {
+      // We do not care too much about the rest of the message, but it should contain a correct node name.
+      assertTrue(e.getMessage().contains("com.google.CatsFactory"));
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingRdepsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.CatsFactory...."};
+    Query query = new Query("rdeps", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
   }
 
   /*
