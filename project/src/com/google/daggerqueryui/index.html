@@ -16,10 +16,10 @@
 <head>
     <title>Dagger Query UI</title>
 
-    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="third-party/css/bootstrap.min.css">
     <link rel="stylesheet" href="third-party/css/mdb.min.css">
     <link rel="stylesheet" href="third-party/css/roboto-fonts.css">
+    <link rel="stylesheet" href="index.css">
 
     <!-- JQuery -->
     <script src="third-party/js/jquery.min.js" defer></script>
@@ -36,7 +36,7 @@
 
 <div class="container" id="query-text-field">
     <div class="row align-items-center">
-        <div class="col-11">
+        <div class="col-10">
             <div class="md-form form-lg interactive-input-container">
                 <div class="form-control form-control-lg query-name"></div>
                 <input type="text"
@@ -80,12 +80,23 @@
                 </div>
             </div>
         </div>
+        <div class="col-1">
+            <div class="custom-control custom-switch custom-switch-large"
+                 id="physics-switch"
+                 title="Turn on physics?"
+                 data-toggle="tooltip">
+                <input type="checkbox" class="custom-control-input" id="physics-switch-input">
+                <label class="custom-control-label" for="physics-switch-input"></label>
+            </div>
+        </div>
     </div>
     <div id="error-message" class="text-danger"></div>
 </div>
 <div id="binding-graph"></div>
 <!-- Activates popover from Bootstrap -->
 <script src="scripts/enables-popover.js" defer></script>
+<!-- Setups switch for managing physics and activates tooltip from Bootstrap -->
+<script src="scripts/setup-switch-with-tooltip.js" defer></script>
 <!-- Interactive binding graph displayed on the page -->
 <script src="scripts/binding_graph.js" defer></script>
 <!-- Tries to execute a query and highlights its name when it is valid -->

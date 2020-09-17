@@ -32,6 +32,11 @@ const bindingGraph = (function() {
   const edges = new vis.DataSet();
 
   /**
+   * Specific options of the binding graph.
+   */
+  const options = {physics: false};
+
+  /**
    * Associates given node with an identifier, if the node was not represented in the graph.
    *
    * @param {string} node a node to be added if it doesn't exist
@@ -77,9 +82,7 @@ const bindingGraph = (function() {
    */
   function getAllEdges(nodeId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === nodeId || edge.to === nodeId);
-      }
+      filter: edge => edge.from === nodeId || edge.to === nodeId
     });
   }
 
@@ -90,9 +93,7 @@ const bindingGraph = (function() {
    */
   function getAllDeps(nodeId) {
     return edges.get({
-      filter: function (edge) {
-        return (edge.from === nodeId);
-      }
+      filter: edge => edge.from === nodeId
     });
   }
 
@@ -118,7 +119,25 @@ const bindingGraph = (function() {
     const sourceId = addNode(source);
     const targetId = addNode(target);
 
+    // Checks if an edge already exists.
+    if (hasEdge(sourceId, targetId)) {
+      return;
+    }
+
     edges.add({from: sourceId, to: targetId});
+  }
+
+  /**
+   * Checks if an edge exists in the graph or not.
+   *
+   * @param {number} sourceId
+   * @param {number} targetId
+   * @return {boolean}
+   */
+  function hasEdge(sourceId, targetId) {
+    return edges.get({
+      filter: edge => edge.from === sourceId && edge.to === targetId
+    }).length !== 0;
   }
 
   return {
@@ -178,6 +197,18 @@ const bindingGraph = (function() {
     },
 
     /**
+     * Toggles physics switcher.
+     *
+     * <p>Disables physics if enabled and vice versa.
+     *
+     * @return {boolean} a flag that indicates if physics is enabled or not
+     */
+    togglePhysics: function() {
+      options.physics = !options.physics;
+      return options.physics;
+    },
+
+    /**
      * Draws the entire graph and sets events listeners.
      */
     draw: function() {
@@ -187,9 +218,6 @@ const bindingGraph = (function() {
         edges: edges
       };
 
-      var options = {
-        physics: false
-      };
       const network = new vis.Network(container, data, options);
     }
   };
