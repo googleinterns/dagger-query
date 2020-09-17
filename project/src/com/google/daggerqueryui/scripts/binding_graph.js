@@ -172,7 +172,8 @@ const bindingGraph = (function() {
    * @param {vis.Network} network
    */
   function supportEventsRecognition(network) {
-    network.on("click", function (params) {
+    // An event for managing children nodes.
+    network.on("doubleClick", function (params) {
       // Checks if any node was selected.
       if (params.nodes.length === 0) {
         return;
@@ -190,7 +191,8 @@ const bindingGraph = (function() {
       }
     });
 
-    network.on("doubleClick", function (params) {
+    // An event for managing parent nodes.
+    network.on("oncontext", function (params) {
       // Checks if any node was selected.
       if (params.nodes.length === 0) {
         return;
