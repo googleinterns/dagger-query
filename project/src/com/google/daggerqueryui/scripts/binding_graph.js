@@ -49,10 +49,8 @@ const bindingGraph = (function() {
 
     const id = nodesToNumbers.get(node);
     if (nodes.get(id) === null) {
-      // Since angle brackets have a special meaning in html, we replace them with square brackets.
-      const fullName = node.replace(/</g, "[").replace(/>/g, "]");
-      const simpleName = fullName.replace(/(?:\w+\.)+(\w+)/g, '$1');
-      nodes.add({id: id, label: simpleName, title: fullName});
+      const simpleName = node.replace(/(?:\w+\.)+(\w+)/g, '$1');
+      nodes.add({id: id, label: simpleName, title: node});
     }
     return id;
   }
