@@ -85,7 +85,7 @@ public class QueryExecutor {
     }
 
     ImmutableList<String> resultList = resultBuilder.build();
-    if (resultList.isEmpty()) {
+    if (resultList.isEmpty() && exceptions.size() > 0) {
       throw new IllegalArgumentException(exceptions.entries().iterator().next().getValue().getMessage());
     } else {
       return resultList;

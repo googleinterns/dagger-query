@@ -456,6 +456,83 @@ public class QueryTest {
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
   }
 
+  // Tests for `EXISTS` query
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingExistsQuery_WithTwoStringParameters_ThrowsIllegalArgumentException() {
+    Query query = new Query("exists", "com.google.cats.FirstCat", "com.google.cats.SecondCat");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testParsingExistsQuery_WithoutParameters_ThrowsIllegalArgumentException() {
+    Query query = new Query("exists");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testParsingExistsQuery_WithNullParameters_ThrowsNullPointerException() {
+    Query query = new Query("exists", /*parameters = */ null);
+  }
+
+  @Test
+  public void testExecutingExistsQuery_WithComponentSourceNode() {
+    String[] parameters = {"com.google.Component"};
+    Query query = new Query("exists", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.Component");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
+  }
+
+  @Test
+  public void testExecutingExistsQuery_WithCapitalizedName_WithComponentSourceNode() {
+    String[] parameters = {"com.google.Component"};
+    Query query = new Query("EXIsts", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+
+    ImmutableSet expectedOutput = ImmutableSet.of("com.google.Component");
+    assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingExistsQuery_WithAbsentSourceNode_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.Kitten"};
+    Query query = new Query("exists", parameters);
+
+    query.execute(makeSimpleBindingGraph());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testExecutingExistsQuery_WithNullBindingGraph_ThrowsNullPointerException() {
+    String[] parameters = {"com.google.Cat"};
+    Query query = new Query("exists", parameters);
+
+    query.execute(null);
+  }
+
+  @Test
+  public void testExecutingExistsQuery_WithOneTypoInNodeName_ThrowsMisspelledNodeNameException() {
+    try {
+      String[] parameters = {"com.google.CatsFactoryy"};
+      Query query = new Query("exists", parameters);
+
+      List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+      fail();
+    } catch (MisspelledNodeNameException e) {
+      // We do not care too much about the rest of the message, but it should contain a correct node name.
+      assertTrue(e.getMessage().contains("com.google.CatsFactory"));
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecutingExistsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.CatsFactory...."};
+    Query query = new Query("exists", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
+  }
+
   /*
    * Makes a simple acyclic binding graph with the following structure:
    *
