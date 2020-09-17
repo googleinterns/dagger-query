@@ -17,6 +17,9 @@ limitations under the License.
 package com.google.daggerquery.executor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.SortedSetMultimap;
+import com.google.common.collect.TreeMultimap;
 import com.google.daggerquery.executor.models.GraphProto;
 import com.google.daggerquery.executor.models.MisspelledNodeNameException;
 import com.google.daggerquery.executor.models.Query;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * A class which is responsible for parsing user's input and executing a query.
@@ -67,27 +71,22 @@ public class QueryExecutor {
     ImmutableList.Builder<String> resultBuilder = new ImmutableList.Builder();
 
     // We assume that we successfully executed a query only if in at least one graph it was executed without fail.
-    MisspelledNodeNameException lastMisspelledNodeNameException = null;
-    IllegalArgumentException lastIllegalArgumentException = null;
+    SortedSetMultimap<Integer, Exception> exceptions = TreeMultimap.create(Ordering.natural(), Ordering.allEqual());
     for (BindingGraph bindingGraph: bindingGraphs) {
       try {
         resultBuilder.addAll(query.execute(new GraphProto(bindingGraph)));
-      } catch (IllegalArgumentException e) {
-        lastIllegalArgumentException = e;
-      } catch (MisspelledNodeNameException e) {
-        lastMisspelledNodeNameException = e;
+      } catch (IllegalArgumentException exception) {
+        exceptions.put(3, exception);
+      } catch (NoSuchElementException exception) {
+        exceptions.put(2, exception);
+      } catch (MisspelledNodeNameException exception) {
+        exceptions.put(1, exception);
       }
     }
 
     ImmutableList<String> resultList = resultBuilder.build();
     if (resultList.isEmpty()) {
-      if (lastMisspelledNodeNameException != null) {
-        throw new IllegalArgumentException(lastMisspelledNodeNameException.getMessage());
-      } else if (lastIllegalArgumentException != null) {
-        throw lastIllegalArgumentException;
-      } else {
-        throw new IllegalArgumentException("Nothing found, list with results is empty.");
-      }
+      throw new IllegalArgumentException(exceptions.entries().iterator().next().getValue().getMessage());
     } else {
       return resultList;
     }
