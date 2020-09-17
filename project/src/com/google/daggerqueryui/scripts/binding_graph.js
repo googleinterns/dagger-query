@@ -120,7 +120,7 @@ const bindingGraph = (function() {
     const targetId = addNode(target);
 
     // Checks if an edge already exists.
-    if (isEdgeExists(sourceId, targetId)) {
+    if (hasEdge(sourceId, targetId)) {
       return;
     }
 
@@ -134,7 +134,7 @@ const bindingGraph = (function() {
    * @param {number} targetId
    * @return {boolean}
    */
-  function isEdgeExists(sourceId, targetId) {
+  function hasEdge(sourceId, targetId) {
     return edges.get({
       filter: edge => edge.from === sourceId && edge.to === targetId
     }).length !== 0;
