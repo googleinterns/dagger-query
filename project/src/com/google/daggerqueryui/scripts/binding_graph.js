@@ -168,6 +168,18 @@ const bindingGraph = (function() {
   }
 
   /**
+   * Checks if a node exists in the graph or not.
+   *
+   * @param {string} nodeName
+   * @return {boolean}
+   */
+  function hasNode(nodeName) {
+    return nodes.get({
+      filter: nodes => nodes.title === nodeName
+    }).length !== 0;
+  }
+
+  /**
    * Supports click and double click events in the network object.
    * @param {vis.Network} network
    */
@@ -236,6 +248,31 @@ const bindingGraph = (function() {
       for (const childNode of deps) {
         addEdge(source, childNode);
       }
+    },
+
+    /**
+     * Adds all nodes which depend on the source node.
+     *
+     * @param {string} source
+     * @param {string[]} ancestors
+     */
+    addAncestors: function (source, ancestors) {
+      for (const ancestorNode of ancestors) {
+        addEdge(ancestorNode, source);
+      }
+    },
+
+    /**
+     * Adds a new node to the graph if it doesn't exist.
+     * 
+     * @param {string} nodeName
+     */
+    addNode: function (nodeName) {
+      if (hasNode(nodeName)) {
+        return;
+      }
+
+      addNode(nodeName);
     },
 
     /**
