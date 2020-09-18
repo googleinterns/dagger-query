@@ -85,7 +85,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the start or destination nodes are equal to the given one.
+   * Retrieves all edges where the given node equals to the source or target nodes.
    *
    * @param {number} nodeId an identifier of the given node
    */
@@ -96,7 +96,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the start node is the specified one.
+   * Retrieves all edges where the given node equals to the source node.
    *
    * @param {number} nodeId an identifier of the given node
    */
@@ -107,7 +107,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the target node is the specified one.
+   * Retrieves all edges where the given node equals to the target node.
    *
    * @param {number} nodeId an identifier of the given node
    */
