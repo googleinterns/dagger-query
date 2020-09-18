@@ -63,13 +63,13 @@ $(function () {
   };
 });
 
-$(function () {
+const queryExecutor = (function() {
   /**
    * Sends a request to the server with specified query and gets a response.
    * @param url an address with the correct path and request parameters in it
    * @return {Promise<any>} a promise that contains a json with a graph on success
    */
-  $.fn.getQueryResults = async function (url) {
+  async function getQueryResults(url) {
     let response = await fetch(url);
 
     if (response.status === 200) {
@@ -77,37 +77,42 @@ $(function () {
     }
 
     throw await response.text();
-  };
-
-  /**
-   * Processes a valid query by sending a request to the specified URL,
-   * receiving a response, and performing UI actions in response.
-   *
-   * @param {string[]} query a valid query which will be executed
-   */
-  $.fn.processQuery = async function (query) {
-    try {
-      const url = new URL(`http://localhost:4921/daggerquery/`);
-      url.searchParams.append('query', query.join(' '));
-      const results = await $(this).getQueryResults(url);
-      $(this).markInputFieldAsValid();
-
-      if (query[0] === $.DEPS_QUERY_NAME) {
-        bindingGraph.clear();
-        bindingGraph.addDeps(query[1], results);
-      } else if (query[0] === $.ALLPATHS_QUERY_NAME || query[0] === $.SOMEPATH_QUERY_NAME) {
-        bindingGraph.clear();
-        for (let path of results) {
-          bindingGraph.addPath(path);
-        }
-      }
-
-      bindingGraph.draw();
-    } catch (error) {
-      $(this).markInputFieldAsInvalid(error);
-    }
   }
-});
+
+  return {
+    /**
+     * Processes a valid query by sending a request to the specified URL,
+     * receiving a response, and performing UI actions in response.
+     *
+     * @param {string[]} query a valid query which will be executed
+     * @param {boolean} shouldClearGraph a flag which indicates if the graph should be cleaned or not
+     */
+    processQuery: async function(query, {shouldClearGraph}) {
+      try {
+        const url = new URL(`http://localhost:4921/daggerquery/`);
+        url.searchParams.append('query', query.join(' '));
+        const results = await getQueryResults(url);
+        $(this).markInputFieldAsValid();
+
+        if (shouldClearGraph) {
+          bindingGraph.clear();
+        }
+
+        if (query[0] === $.DEPS_QUERY_NAME) {
+          bindingGraph.addDeps(query[1], results);
+        } else if (query[0] === $.ALLPATHS_QUERY_NAME || query[0] === $.SOMEPATH_QUERY_NAME) {
+          for (const path of results) {
+            bindingGraph.addPath(path);
+          }
+        }
+
+        bindingGraph.draw();
+      } catch (error) {
+        $(this).markInputFieldAsInvalid(error);
+      }
+    }
+  };
+})();
 
 $("#query-input").on('keyup', function (event) {
   const query = $(this).val().trim().split(' ');
@@ -123,6 +128,6 @@ $("#query-input").on('keyup', function (event) {
   queryNameElement.html(queryName).show();
 
   if (event.key === 'Enter' && $(this).validateParameters(query)) {
-    $(this).processQuery(query);
+    queryExecutor.processQuery(query, {shouldClearGraph: true});
   }
 });

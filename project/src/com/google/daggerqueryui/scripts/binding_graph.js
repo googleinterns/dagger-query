@@ -34,7 +34,18 @@ const bindingGraph = (function() {
   /**
    * Specific options of the binding graph.
    */
-  const options = {physics: false};
+  const options = {
+    physics: false,
+    layout: {
+      randomSeed: 42,
+    }
+  };
+
+  /**
+   * Determines if graph needs to be redrawn or not.
+   * @type {boolean}
+   */
+  let needsToRedraw = true;
 
   /**
    * Associates given node with an identifier, if the node was not represented in the graph.
@@ -74,7 +85,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the start or destination nodes are equal to the given one.
+   * Retrieves all edges where the given node equals to the source or target nodes.
    *
    * @param {number} nodeId an identifier of the given node
    */
@@ -85,13 +96,24 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the start node is the specified one.
+   * Retrieves all edges where the given node equals to the source node.
    *
    * @param {number} nodeId an identifier of the given node
    */
-  function getAllDeps(nodeId) {
+  function getAllEdgesToDeps(nodeId) {
     return edges.get({
       filter: edge => edge.from === nodeId
+    });
+  }
+
+  /**
+   * Retrieves all edges where the given node equals to the target node.
+   *
+   * @param {number} nodeId an identifier of the given node
+   */
+  function getAllEdgesFromAncestors(nodeId) {
+    return edges.get({
+      filter: edge => edge.to === nodeId
     });
   }
 
@@ -99,12 +121,19 @@ const bindingGraph = (function() {
    * Removes an edge from a subgraph, and if the destination node
    * becomes isolated, then removes it as well.
    *
-   * @param edge an edge which will be removed
+   * @param {vis.Edge} edge an edge which will be removed
+   * @param {boolean} shouldRemoveSource
+   * @param {boolean} shouldRemoveTarget
    */
-  function removeEdge(edge) {
+  function removeEdge(edge, shouldRemoveSource, shouldRemoveTarget) {
     edges.remove(edge);
 
-    tryToRemoveNode(edge.to);
+    if (shouldRemoveSource) {
+      tryToRemoveNode(edge.from);
+    }
+    if (shouldRemoveTarget) {
+      tryToRemoveNode(edge.to);
+    }
   }
 
   /**
@@ -138,6 +167,66 @@ const bindingGraph = (function() {
     }).length !== 0;
   }
 
+  /**
+   * If the dependencies are not currently shown, we prefer to draw them all.
+   * Otherwise, we hide all children, even if they are not all were presented.
+   *
+   * @param {number} nodeId
+   */
+  function showOrHideDeps(nodeId) {
+    const nodeTitle = nodes.get(nodeId).title;
+
+    if (getAllEdgesToDeps(nodeId).length === 0) {
+      queryExecutor.processQuery(['deps', nodeTitle], false);
+    } else {
+      bindingGraph.deleteDeps(nodeTitle);
+    }
+  }
+
+  /**
+   * If the ancestors are not currently shown, we prefer to draw them all.
+   * Otherwise, we hide all parents, even if they are not all were presented.
+   *
+   * @param {number} nodeId
+   */
+  function showOrHideAncestors(nodeId) {
+    const nodeTitle = nodes.get(nodeId).title;
+
+    if (getAllEdgesFromAncestors(nodeId).length === 0) {
+      queryExecutor.processQuery(['rdeps', nodeTitle], false);
+    } else {
+      bindingGraph.deleteAncestors(nodeTitle);
+    }
+  }
+
+  /**
+   * Supports right-click and left-click events in the network object.
+   * @param {vis.Network} network
+   */
+  function supportEventsRecognition(network) {
+    // An event for managing children nodes.
+    network.on("click", function (params) {
+      // Checks if any node was selected.
+      if (params.nodes.length === 0) {
+        return;
+      }
+
+      const nodeId = params.nodes[0];
+      showOrHideDeps(nodeId);
+    });
+
+    // An event for managing parent nodes.
+    network.on("oncontext", function (params) {
+      // Checks if any node was selected.
+      if (params.nodes.length === 0) {
+        return;
+      }
+
+      const nodeId = params.nodes[0];
+      showOrHideAncestors(nodeId);
+    });
+  }
+
   return {
     /**
      * Takes a string representing a path where two adjacent nodes are connected by an edge,
@@ -162,6 +251,33 @@ const bindingGraph = (function() {
     addDeps: function (source, deps) {
       for (const childNode of deps) {
         addEdge(source, childNode);
+      }
+    },
+
+    /**
+     * Removes all edges with the given source node from the subgraph.
+     *
+     * @param {string} node a source node which dependencies will be removed
+     */
+    deleteDeps: function (node) {
+      // Retrieves all edges having a start node with value `node`.
+      const edgesToBeRemoved = getAllEdgesToDeps(nodesToNumbers.get(node));
+
+      for (const edge of edgesToBeRemoved) {
+        removeEdge(edge, /*shouldRemoveSource =*/ false, /*shouldRemoveTarget =*/ true);
+      }
+    },
+
+    /**
+     * Removes all edges with the given target node from the subgraph.
+     *
+     * @param {string} node a target node which parents will be removed
+     */
+    deleteAncestors: function (node) {
+      const edgesToBeRemoved = getAllEdgesFromAncestors(nodesToNumbers.get(node));
+
+      for (const edge of edgesToBeRemoved) {
+        removeEdge(edge, /*shouldRemoveSource =*/ true, /*shouldRemoveTarget =*/ false);
       }
     },
 
@@ -203,6 +319,7 @@ const bindingGraph = (function() {
      */
     togglePhysics: function() {
       options.physics = !options.physics;
+      needsToRedraw = true;
       return options.physics;
     },
 
@@ -210,13 +327,24 @@ const bindingGraph = (function() {
      * Draws the entire graph and sets events listeners.
      */
     draw: function() {
+      if (!needsToRedraw) {
+        return;
+      }
+
       const container = document.getElementById('binding-graph');
       const data = {
         nodes: nodes,
         edges: edges
       };
 
-      const network = new vis.Network(container, data, options);
-    }
+      network = new vis.Network(container, data, options);
+      supportEventsRecognition(network);
+
+      // With physics enabled, we don't need to draw the graph again, because the nodes are located by gravity.
+      // Otherwise, all the nodes will appear in the initial position and overlap, so we need to redraw the graph.
+      if (options.physics) {
+        needsToRedraw = false;
+      }
+    },
   };
 })();
