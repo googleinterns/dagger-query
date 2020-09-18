@@ -91,7 +91,7 @@ const queryExecutor = (function() {
      * @param {string[]} query a valid query which will be executed
      * @param {boolean} shouldClearGraph a flag which indicates if the graph should be cleaned or not
      */
-    processQuery: async function(query, shouldClearGraph) {
+    processQuery: async function(query, {shouldClearGraph}) {
       try {
         const url = new URL(`http://localhost:4921/daggerquery/`);
         url.searchParams.append('query', query.join(' '));
@@ -133,7 +133,7 @@ $("#query-input").on('keyup', function (event) {
     // The user can specify the node name without the query name.
     // If such a node exists in the graph, it will be drawn.
     if (event.key === 'Enter' && query.length === 1) {
-      queryExecutor.processQuery([$.EXISTS_QUERY_NAME, query[0]], false);
+      queryExecutor.processQuery([$.EXISTS_QUERY_NAME, query[0]], {shouldClearGraph: false});
     }
 
     return;
@@ -144,7 +144,7 @@ $("#query-input").on('keyup', function (event) {
 
   if (event.key === 'Enter') {
     if ($(this).validateParameters(query)) {
-      queryExecutor.processQuery(query, true);
+      queryExecutor.processQuery(query, {shouldClearGraph: true});
     } else {
       $(this).markInputFieldAsInvalid(
         `The number of passed parameters for ${queryName} query is incorrect.` +
