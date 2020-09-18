@@ -200,12 +200,12 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Supports click and double click events in the network object.
+   * Supports right-click and left-click events in the network object.
    * @param {vis.Network} network
    */
   function supportEventsRecognition(network) {
     // An event for managing children nodes.
-    network.on("doubleClick", function (params) {
+    network.on("click", function (params) {
       // Checks if any node was selected.
       if (params.nodes.length === 0) {
         return;
