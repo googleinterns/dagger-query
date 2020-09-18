@@ -41,10 +41,16 @@ $(function () {
    * Validates the number of query parameters.
    *
    * @param {Array<string>} query a full query passed by user with unique name and parameters
-   * @return {boolean} a value that determines whether the number of parameters is correct or not
+   * @throws a detailed error if number of parameters is wrong
    */
   $.fn.validateParameters = function (query) {
-    return $.supportedQueries.get(query[0]) === query.length - 1;
+    const queryName = query[0];
+    if ($.supportedQueries.get(queryName) === query.length - 1) {
+      return;
+    }
+
+    throw `The number of passed parameters for ${queryName} query is incorrect.` +
+    ` Expected: ${$.supportedQueries.get(queryName)}, got: ${query.length - 1}.`;
   };
 });
 
@@ -143,13 +149,11 @@ $("#query-input").on('keyup', function (event) {
   queryNameElement.html(queryName).show();
 
   if (event.key === 'Enter') {
-    if ($(this).validateParameters(query)) {
+    try {
+      $(this).validateParameters(query)
       queryExecutor.processQuery(query, {shouldClearGraph: true});
-    } else {
-      $(this).markInputFieldAsInvalid(
-        `The number of passed parameters for ${queryName} query is incorrect.` +
-        ` Expected: ${$.supportedQueries.get(queryName)}, got: ${query.length - 1}.`
-      );
+    } catch (error) {
+      $(this).markInputFieldAsInvalid(error);
     }
   }
 });
