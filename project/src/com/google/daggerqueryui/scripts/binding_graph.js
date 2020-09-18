@@ -168,6 +168,38 @@ const bindingGraph = (function() {
   }
 
   /**
+   * If the dependencies are not currently shown, we prefer to draw them all.
+   * Otherwise, we hide all children, even if they are not all were presented.
+   *
+   * @param {number} nodeId
+   */
+  function showOrHideDeps(nodeId) {
+    const nodeTitle = nodes.get(nodeId).title;
+
+    if (getAllEdgesToDeps(nodeId).length === 0) {
+      queryExecutor.processQuery(['deps', nodeTitle], false);
+    } else {
+      bindingGraph.deleteDeps(nodeTitle);
+    }
+  }
+
+  /**
+   * If the ancestors are not currently shown, we prefer to draw them all.
+   * Otherwise, we hide all parents, even if they are not all were presented.
+   *
+   * @param {number} nodeId
+   */
+  function showOrHideAncestors(nodeId) {
+    const nodeTitle = nodes.get(nodeId).title;
+
+    if (getAllEdgesFromAncestors(nodeId).length === 0) {
+      queryExecutor.processQuery(['rdeps', nodeTitle], false);
+    } else {
+      bindingGraph.deleteAncestors(nodeTitle);
+    }
+  }
+
+  /**
    * Supports click and double click events in the network object.
    * @param {vis.Network} network
    */
@@ -180,15 +212,7 @@ const bindingGraph = (function() {
       }
 
       const nodeId = params.nodes[0];
-      const nodeTitle = nodes.get(nodeId).title;
-
-      // If the dependencies are not currently shown, we prefer to draw them all.
-      // Otherwise, we hide all children, even if they are not all were presented.
-      if (getAllEdgesToDeps(nodeId).length === 0) {
-        queryExecutor.processQuery(['deps', nodeTitle], false);
-      } else {
-        bindingGraph.deleteDeps(nodeTitle);
-      }
+      showOrHideDeps(nodeId);
     });
 
     // An event for managing parent nodes.
@@ -199,15 +223,7 @@ const bindingGraph = (function() {
       }
 
       const nodeId = params.nodes[0];
-      const nodeTitle = nodes.get(nodeId).title;
-
-      // If the ancestors are not currently shown, we prefer to draw them all.
-      // Otherwise, we hide all parents, even if they are not all were presented.
-      if (getAllEdgesFromAncestors(nodeId).length === 0) {
-        queryExecutor.processQuery(['rdeps', nodeTitle], false);
-      } else {
-        bindingGraph.deleteAncestors(nodeTitle);
-      }
+      showOrHideAncestors(nodeId);
     });
   }
 
