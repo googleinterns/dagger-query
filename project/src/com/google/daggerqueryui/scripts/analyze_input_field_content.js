@@ -87,7 +87,7 @@ const queryExecutor = (function() {
      * @param {string[]} query a valid query which will be executed
      * @param {boolean} shouldClearGraph a flag which indicates if the graph should be cleaned or not
      */
-    processQuery: async function(query, shouldClearGraph) {
+    processQuery: async function(query, {shouldClearGraph}) {
       try {
         const url = new URL(`http://localhost:4921/daggerquery/`);
         url.searchParams.append('query', query.join(' '));
@@ -128,6 +128,6 @@ $("#query-input").on('keyup', function (event) {
   queryNameElement.html(queryName).show();
 
   if (event.key === 'Enter' && $(this).validateParameters(query)) {
-    queryExecutor.processQuery(query, true);
+    queryExecutor.processQuery(query, {shouldClearGraph: true});
   }
 });
