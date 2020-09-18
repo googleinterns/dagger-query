@@ -51,7 +51,7 @@ const bindingGraph = (function() {
    * An enum that defines which nodes from the edge will be highlighted.
    * @type {Readonly<{highlightTarget: number, noHighlight: number, highlightSource: number}>}
    */
-  const EdgeStyle = Object.freeze({'highlightSource': 1, 'highlightTarget': 2, 'noHighlight': 4});
+  const EdgeStyle = Object.freeze({'highlightSource': 1, 'highlightTarget': 2, 'noHighlight': 3});
 
   /**
    * Contains information that can be used by the nodes constructor to change their style.
@@ -84,7 +84,17 @@ const bindingGraph = (function() {
     const id = nodesToNumbers.get(node);
     if (nodes.get(id) === null) {
       const simpleName = node.replace(/(?:\w+\.)+(\w+)/g, '$1');
-      nodes.add({id: id, label: simpleName, title: node, color: {background: style.colour, border: style.colour, highlight: style.colour}, shape: style.shape});
+      nodes.add({
+        id: id,
+        label: simpleName,
+        title: node,
+        color: {
+          background: style.colour,
+          border: style.colour,
+          highlight: style.colour
+        },
+        shape: style.shape
+      });
     }
     return id;
   }
@@ -108,7 +118,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the start or destination nodes are equal to the given one.
+   * Retrieves all edges where the given node equals to the source or target nodes.
    *
    * @param {number} nodeId an identifier of the given node
    */
@@ -119,7 +129,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the start node is the specified one.
+   * Retrieves all edges where the given node equals to the source node.
    *
    * @param {number} nodeId an identifier of the given node
    */
@@ -130,7 +140,7 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Retrieves all edges where the target node is the specified one.
+   * Retrieves all edges where the given node equals to the target node.
    *
    * @param {number} nodeId an identifier of the given node
    */
@@ -206,27 +216,52 @@ const bindingGraph = (function() {
   }
 
   /**
-   * Supports click and double click events in the network object.
+   * If the dependencies are not currently shown, we prefer to draw them all.
+   * Otherwise, we hide all children, even if they are not all were presented.
+   *
+   * @param {number} nodeId
+   */
+  function showOrHideDeps(nodeId) {
+    const nodeTitle = nodes.get(nodeId).title;
+
+    if (getAllEdgesToDeps(nodeId).length === 0) {
+      queryExecutor.processQuery(['deps', nodeTitle], false);
+    } else {
+      bindingGraph.deleteDeps(nodeTitle);
+    }
+  }
+
+  /**
+   * If the ancestors are not currently shown, we prefer to draw them all.
+   * Otherwise, we hide all parents, even if they are not all were presented.
+   *
+   * @param {number} nodeId
+   */
+  function showOrHideAncestors(nodeId) {
+    const nodeTitle = nodes.get(nodeId).title;
+
+    if (getAllEdgesFromAncestors(nodeId).length === 0) {
+      queryExecutor.processQuery(['rdeps', nodeTitle], false);
+    } else {
+      bindingGraph.deleteAncestors(nodeTitle);
+    }
+  }
+
+  /**
+   * Supports right-click and left-click events in the network object.
+   *
    * @param {vis.Network} network
    */
   function supportEventsRecognition(network) {
     // An event for managing children nodes.
-    network.on("doubleClick", function (params) {
+    network.on("click", function (params) {
       // Checks if any node was selected.
       if (params.nodes.length === 0) {
         return;
       }
 
       const nodeId = params.nodes[0];
-      const nodeTitle = nodes.get(nodeId).title;
-
-      // If the dependencies are not currently shown, we prefer to draw them all.
-      // Otherwise, we hide all children, even if they are not all were presented.
-      if (getAllEdgesToDeps(nodeId).length === 0) {
-        queryExecutor.processQuery(['deps', nodeTitle], false);
-      } else {
-        bindingGraph.deleteDeps(nodeTitle);
-      }
+      showOrHideDeps(nodeId);
     });
 
     // An event for managing parent nodes.
@@ -237,15 +272,7 @@ const bindingGraph = (function() {
       }
 
       const nodeId = params.nodes[0];
-      const nodeTitle = nodes.get(nodeId).title;
-
-      // If the ancestors are not currently shown, we prefer to draw them all.
-      // Otherwise, we hide all parents, even if they are not all were presented.
-      if (getAllEdgesFromAncestors(nodeId).length === 0) {
-        queryExecutor.processQuery(['rdeps', nodeTitle], false);
-      } else {
-        bindingGraph.deleteAncestors(nodeTitle);
-      }
+      showOrHideAncestors(nodeId);
     });
   }
 
