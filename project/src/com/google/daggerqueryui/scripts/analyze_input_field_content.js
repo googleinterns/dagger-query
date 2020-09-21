@@ -16,11 +16,15 @@ $(function () {
   $.DEPS_QUERY_NAME = 'deps';
   $.SOMEPATH_QUERY_NAME = 'somepath';
   $.ALLPATHS_QUERY_NAME = 'allpaths';
+  $.RDEPS_QUERY_NAME = 'rdeps';
+  $.EXISTS_QUERY_NAME = 'exists';
 
   $.supportedQueries = new Map([
     [$.DEPS_QUERY_NAME, 1],
     [$.ALLPATHS_QUERY_NAME, 2],
     [$.SOMEPATH_QUERY_NAME, 2],
+    [$.RDEPS_QUERY_NAME, 1],
+    [$.EXISTS_QUERY_NAME, 1],
   ]);
 
   /**
@@ -37,10 +41,16 @@ $(function () {
    * Validates the number of query parameters.
    *
    * @param {Array<string>} query a full query passed by user with unique name and parameters
-   * @return {boolean} a value that determines whether the number of parameters is correct or not
+   * @throws a detailed error if number of parameters is wrong
    */
   $.fn.validateParameters = function (query) {
-    return $.supportedQueries.get(query[0]) === query.length - 1;
+    const queryName = query[0];
+    if ($.supportedQueries.get(queryName) === query.length - 1) {
+      return;
+    }
+
+    throw `The number of passed parameters for ${queryName} query is incorrect.` +
+    ` Expected: ${$.supportedQueries.get(queryName)}, got: ${query.length - 1}.`;
   };
 });
 
@@ -104,6 +114,10 @@ const queryExecutor = (function() {
           for (const path of results) {
             bindingGraph.addPath(path);
           }
+        } else if (query[0] === $.RDEPS_QUERY_NAME) {
+          bindingGraph.addAncestors(query[1], results);
+        } else if (query[0] === $.EXISTS_QUERY_NAME) {
+          bindingGraph.addNode(query[1]);
         }
 
         bindingGraph.draw();
@@ -116,18 +130,30 @@ const queryExecutor = (function() {
 
 $("#query-input").on('keyup', function (event) {
   const query = $(this).val().trim().split(' ');
-  const queryName = query[0];
+  const queryName = query[0].toLowerCase();
 
   const queryNameElement = $(this).closest('.interactive-input-container').find('.query-name');
   if (!$(this).validateQueryName(queryName)) {
     queryNameElement.hide();
+
+    // The user can specify the node name without the query name.
+    // If such a node exists in the graph, it will be drawn.
+    if (event.key === 'Enter' && query.length === 1) {
+      queryExecutor.processQuery([$.EXISTS_QUERY_NAME, query[0]], {shouldClearGraph: false});
+    }
+
     return;
   }
 
   // Highlights query's name when it is valid.
   queryNameElement.html(queryName).show();
 
-  if (event.key === 'Enter' && $(this).validateParameters(query)) {
-    queryExecutor.processQuery(query, {shouldClearGraph: true});
+  if (event.key === 'Enter') {
+    try {
+      $(this).validateParameters(query)
+      queryExecutor.processQuery(query, {shouldClearGraph: true});
+    } catch (error) {
+      $(this).markInputFieldAsInvalid(error);
+    }
   }
 });
