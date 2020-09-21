@@ -45,6 +45,7 @@ public class Query {
   private final static String ALLPATHS_QUERY_NAME = "allpaths";
   private final static String SOMEPATH_QUERY_NAME = "somepath";
   private final static String RDEPS_QUERY_NAME = "rdeps";
+  private final static String EXISTS_QUERY_NAME = "exists";
 
   private final static int MAX_NUMBER_OF_MISPLACED_LETTERS = 3;
 
@@ -57,6 +58,7 @@ public class Query {
       .put(ALLPATHS_QUERY_NAME, 2)
       .put(SOMEPATH_QUERY_NAME, 2)
       .put(RDEPS_QUERY_NAME, 1)
+      .put(EXISTS_QUERY_NAME, 1)
       .build();
 
   private String name;
@@ -157,6 +159,12 @@ public class Query {
         checkNodeForCorrectness(source, bindingGraph);
 
         return bindingGraph.getAncestors(source).asList();
+      }
+      case EXISTS_QUERY_NAME: {
+        String source = parameters[0];
+
+        checkNodeForCorrectness(source, bindingGraph);
+        return ImmutableList.of(source);
       }
     }
 

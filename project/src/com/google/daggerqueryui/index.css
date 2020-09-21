@@ -68,3 +68,11 @@
 .custom-switch.custom-switch-large .custom-control-input:checked ~ .custom-control-label::after {
     transform: translateX(1.75rem);
 }
+
+#query-input:valid {
+    background-image: none;
+}
+
+#query-input:invalid {
+    background-image: none;
+}

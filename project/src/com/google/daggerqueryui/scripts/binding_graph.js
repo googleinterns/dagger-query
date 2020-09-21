@@ -267,12 +267,13 @@ const bindingGraph = (function() {
     // An event for managing parent nodes.
     network.on("oncontext", function (params) {
       // Checks if any node was selected.
-      if (params.nodes.length === 0) {
+      const selectedNode = this.getNodeAt(params.pointer.DOM);
+      if (selectedNode === undefined) {
         return;
       }
 
-      const nodeId = params.nodes[0];
-      showOrHideAncestors(nodeId);
+      showOrHideAncestors(selectedNode);
+      this.selectNodes([selectedNode]);
     });
   }
 
