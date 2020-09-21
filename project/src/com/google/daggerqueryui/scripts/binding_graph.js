@@ -283,10 +283,15 @@ const bindingGraph = (function() {
      *
      * <p>Given path is separated with ' -> ' arrow.
      *
+     * <p>If the path is invalid and contains less than two nodes, the method does nothing.
+     *
      * @param {string} path a valid string representing a path with at least two nodes
      */
     addPath: function (path) {
       const nodesInPath = path.split( ' -> ');
+      if (nodesInPath.length < 2) {
+        return;
+      }
 
       addEdge(nodesInPath[0], nodesInPath[1], EdgeStyle.highlightSource);
       for (let index = 1; index + 2 < nodesInPath.length; ++index) {
