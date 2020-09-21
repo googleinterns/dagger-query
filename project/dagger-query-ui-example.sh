@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bazel run src/com/google/daggerquery/example:beach_example
 bazel run src/com/google/daggerquery:example_java_server
 
