@@ -48,12 +48,35 @@ const bindingGraph = (function() {
   let needsToRedraw = true;
 
   /**
+   * An enum that defines which nodes from the edge will be highlighted.
+   * @type {Readonly<{highlightTarget: number, noHighlight: number, highlightSource: number}>}
+   */
+  const EdgeStyle = Object.freeze({'highlightSource': 1, 'highlightTarget': 2, 'noHighlight': 3});
+
+  /**
+   * Contains information that can be used by the nodes constructor to change their style.
+   * @param {string} colour a hex string representing the background color of the node
+   * @param {string} shape the shape defines what the node looks like
+   */
+  function NodeStyle(colour, shape) {
+    this.colour = colour;
+    this.shape = shape;
+  }
+
+  const BLUE_COLOR = '#92cfff';
+  const GREEN_COLOR = '#93d145';
+  const YELLOW_COLOR = '#f8cc43';
+  const GRAY_COLOR = '#c8c8c8';
+  const ELLIPSE_SHAPE = 'ellipse';
+
+  /**
    * Associates given node with an identifier, if the node was not represented in the graph.
    *
    * @param {string} node a node to be added if it doesn't exist
+   * @param {NodeStyle} style a style with a specific color and shape to be applied to the node
    * @return {number} an identifier of a given node
    */
-  function addNode(node) {
+  function addNode(node, style) {
     if (!nodesToNumbers.has(node)) {
       nodesToNumbers.set(node, nodesToNumbers.size);
     }
@@ -61,7 +84,17 @@ const bindingGraph = (function() {
     const id = nodesToNumbers.get(node);
     if (nodes.get(id) === null) {
       const simpleName = node.replace(/(?:\w+\.)+(\w+)/g, '$1');
-      nodes.add({id: id, label: simpleName, title: node});
+      nodes.add({
+        id: id,
+        label: simpleName,
+        title: node,
+        color: {
+          background: style.colour,
+          border: style.colour,
+          highlight: style.colour
+        },
+        shape: style.shape
+      });
     }
     return id;
   }
@@ -141,17 +174,20 @@ const bindingGraph = (function() {
    *
    * @param {string} source the first node of the given edge
    * @param {string} target the second node of the given edge
+   * @param {EdgeStyle} style specifies which nodes will be highlighted
    */
   function addEdge(source, target, style) {
-    const sourceId = addNode(source);
-    const targetId = addNode(target);
+    const sourceId = addNode(source, style === EdgeStyle.highlightSource ?
+      new NodeStyle(GREEN_COLOR, ELLIPSE_SHAPE) : new NodeStyle(BLUE_COLOR, ELLIPSE_SHAPE));
+    const targetId = addNode(target, style === EdgeStyle.highlightTarget ?
+      new NodeStyle(GREEN_COLOR, ELLIPSE_SHAPE) : new NodeStyle(BLUE_COLOR, ELLIPSE_SHAPE));
 
     // Checks if an edge already exists.
     if (hasEdge(sourceId, targetId)) {
       return;
     }
 
-    edges.add({from: sourceId, to: targetId});
+    edges.add({from: sourceId, to: targetId, arrows: 'to', color: GRAY_COLOR});
   }
 
   /**
@@ -248,13 +284,21 @@ const bindingGraph = (function() {
      *
      * <p>Given path is separated with ' -> ' arrow.
      *
+     * <p>If the path is invalid and contains less than two nodes, the method does nothing.
+     *
      * @param {string} path a valid string representing a path with at least two nodes
      */
     addPath: function (path) {
       const nodesInPath = path.split( ' -> ');
-      for (let index = 0; index + 1 < nodesInPath.length; ++index) {
-        addEdge(nodesInPath[index], nodesInPath[index + 1]);
+      if (nodesInPath.length < 2) {
+        return;
       }
+
+      addEdge(nodesInPath[0], nodesInPath[1], EdgeStyle.highlightSource);
+      for (let index = 1; index + 2 < nodesInPath.length; ++index) {
+        addEdge(nodesInPath[index], nodesInPath[index + 1], EdgeStyle.noHighlight);
+      }
+      addEdge(nodesInPath[nodesInPath.length - 2], nodesInPath[nodesInPath.length - 1], EdgeStyle.highlightTarget);
     },
 
     /**
@@ -264,7 +308,7 @@ const bindingGraph = (function() {
      */
     addDeps: function (source, deps) {
       for (const childNode of deps) {
-        addEdge(source, childNode);
+        addEdge(source, childNode, EdgeStyle.highlightSource);
       }
     },
 
@@ -276,7 +320,7 @@ const bindingGraph = (function() {
      */
     addAncestors: function (source, ancestors) {
       for (const ancestorNode of ancestors) {
-        addEdge(ancestorNode, source);
+        addEdge(ancestorNode, source, EdgeStyle.highlightTarget);
       }
     },
 
@@ -290,7 +334,7 @@ const bindingGraph = (function() {
         return;
       }
 
-      addNode(nodeName);
+      addNode(nodeName, new NodeStyle(YELLOW_COLOR, ELLIPSE_SHAPE));
     },
 
     /**
