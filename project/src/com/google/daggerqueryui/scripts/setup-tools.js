@@ -27,3 +27,7 @@ $(function () {
     bindingGraph.draw();
   });
 })
+
+$("#clear-icon").click(function(){
+  bindingGraph.clear();
+});
