@@ -96,11 +96,12 @@ const bindingGraph = (function() {
    * @param {string} colour the colour that will fill all nodes
    */
   function recolourAllNodes(colour) {
-    nodes.forEach(node => node.color = {
-      background: colour,
-      border: colour,
-      highlight: colour
-    });
+    nodes.forEach(node => nodes.update([{id: node.id, color: {
+        background: colour,
+        border: colour,
+        highlight: colour
+      }}])
+    );
   }
 
   /**
@@ -126,12 +127,11 @@ const bindingGraph = (function() {
     }
 
     const newNode = nodes.get(id);
-    newNode.color = {
+    nodes.update([{id: id, shape: style.shape, color: {
       background: style.colour,
-      border: style.colour,
-      highlight: style.colour
-    };
-    newNode.shape = style.shape;
+        border: style.colour,
+        highlight: style.colour
+    }}]);
 
     return id;
   }
