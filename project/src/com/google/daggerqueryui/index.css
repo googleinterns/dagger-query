@@ -84,3 +84,16 @@
 #query-input:invalid {
     background-image: none;
 }
+
+#clear-button-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1001;
+    margin: 16px;
+}
+
+#clear-icon {
+    width: 64px;
+    height: 64px;
+}

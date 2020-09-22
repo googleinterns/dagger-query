@@ -116,7 +116,13 @@ public class Query {
 
         checkNodeForCorrectness(source, bindingGraph);
 
-        return bindingGraph.getDependencies(source).asList();
+        ImmutableList<String> deps = bindingGraph.getDependencies(source).asList();
+
+        if (deps.isEmpty()) {
+          throw new NoSuchElementException("Nothing found, list with results is empty.");
+        }
+
+        return deps;
       }
       case ALLPATHS_QUERY_NAME: {
         String source = parameters[0];
@@ -158,7 +164,13 @@ public class Query {
 
         checkNodeForCorrectness(source, bindingGraph);
 
-        return bindingGraph.getAncestors(source).asList();
+        ImmutableList<String> rdeps = bindingGraph.getAncestors(source).asList();
+
+        if (rdeps.isEmpty()) {
+          throw new NoSuchElementException("Nothing found, list with results is empty.");
+        }
+
+        return rdeps;
       }
       case EXISTS_QUERY_NAME: {
         String source = parameters[0];
