@@ -37,6 +37,14 @@
     color: #09AF00;
 }
 
+.action-name {
+    color: #2c7ef6;
+}
+
+.tool-element-name {
+    color: #f08b31;
+}
+
 .interactive-input-container .query-name {
     position: absolute;
     width: auto;

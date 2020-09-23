@@ -36,7 +36,7 @@
 
 <div class="container" id="query-text-field">
     <div class="row align-items-center">
-        <div class="col-9">
+        <div class="col-10">
             <div class="md-form form-lg interactive-input-container">
                 <div class="form-control form-control-lg query-name"></div>
                 <input type="text"
@@ -66,17 +66,33 @@
                     <ul>
                         <li>
                             <b class="query-name">deps</b>
-                            <b>binding</b> - to see all nodes dependencies
+                            <b>binding</b> - to see all node dependencies,
+                        </li>
+                        <li>
+                            <b class="query-name">rdeps</b>
+                            <b>binding</b> - to see all nodes that depend on the binding,
                         </li>
                         <li>
                             <b class="query-name">allpaths</b>
-                            <b>source target</b> - to see all paths between source and target nodes
+                            <b>source target</b> - to see all paths between source and target nodes,
                         </li>
                         <li>
                             <b class="query-name">somepath</b>
-                            <b>source target</b> - to see some path between source and target nodes
+                            <b>source target</b> - to see some path between source and target nodes.
                         </li>
                     </ul>
+                    <p>
+                        To traverse an arbitrary graph use <b class="action-name">right-click</b> for showing node
+                        ancestors and <b class="action-name">left-click</b> for showing node dependencies.
+                        You can use the same actions to hide dependencies and ancestors as well.
+                    </p>
+                    <p>
+                        Consider the ability to simply <b class="action-name">specify the binding name</b>
+                        in the input field - if the graph contains such a node, it will be drawn on the plane.<br><br>
+                        The <b class="tool-element-name">switch element</b> allows you to control physics.
+                        Use the <b class="tool-element-name">clear button</b> located in the lower
+                        right corner to clear the canvas.
+                    </p>
                 </div>
             </div>
         </div>
