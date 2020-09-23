@@ -51,7 +51,19 @@ const bindingGraph = (function() {
    * An enum that defines which nodes from the edge will be highlighted.
    * @type {Readonly<{highlightTarget: number, noHighlight: number, highlightSource: number}>}
    */
-  const EdgeStyle = Object.freeze({'highlightSource': 1, 'highlightTarget': 2, 'noHighlight': 3});
+  const EdgeType = Object.freeze({'highlightSource': 1, 'highlightTarget': 2, 'noHighlight': 3});
+
+  /**
+   * Contains information that can be used by the edges constructor to change their style.
+   * @param {EdgeType} type
+   * @param {string} baseColor
+   * @param {string} highlightColor
+   */
+  function EdgeStyle(type, baseColor, highlightColor) {
+    this.type = type;
+    this.baseColor = baseColor;
+    this.highlightColor = highlightColor;
+  }
 
   /**
    * Contains information that can be used by the nodes constructor to change their style.
@@ -63,11 +75,36 @@ const bindingGraph = (function() {
     this.shape = shape;
   }
 
-  const BLUE_COLOR = '#92cfff';
-  const GREEN_COLOR = '#93d145';
-  const YELLOW_COLOR = '#f8cc43';
   const GRAY_COLOR = '#c8c8c8';
   const ELLIPSE_SHAPE = 'ellipse';
+  const queueWithColours = ['#92cfff', '#fbaed2', '#93d145', '#f8cc43'];
+
+  /**
+   * Retrieves the first colour from the queue and places it at the end of the queue.
+   * @return {string} the first colour from the queue
+   */
+  function extractColor() {
+    const pickedColor = queueWithColours.shift();
+    queueWithColours.push(pickedColor);
+
+    return pickedColor;
+  }
+
+  /**
+   * Fills all nodes in the graph with the given color.
+   * @param {string} colour the colour that will fill all nodes
+   */
+  function recolourAllNodes(colour) {
+    const newColours = nodes.map(node => ({
+      id: node.id,
+      color: {
+        background: colour,
+        border: colour,
+        highlight: colour
+      }
+    }));
+    nodes.update(newColours);
+  }
 
   /**
    * Associates given node with an identifier, if the node was not represented in the graph.
@@ -88,14 +125,19 @@ const bindingGraph = (function() {
         id: id,
         label: simpleName,
         title: node,
-        color: {
-          background: style.colour,
-          border: style.colour,
-          highlight: style.colour
-        },
-        shape: style.shape
       });
     }
+
+    nodes.update([{
+      id: id,
+      shape: style.shape,
+      color: {
+        background: style.colour,
+        border: style.colour,
+        highlight: style.colour
+      }
+    }]);
+    
     return id;
   }
 
@@ -177,10 +219,10 @@ const bindingGraph = (function() {
    * @param {EdgeStyle} style specifies which nodes will be highlighted
    */
   function addEdge(source, target, style) {
-    const sourceId = addNode(source, style === EdgeStyle.highlightSource ?
-      new NodeStyle(GREEN_COLOR, ELLIPSE_SHAPE) : new NodeStyle(BLUE_COLOR, ELLIPSE_SHAPE));
-    const targetId = addNode(target, style === EdgeStyle.highlightTarget ?
-      new NodeStyle(GREEN_COLOR, ELLIPSE_SHAPE) : new NodeStyle(BLUE_COLOR, ELLIPSE_SHAPE));
+    const sourceId = addNode(source, style.type === EdgeType.highlightSource ?
+      new NodeStyle(style.highlightColor, ELLIPSE_SHAPE) : new NodeStyle(style.baseColor, ELLIPSE_SHAPE));
+    const targetId = addNode(target, style.type === EdgeType.highlightTarget ?
+      new NodeStyle(style.highlightColor, ELLIPSE_SHAPE) : new NodeStyle(style.baseColor, ELLIPSE_SHAPE));
 
     // Checks if an edge already exists.
     if (hasEdge(sourceId, targetId)) {
@@ -294,11 +336,16 @@ const bindingGraph = (function() {
         return;
       }
 
-      addEdge(nodesInPath[0], nodesInPath[1], EdgeStyle.highlightSource);
+      recolourAllNodes(GRAY_COLOR);
+
+      const baseColor = extractColor();
+      const highlightColor = extractColor();
+      addEdge(nodesInPath[0], nodesInPath[1], new EdgeStyle(EdgeType.highlightSource, baseColor, highlightColor));
       for (let index = 1; index + 2 < nodesInPath.length; ++index) {
-        addEdge(nodesInPath[index], nodesInPath[index + 1], EdgeStyle.noHighlight);
+        addEdge(nodesInPath[index], nodesInPath[index + 1], new EdgeStyle(EdgeType.noHighlight, baseColor, highlightColor));
       }
-      addEdge(nodesInPath[nodesInPath.length - 2], nodesInPath[nodesInPath.length - 1], EdgeStyle.highlightTarget);
+      addEdge(nodesInPath[nodesInPath.length - 2], nodesInPath[nodesInPath.length - 1],
+        new EdgeStyle(EdgeType.highlightTarget, baseColor, highlightColor));
     },
 
     /**
@@ -307,8 +354,16 @@ const bindingGraph = (function() {
      * @param {string[]} deps
      */
     addDeps: function (source, deps) {
+      if (deps.length === 0) {
+        return;
+      }
+
+      recolourAllNodes(GRAY_COLOR);
+
+      const baseColor = extractColor();
+      const highlightColor = extractColor();
       for (const childNode of deps) {
-        addEdge(source, childNode, EdgeStyle.highlightSource);
+        addEdge(source, childNode, new EdgeStyle(EdgeType.highlightSource, baseColor, highlightColor));
       }
     },
 
@@ -319,8 +374,16 @@ const bindingGraph = (function() {
      * @param {string[]} ancestors
      */
     addAncestors: function (source, ancestors) {
+      if (ancestors.length === 0) {
+        return;
+      }
+
+      recolourAllNodes(GRAY_COLOR);
+
+      const baseColor = extractColor();
+      const highlightColor = extractColor();
       for (const ancestorNode of ancestors) {
-        addEdge(ancestorNode, source, EdgeStyle.highlightTarget);
+        addEdge(ancestorNode, source, new EdgeStyle(EdgeType.highlightTarget, baseColor, highlightColor));
       }
     },
 
@@ -334,7 +397,9 @@ const bindingGraph = (function() {
         return;
       }
 
-      addNode(nodeName, new NodeStyle(YELLOW_COLOR, ELLIPSE_SHAPE));
+      recolourAllNodes(GRAY_COLOR);
+
+      addNode(nodeName, new NodeStyle(extractColor(), ELLIPSE_SHAPE));
     },
 
     /**
