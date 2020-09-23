@@ -128,7 +128,83 @@ const queryExecutor = (function() {
   };
 })();
 
+const historyManager = (function() {
+  /**
+   * An array with all executed queries.
+   *
+   * @type {string[]}
+   */
+  const executedQueries = [];
+
+  /**
+   * We assume that pointer always contains the correct index of the latest query which was shown in the input field.
+   *
+   * <p>If no queries were made, the pointer equals to -1.
+   *
+   * @type {number}
+   */
+  let pointer = -1;
+
+  return {
+    /**
+     * Returns the previous executed query.
+     *
+     * @return {string}
+     * @throws a message error if no queries have been executed before the last one
+     */
+    getPreviousQuery: function() {
+      if (pointer > 0) {
+        return executedQueries[--pointer];
+      }
+
+      throw 'Failed to show previous query. Reason: queries were not previously executed.';
+    },
+
+    /**
+     * Returns the next query from an array with history.
+     *
+     * @return {string}
+     * @throws a message error if no queries have been executed after the last one
+     */
+    getNextQuery: function() {
+      if (pointer + 1 < executedQueries.length) {
+        return executedQueries[++pointer];
+      }
+
+      throw 'Failed to show the next query. Reason: queries were not executed later.';
+    },
+
+    /**
+     * Saves a new executed query and resets a pointer to the latest query in the history array.
+
+     * @param {string} query
+     */
+    addQuery: function(query) {
+      executedQueries.push(query);
+      pointer = executedQueries.length - 1;
+    },
+  };
+})();
+
 $("#query-input").on('keyup', function (event) {
+  if (event.key === 'ArrowUp') {
+    try {
+      $(this).val(historyManager.getPreviousQuery());
+    } catch (error) {
+      console.log(error)
+    }
+
+    return;
+  } else if (event.key === 'ArrowDown') {
+    try {
+      $(this).val(historyManager.getNextQuery());
+    } catch (error) {
+      console.log(error)
+    }
+
+    return;
+  }
+
   const query = $(this).val().trim().split(' ');
   const queryName = query[0].toLowerCase();
 
@@ -140,6 +216,7 @@ $("#query-input").on('keyup', function (event) {
     // If such a node exists in the graph, it will be drawn.
     if (event.key === 'Enter' && query.length === 1) {
       queryExecutor.processQuery([$.EXISTS_QUERY_NAME, query[0]], {shouldClearGraph: false});
+      historyManager.addQuery($(this).val());
     }
 
     return;
@@ -149,6 +226,8 @@ $("#query-input").on('keyup', function (event) {
   queryNameElement.html(queryName).show();
 
   if (event.key === 'Enter') {
+    historyManager.addQuery($(this).val());
+
     try {
       $(this).validateParameters(query)
       queryExecutor.processQuery(query, {shouldClearGraph: true});
