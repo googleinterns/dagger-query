@@ -137,7 +137,7 @@ const bindingGraph = (function() {
         highlight: style.colour
       }
     }]);
-
+    
     return id;
   }
 

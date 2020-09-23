@@ -89,14 +89,12 @@ public class QueryTest {
     assertArrayEquals(expectedOutput, queryExecutionResult.toArray());
   }
 
-  @Test
-  public void testExecutingDepsQuery_WithLeafAsSourceNode() {
+  @Test(expected = NoSuchElementException.class)
+  public void testExecutingDepsQuery_WithLeafAsSourceNode_ThrowsNoSuchElementException() {
     String[] parameters = {"com.google.Cat"};
     Query query = new Query("deps", parameters);
 
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -195,7 +193,7 @@ public class QueryTest {
   }
 
   @Test(expected = NoSuchElementException.class)
-  public void testExecutingAllPathsQuery_WithLeafAsSourceNode() {
+  public void testExecutingAllPathsQuery_WithLeafAsSourceNode_ThrowsNoSuchElementException() {
     String[] parameters = {"com.google.Details", "com.google.Component"};
     Query query = new Query("allpaths", parameters);
 
@@ -203,7 +201,7 @@ public class QueryTest {
   }
 
   @Test(expected = NoSuchElementException.class)
-  public void testExecutingAllPathsQuery_WhenThereIsNoPaths() {
+  public void testExecutingAllPathsQuery_WhenThereIsNoPaths_ThrowsNoSuchElementException() {
     String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
     Query query = new Query("allpaths", parameters);
 
@@ -243,6 +241,14 @@ public class QueryTest {
   @Test(expected = IllegalArgumentException.class)
   public void testExecutingAllPathsQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
     String[] parameters = {"com.google.com.CatsFactory", "com.google.Details"};
+    Query query = new Query("allpaths", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+  }
+
+  @Test(expected = NoSuchElementException.class)
+  public void testExecutingAllPathsQuery_WithEqualNodes_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.CatsFactory", "com.google.CatsFactory"};
     Query query = new Query("allpaths", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
@@ -307,7 +313,7 @@ public class QueryTest {
   }
 
   @Test(expected = NoSuchElementException.class)
-  public void testExecutingSomePathQuery_WithLeafAsSourceNode() {
+  public void testExecutingSomePathQuery_WithLeafAsSourceNode_ThrowsNoSuchElementException() {
     String[] parameters = {"com.google.Details", "com.google.Component"};
     Query query = new Query("somepath", parameters);
 
@@ -315,7 +321,7 @@ public class QueryTest {
   }
 
   @Test(expected = NoSuchElementException.class)
-  public void testExecutingSomePathQuery_WhenThereIsNoPaths() {
+  public void testExecutingSomePathQuery_WhenThereIsNoPaths_ThrowsNoSuchElementException() {
     String[] parameters = {"com.google.CatsFactory", "com.google.Helper"};
     Query query = new Query("somepath", parameters);
 
@@ -355,6 +361,14 @@ public class QueryTest {
   @Test(expected = IllegalArgumentException.class)
   public void testExecutingSomePathQuery_WithTooManyTyposInNodeName_ThrowsIllegalArgumentException() {
     String[] parameters = {"com.google.com.CatsFactory", "com.google.Details"};
+    Query query = new Query("somepath", parameters);
+
+    List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
+  }
+
+  @Test(expected = NoSuchElementException.class)
+  public void testExecutingSomePathQuery_WithEqualNodes_ThrowsIllegalArgumentException() {
+    String[] parameters = {"com.google.Component", "com.google.Component"};
     Query query = new Query("somepath", parameters);
 
     List<String> queryExecutionResult = query.execute(makeBindingGraph_WithMultiplePathsBetweenTwoNodes());
@@ -408,14 +422,12 @@ public class QueryTest {
     assertEquals(expectedOutput, ImmutableSet.copyOf(queryExecutionResult));
   }
 
-  @Test
-  public void testExecutingRdepsQuery_WithRootAsSourceNode() {
+  @Test(expected = NoSuchElementException.class)
+  public void testExecutingRdepsQuery_WithRootAsSourceNode_ThrowsNoSuchElementException() {
     String[] parameters = {"com.google.Component"};
     Query query = new Query("rdeps", parameters);
 
     List<String> queryExecutionResult = query.execute(makeSimpleBindingGraph());
-
-    assertEquals(0, queryExecutionResult.size());
   }
 
   @Test(expected = IllegalArgumentException.class)
