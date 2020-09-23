@@ -84,9 +84,8 @@ const bindingGraph = (function() {
    * @return {string} the first colour from the queue
    */
   function extractColor() {
-    const pickedColor = queueWithColours[0];
+    const pickedColor = queueWithColours.shift();
     queueWithColours.push(pickedColor);
-    queueWithColours.shift();
 
     return pickedColor;
   }
@@ -96,12 +95,15 @@ const bindingGraph = (function() {
    * @param {string} colour the colour that will fill all nodes
    */
   function recolourAllNodes(colour) {
-    nodes.forEach(node => nodes.update([{id: node.id, color: {
+    const newColours = nodes.map(node => ({
+      id: node.id,
+      color: {
         background: colour,
         border: colour,
         highlight: colour
-      }}])
-    );
+      }
+    }));
+    nodes.update(newColours);
   }
 
   /**
@@ -126,12 +128,15 @@ const bindingGraph = (function() {
       });
     }
 
-    const newNode = nodes.get(id);
-    nodes.update([{id: id, shape: style.shape, color: {
-      background: style.colour,
+    nodes.update([{
+      id: id,
+      shape: style.shape,
+      color: {
+        background: style.colour,
         border: style.colour,
         highlight: style.colour
-    }}]);
+      }
+    }]);
 
     return id;
   }
