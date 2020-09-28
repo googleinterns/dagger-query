@@ -187,9 +187,19 @@ const historyManager = (function() {
 })();
 
 $("#query-input").on('keyup', function (event) {
+  const queryNameElement = $(this).closest('.interactive-input-container').find('.query-name');
+
   if (event.key === 'ArrowUp') {
     try {
-      $(this).val(historyManager.getPreviousQuery());
+      const previousQuery = historyManager.getPreviousQuery();
+      const queryName = previousQuery.split(' ')[0];
+      $(this).val(previousQuery);
+
+      if ($(this).validateQueryName(queryName)) {
+        queryNameElement.html(queryName).show();
+      } else {
+        queryNameElement.hide();
+      }
     } catch (error) {
       console.log(error)
     }
@@ -197,7 +207,15 @@ $("#query-input").on('keyup', function (event) {
     return;
   } else if (event.key === 'ArrowDown') {
     try {
-      $(this).val(historyManager.getNextQuery());
+      const nextQuery = historyManager.getNextQuery();
+      const queryName = nextQuery.split(' ')[0];
+      $(this).val(nextQuery);
+
+      if ($(this).validateQueryName(queryName)) {
+        queryNameElement.html(queryName).show();
+      } else {
+        queryNameElement.hide();
+      }
     } catch (error) {
       console.log(error)
     }
@@ -208,7 +226,6 @@ $("#query-input").on('keyup', function (event) {
   const query = $(this).val().trim().split(' ');
   const queryName = query[0].toLowerCase();
 
-  const queryNameElement = $(this).closest('.interactive-input-container').find('.query-name');
   if (!$(this).validateQueryName(queryName)) {
     queryNameElement.hide();
 
