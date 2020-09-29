@@ -1,3 +1,5 @@
+![logo](https://github.com/googleinterns/dagger-query/blob/master/project/assets/logo.png)
+
 # Dagger Query
 
 A graph based query language on top of [dagger](https://github.com/google/dagger)
