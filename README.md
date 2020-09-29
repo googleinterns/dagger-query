@@ -1,3 +1,5 @@
+![logo](https://github.com/googleinterns/dagger-query/blob/master/project/assets/logo.png)
+
 # Dagger Query
 
 A graph based query language on top of [dagger](https://github.com/google/dagger)
@@ -51,19 +53,19 @@ cd project
 
 > allpaths com.google.daggerquery.example.HotelComponent com.google.daggerquery.example.models.Phone
 
-![allpaths](https://github.com/googleinterns/dagger-query/blob/improve_readme/project/assets/allpaths_query_example.png)
+![allpaths](https://github.com/googleinterns/dagger-query/blob/master/project/assets/allpaths_query_example.png)
 
 > somepath com.google.daggerquery.example.BeachComponent com.google.daggerquery.example.models.Tourist
 
-![somepath](https://github.com/googleinterns/dagger-query/blob/improve_readme/project/assets/somepath_query_example.png)
+![somepath](https://github.com/googleinterns/dagger-query/blob/master/project/assets/somepath_query_example.png)
 
 > deps com.google.daggerquery.example.models.Villa 
 
-![deps](https://github.com/googleinterns/dagger-query/blob/improve_readme/project/assets/deps_query_example.png)
+![deps](https://github.com/googleinterns/dagger-query/blob/master/project/assets/deps_query_example.png)
 
 > rdeps com.google.daggerquery.example.models.Tourist 
 
-![rdeps](https://github.com/googleinterns/dagger-query/blob/improve_readme/project/assets/rdeps_query_example.png)
+![rdeps](https://github.com/googleinterns/dagger-query/blob/master/project/assets/rdeps_query_example.png)
 
 ### Traversing an arbitrary graph
 
@@ -71,7 +73,7 @@ cd project
 * Use **left-click** on a node to show all its dependencies and hide them.
 * Use **right-click** on a node to show all its ancestors and hide them.
 
-![traversing](https://github.com/googleinterns/dagger-query/blob/improve_readme/project/assets/traversing_graph.gif)
+![traversing](https://github.com/googleinterns/dagger-query/blob/master/project/assets/traversing_graph.gif)
 
 ## Source Code Headers
 
