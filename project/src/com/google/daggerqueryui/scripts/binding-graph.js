@@ -319,33 +319,50 @@ const bindingGraph = (function() {
     });
   }
 
-  return {
-    /**
-     * Takes a string representing a path where two adjacent nodes are connected by an edge,
-     * and adds all these edges to the subgraph.
-     *
-     * <p>Given path is separated with ' -> ' arrow.
-     *
-     * <p>If the path is invalid and contains less than two nodes, the method does nothing.
-     *
-     * @param {string} path a valid string representing a path with at least two nodes
-     */
-    addPath: function (path) {
-      const nodesInPath = path.split( ' -> ');
-      if (nodesInPath.length < 2) {
-        return;
-      }
+  /**
+   * Takes a string representing a path where two adjacent nodes are connected by an edge,
+   * and adds all these edges to the subgraph.
+   *
+   * <p>Given path is separated with ' -> ' arrow.
+   *
+   * <p>If the path is invalid and contains less than two nodes, the method does nothing.
+   *
+   * @param {string} path
+   * @param {string} baseColor
+   * @param {string} highlightColor
+   */
+  function addPath(path, baseColor, highlightColor) {
+    const nodesInPath = path.split( ' -> ');
+    if (nodesInPath.length < 2) {
+      return;
+    }
 
+    addEdge(nodesInPath[0], nodesInPath[1], new EdgeStyle(EdgeType.highlightSource, baseColor, highlightColor));
+    for (let index = 1; index + 2 < nodesInPath.length; ++index) {
+      addEdge(nodesInPath[index], nodesInPath[index + 1], new EdgeStyle(EdgeType.noHighlight, baseColor, highlightColor));
+    }
+    addEdge(nodesInPath[nodesInPath.length - 2], nodesInPath[nodesInPath.length - 1],
+      new EdgeStyle(EdgeType.highlightTarget, baseColor, highlightColor));
+  }
+
+  return {
+
+
+    /**
+     * Takes an array with paths and draws all of them.
+     *
+     * <p>All given paths are separated with ' -> ' arrow.
+     *
+     * @param {string[]} paths an array with valid paths between nodes in the graph
+     */
+    addPaths: function (paths) {
       recolourAllNodes(GRAY_COLOR);
 
       const baseColor = extractColor();
       const highlightColor = extractColor();
-      addEdge(nodesInPath[0], nodesInPath[1], new EdgeStyle(EdgeType.highlightSource, baseColor, highlightColor));
-      for (let index = 1; index + 2 < nodesInPath.length; ++index) {
-        addEdge(nodesInPath[index], nodesInPath[index + 1], new EdgeStyle(EdgeType.noHighlight, baseColor, highlightColor));
+      for (const path of paths) {
+        addPath(path, baseColor, highlightColor);
       }
-      addEdge(nodesInPath[nodesInPath.length - 2], nodesInPath[nodesInPath.length - 1],
-        new EdgeStyle(EdgeType.highlightTarget, baseColor, highlightColor));
     },
 
     /**
