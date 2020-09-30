@@ -26,6 +26,9 @@ Dagger Query can be used to investigate the dagger dependency graph.
     > ./dagger-query.sh YOUR_PATH allpaths com.google.Office com.google.Beach \
     > ./dagger-query.sh YOUR_PATH somepath com.google.Paris com.google.sights.EiffelTower
     
+   If permission is denied, run this command:
+    > chmod u+r+x dagger-query-ui.sh
+    
 ## How to use Dagger Query UI?
 
 1. Add `//src/com/google/daggerquery:dagger_query_plugin` target in a **plugins** attribute of your app's target.
@@ -40,6 +43,9 @@ Dagger Query can be used to investigate the dagger dependency graph.
 
 3. Use bash script `dagger-query-ui.sh` located in a `project` folder for starting a server and opening a website! 👾 Pass a path to the `dagger_query_server` target as the parameter.  
     > ./dagger-query-ui.sh YOUR_PATH 
+    
+   If permission is denied, run this command:
+    > chmod u+r+x dagger-query-ui.sh
 
 ## Dagger Query UI: Getting started
 
