@@ -14,19 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
 
-public class Pool {
-  private final InflatableDonut inflatableDonut;
-  private final InflatableFlamingo inflatableFlamingo;
-  private final InflatableUnicorn inflatableUnicorn;
-
+public class CocaCola {
   @Inject
-  Pool(InflatableUnicorn unicorn, InflatableFlamingo flamingo, InflatableDonut donut) {
-    this.inflatableDonut = donut;
-    this.inflatableFlamingo = flamingo;
-    this.inflatableUnicorn = unicorn;
+  CocaCola() {
   }
 }

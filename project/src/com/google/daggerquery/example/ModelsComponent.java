@@ -16,9 +16,6 @@ limitations under the License.
 
 package com.google.daggerquery.example;
 
-import com.google.daggerquery.example.models.Lifeguard;
-import com.google.daggerquery.example.models.Manager;
-import com.google.daggerquery.example.models.Tourist;
 import dagger.Component;
 
 @Component

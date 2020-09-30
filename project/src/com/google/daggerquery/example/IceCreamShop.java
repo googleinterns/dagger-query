@@ -14,20 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
+import java.util.Random;
 
-public class Manager implements Staff {
-  private final Phone phone;
+public class IceCreamShop {
+  private final int numberOfIceCream;
 
   @Inject
-  Manager(Phone phone) {
-    this.phone = phone;
-  }
-
-  @Override
-  public void help() {
-    System.out.println("Hotel Manager helped the tourist to organize an excursion.");
+  IceCreamShop() {
+    numberOfIceCream = Math.abs((new Random().nextInt()) % 100);
   }
 }
