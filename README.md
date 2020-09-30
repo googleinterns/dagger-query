@@ -41,6 +41,8 @@ Dagger Query can be used to investigate the dagger dependency graph.
 3. Use bash script `dagger-query-ui.sh` located in a `project` folder for starting a server and opening a website! 👾 Pass a path to the `dagger_query_server` target as the parameter.  
     > ./dagger-query-ui.sh YOUR_PATH 
 
+If the website does not open, you need to start it manually by clicking on the file `src/com/daggerqueryui/index.html`.
+
 ## Dagger Query UI: Getting started
 
 ### Using an example project

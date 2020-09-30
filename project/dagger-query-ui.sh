@@ -12,5 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+xdg-open src/com/google/daggerqueryui/index.html
+start src/com/google/daggerqueryui/index.html
 open src/com/google/daggerqueryui/index.html
 bazel run ${1:-src/com/google/daggerquery:example_java_server}
