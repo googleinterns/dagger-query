@@ -356,8 +356,6 @@ const bindingGraph = (function() {
      * @param {string[]} paths an array with valid paths between nodes in the graph
      */
     addPaths: function (paths) {
-      recolourAllNodes(GRAY_COLOR);
-
       const baseColor = extractColor();
       const highlightColor = extractColor();
       for (const path of paths) {
