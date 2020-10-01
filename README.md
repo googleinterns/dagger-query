@@ -27,7 +27,7 @@ Dagger Query can be used to investigate the dagger dependency graph.
     > ./dagger-query.sh YOUR_PATH somepath com.google.Paris com.google.sights.EiffelTower
     
    If permission is denied, run this command:
-    > chmod u+r+x dagger-query-ui.sh
+    > chmod u+rx dagger-query-ui.sh
     
 ## How to use Dagger Query UI?
 
@@ -45,7 +45,7 @@ Dagger Query can be used to investigate the dagger dependency graph.
     > ./dagger-query-ui.sh YOUR_PATH 
     
    If permission is denied, run this command:
-    > chmod u+r+x dagger-query-ui.sh
+    > chmod u+rx dagger-query-ui.sh
 
 ## Dagger Query UI: Getting started
 
