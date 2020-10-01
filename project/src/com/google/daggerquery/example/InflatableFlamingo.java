@@ -14,23 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
 
-public class Apartment {
-  private final Bed bed;
-  private final MiniBar miniBar;
-  private final TV tv;
-  private final Phone phone;
-  private final Tourist tourist;
-
+public class InflatableFlamingo {
   @Inject
-  Apartment(Bed bed, MiniBar miniBar, TV tv, Phone phone, Tourist tourist) {
-    this.bed = bed;
-    this.miniBar = miniBar;
-    this.tv = tv;
-    this.phone = phone;
-    this.tourist = tourist;
+  InflatableFlamingo() {
   }
 }

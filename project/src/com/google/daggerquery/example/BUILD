@@ -24,8 +24,6 @@ java_binary(
     main_class = "com.google.daggerquery.example.Main",
     deps = [
         ":dagger",
-        "//src/com/google/daggerquery/example/models:example_models",
-        "//src/com/google/daggerquery/example/modules:example_modules",
         "//src/com/google/daggerquery:dagger_query_plugin"
     ],
     plugins = ["//src/com/google/daggerquery:dagger_query_plugin"]

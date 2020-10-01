@@ -14,12 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
+import java.util.Random;
 
-public class Bed {
+public class Phone {
+  private String model;
+
   @Inject
-  Bed() {
+  Phone() {
+    switch (Math.abs((new Random().nextInt()) % 2)) {
+      case 0:
+        model = "Google Pixel 4 XL";
+        break;
+      case 1:
+        model = "iPhone XS";
+        break;
+    }
   }
 }

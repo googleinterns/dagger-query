@@ -14,19 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
 
-public class MiniBar {
-  private final CocaCola cocaCola;
-  private final Fanta fanta;
-  private final Sprite sprite;
+public class Lifeguard implements Staff {
+  private final LifeVest lifeVest;
 
   @Inject
-  MiniBar(CocaCola cocaCola, Fanta fanta, Sprite sprite) {
-    this.cocaCola = cocaCola;
-    this.fanta = fanta;
-    this.sprite = sprite;
+  Lifeguard(LifeVest lifeVest) {
+    this.lifeVest = lifeVest;
+  }
+
+  @Override
+  public void help() {
+    System.out.println("Lifeguard has helped a tourist to escape big waves 🌊.");
   }
 }

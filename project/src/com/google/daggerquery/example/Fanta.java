@@ -14,32 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
-import java.util.Random;
 
-public class LifeVest {
-  private String surfaceColor;
-
+public class Fanta {
   @Inject
-  LifeVest() {
-    switch (Math.abs((new Random().nextInt()) % 5)) {
-      case 0:
-        surfaceColor = "red";
-        break;
-      case 1:
-        surfaceColor = "yellow";
-        break;
-      case 2:
-        surfaceColor = "blue";
-        break;
-      case 3:
-        surfaceColor = "green";
-        break;
-      case 4:
-        surfaceColor = "pink";
-        break;
-    }
+  Fanta() {
   }
 }
