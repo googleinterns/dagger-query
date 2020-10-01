@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.modules;
+package com.google.daggerquery.example;
 
-import com.google.daggerquery.example.models.Apartment;
-import com.google.daggerquery.example.models.Villa;
+import com.google.daggerquery.example.Apartment;
+import com.google.daggerquery.example.Villa;
 import dagger.Module;
 import dagger.Provides;
 

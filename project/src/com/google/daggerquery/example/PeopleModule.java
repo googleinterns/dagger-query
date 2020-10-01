@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.modules;
+package com.google.daggerquery.example;
 
-import com.google.daggerquery.example.models.Lifeguard;
-import com.google.daggerquery.example.models.Manager;
-import com.google.daggerquery.example.models.Staff;
-import com.google.daggerquery.example.models.Tourist;
+import com.google.daggerquery.example.Lifeguard;
+import com.google.daggerquery.example.Manager;
+import com.google.daggerquery.example.Staff;
+import com.google.daggerquery.example.Tourist;
 import dagger.Module;
 import dagger.Provides;
 

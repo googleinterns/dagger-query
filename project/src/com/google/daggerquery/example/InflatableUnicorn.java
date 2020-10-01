@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
 
-public class CocaCola {
+public class InflatableUnicorn {
   @Inject
-  CocaCola() {
+  InflatableUnicorn() {
   }
 }

@@ -14,16 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.google.daggerquery.example.models;
+package com.google.daggerquery.example;
 
 import javax.inject.Inject;
-import java.util.Random;
+import java.util.Set;
 
-public class IceCreamShop {
-  private final int numberOfIceCream;
+public class Beach {
+  private final Set<Tourist> tourists;
+  private final Set<Staff> lifeguards;
+  private final IceCreamShop iceCreamShop;
 
   @Inject
-  IceCreamShop() {
-    numberOfIceCream = Math.abs((new Random().nextInt()) % 100);
+  Beach(Set<Tourist> tourists, Set<Staff> lifeguards, IceCreamShop iceCreamShop) {
+    this.iceCreamShop = iceCreamShop;
+    this.tourists = tourists;
+    this.lifeguards = lifeguards;
   }
 }

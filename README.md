@@ -49,21 +49,26 @@ If you launch `dagger-query-ui.sh` script without any parameters it will use exa
 cd project
 ./dagger-query-ui.sh
 ```
+
+The example project has the following structure (note that we only show simple class names in the nodes, add the prefix com.google.daggerquery.example to each name to build the fully qualified name):
+
+![example](https://github.com/googleinterns/dagger-query/blob/master/project/assets/example_project_structure.png)
+
 ### Executing queries
 
-> allpaths com.google.daggerquery.example.HotelComponent com.google.daggerquery.example.models.Phone
+> allpaths com.google.daggerquery.example.HotelComponent com.google.daggerquery.example.Phone
 
 ![allpaths](https://github.com/googleinterns/dagger-query/blob/master/project/assets/allpaths_query_example.png)
 
-> somepath com.google.daggerquery.example.BeachComponent com.google.daggerquery.example.models.Tourist
+> somepath com.google.daggerquery.example.BeachComponent com.google.daggerquery.example.Tourist
 
 ![somepath](https://github.com/googleinterns/dagger-query/blob/master/project/assets/somepath_query_example.png)
 
-> deps com.google.daggerquery.example.models.Villa 
+> deps com.google.daggerquery.example.Villa 
 
 ![deps](https://github.com/googleinterns/dagger-query/blob/master/project/assets/deps_query_example.png)
 
-> rdeps com.google.daggerquery.example.models.Tourist 
+> rdeps com.google.daggerquery.example.Tourist 
 
 ![rdeps](https://github.com/googleinterns/dagger-query/blob/master/project/assets/rdeps_query_example.png)
 
