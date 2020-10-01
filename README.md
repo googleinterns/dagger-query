@@ -21,10 +21,12 @@ Dagger Query can be used to investigate the dagger dependency graph.
           dagger_app_target = "YOUR_TARGET"
        )
 
-3. Use bash script `dagger-query.sh` located in a `project` folder for executing queries! 🚀 Pass a path to the `dagger_query` target as the first parameter.  
+3. If you use Linux or OSX you can execute bash script `dagger-query.sh` located in a `project` folder for executing queries! 🚀 Pass a path to the `dagger_query` target as the first parameter.  
     > ./dagger-query.sh YOUR_PATH deps com.google.Cat \
     > ./dagger-query.sh YOUR_PATH allpaths com.google.Office com.google.Beach \
     > ./dagger-query.sh YOUR_PATH somepath com.google.Paris com.google.sights.EiffelTower
+                                                                                                                                                                                                       
+   If you use Windows, consider running the command-line app manually.
     
    If permission is denied, run this command:
     > chmod u+rx dagger-query-ui.sh
@@ -41,11 +43,15 @@ Dagger Query can be used to investigate the dagger dependency graph.
           dagger_app_target = "YOUR_TARGET"
        )
 
-3. Use bash script `dagger-query-ui.sh` located in a `project` folder for starting a server and opening a website! 👾 Pass a path to the `dagger_query_server` target as the parameter.  
-    > ./dagger-query-ui.sh YOUR_PATH 
-    
+3. If you use Linux or OSX you can execute bash script `dagger-query-ui.sh` located in a `project` folder for starting a server and opening a website! 👾 Pass a path to the `dagger_query_server` target as the parameter.  
+    > ./dagger-query-ui.sh YOUR_PATH
+                                                                                                                                                                                                                      
+   If you use Windows, consider starting the server manually.
+                                                                                                                                                                                                             
    If permission is denied, run this command:
     > chmod u+rx dagger-query-ui.sh
+    
+If the website does not open, you need to start it manually by clicking on the file `src/com/daggerqueryui/index.html`.
 
 ## Dagger Query UI: Getting started
 
