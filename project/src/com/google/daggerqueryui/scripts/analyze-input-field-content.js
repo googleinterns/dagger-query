@@ -111,9 +111,7 @@ const queryExecutor = (function() {
         if (query[0] === $.DEPS_QUERY_NAME) {
           bindingGraph.addDeps(query[1], results);
         } else if (query[0] === $.ALLPATHS_QUERY_NAME || query[0] === $.SOMEPATH_QUERY_NAME) {
-          for (const path of results) {
-            bindingGraph.addPath(path);
-          }
+          bindingGraph.addPaths(results);
         } else if (query[0] === $.RDEPS_QUERY_NAME) {
           bindingGraph.addAncestors(query[1], results);
         } else if (query[0] === $.EXISTS_QUERY_NAME) {
